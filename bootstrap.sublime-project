@@ -1,0 +1,35 @@
+{
+	"folders":
+	[
+		{
+			"path": ".",
+		},
+		{
+			"path": "..\\jai"
+		},
+	],
+	"build_systems":
+	[
+		{
+			"name": "jai",
+			"working_dir": "${project_path}",
+			"file_regex": "^(..[^\\()]*):([0-9]+),?([0-9]+)?: (.*)$", // clang regex
+
+			"variants":
+			[
+				{
+					"name" : "build",
+					"shell_cmd" : "jai build.jai - compile",
+				},
+				{
+					"name" : "build & run",
+					"shell_cmd" : "jai build.jai - compile run",
+				},
+				{
+					"name" : "build & debug",
+					"shell_cmd" : "jai build.jai - compile debug",
+				},
+			]
+		}
+	]
+}
