@@ -1,6 +1,5 @@
 PLACEHOLDER_NAME :: "bootstrap";
 BUILD_FILE :: "build.jai";
-SETUP_FILE :: "setup.jai";
 
 #run {
     // This is not an actual compilation script
@@ -23,6 +22,11 @@ SETUP_FILE :: "setup.jai";
     build_file_content: = read_entire_file(BUILD_FILE);
     build_file_content = replace(build_file_content, PLACEHOLDER_NAME, project_name);
     write_entire_file(BUILD_FILE, build_file_content);
+
+    // Removing setup files
+    log("Removing setup files...");
+    file_delete("setup.jai");
+    file_delete("setup.bat");
 }
 
 #import "Compiler";
