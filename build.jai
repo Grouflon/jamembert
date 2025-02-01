@@ -85,11 +85,10 @@ build :: ()
 
         set_optimization(*options, ifx optimize then .OPTIMIZED else .DEBUG);
 
-        log("%", options);
         set_build_options(options, w);
         
-        error_count: = 0;
         log("Compiling...");
+        error_count: = 0;
         compiler_begin_intercept(w);
         add_build_file("src/main.jai", w);
         while true
@@ -126,7 +125,7 @@ build :: ()
                 // Convert wasm64 to wasm32
                 wasm64_path: = tprint("./%1/%2%0064.wasm", BUILD_OUTPUT_DIRECTORY, BUILD_NAME);
                 wasm32_path: = tprint("./%1/%2.wasm", BUILD_OUTPUT_DIRECTORY, BUILD_NAME);
-                cmd := string.["./thirdparty/wasm64232.exe", "-o", wasm32_path, wasm64_path];
+                cmd := string.["./modules/yae/thirdparty/wasm64232.exe", "-o", wasm32_path, wasm64_path];
                 log("%", cmd);
                 run_command(..cmd, capture_and_return_output= true, print_captured_output= true);
                 file_delete(wasm64_path);
