@@ -1,6 +1,3 @@
 [submodule "modules/yae"]
 	path = modules/yae
 	url = git@github.com:Grouflon/yae-jai.git
-[submodule "modules/raylib"]
-	path = modules/raylib
-	url = git@github.com:Grouflon/raylib-jai.git

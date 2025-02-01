@@ -29,6 +29,10 @@
 					"name" : "build & debug",
 					"shell_cmd" : "jai build.jai - compile debug",
 				},
+				{
+					"name" : "wasm - build",
+					"shell_cmd" : "jai build.jai - compile wasm",
+				},
 			]
 		}
 	]
