@@ -37,21 +37,37 @@ bootstrap_update :: (dt: float)
         log("right released");
     }
 
+    width, height: = get_window_size();
+    push_camera(Camera.{
+        position = .{},
+        rotation = .{},
+        type = .ORTHOGRAPHIC,
+        orthographic = .{
+            top = 0,
+            left = 0,
+            bottom = height,
+            right = width,
+            near = -1,
+            far = -1
+        }
+    });
+    defer pop_camera();
+
     begin_draw();
+    defer end_draw();
 
     clear_color(.{0.0, 1.0, 0.0, 1.0});
 
-    v1: = rotate(.{-0.5, -0.5 }, time);
-    v2: = rotate(.{0.5, -0.5 }, time);
-    v3: = rotate(.{0.0, 0.5 }, time);
+    triangle_position: = Vector3.{400, 300, 0};
+    v1: = rotate(.{-100, -100}, time);
+    v2: = rotate(.{100, -100}, time);
+    v3: = rotate(.{0, 100}, time);
     triangle: = Vertex.[
-        .{.{v1.x, v1.y, 0.0}, .{0.0, 0.0}, .{1.0, 0.0, 0.0, 1.0} },
-        .{.{v2.x, v2.y, 0.0}, .{0.0, 1.0}, .{0.0, 1.0, 0.0, 1.0} },
-        .{.{v3.x, v3.y, 0.0}, .{1.0, 1.0}, .{0.0, 0.0, 1.0, 1.0} },
+        .{triangle_postion + .{v1.x, v1.y, 0.0}, .{0.0, 0.0}, .{1.0, 0.0, 0.0, 1.0} },
+        .{triangle_postion + .{v2.x, v2.y, 0.0}, .{0.0, 1.0}, .{0.0, 1.0, 0.0, 1.0} },
+        .{triangle_postion + .{v3.x, v3.y, 0.0}, .{1.0, 1.0}, .{0.0, 0.0, 1.0, 1.0} },
     ];
     draw_triangle(triangle);
-
-    end_draw();
 }
 
 bootstrap_shutdown :: ()
