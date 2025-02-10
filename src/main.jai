@@ -1,7 +1,46 @@
-// Build Parameters
+// === Build Parameters ===
 DEBUG_MEMORY :: (OS != .WASM);
 
+// === Main ===
+main :: ()
+{
+    // normalize working directory
+    #if OS != .WASM
+    {
+        exe_directory: = path_strip_filename(get_path_of_running_executable());
+        root_directory: = tprint("%/..", exe_directory);
+        set_working_directory(root_directory);
+    }
+
+    // Run application
+    params: = ApplicationParameters.{
+        width = 800,
+        height = 600,
+        name = "Bootstrap",
+
+        preload_function = bootstrap_preload,
+        init_function = bootstrap_init,
+        update_function = bootstrap_update,
+        shutdown_function = bootstrap_shutdown,
+    };
+    application_run(params);
+
+    // Memory leak check
+    #if DEBUG_MEMORY
+    {
+        report: = make_leak_report();
+        if report.sorted_summaries.count
+        {
+            log_error("\n=========\nMemory Leak!!\n=========");
+            log_leak_report(report);
+            assert(false);
+        }
+    }
+}
+
+// === Game ===
 TEXTURE_PATH :: "data/oro_avatar.png";
+texture: Texture;
 
 bootstrap_preload :: ()
 {
@@ -11,9 +50,7 @@ bootstrap_preload :: ()
 
 bootstrap_init :: ()
 {
-    texture: = create_texture(TEXTURE_PATH);
-    bind_texture(texture, 0);
-    shader_uniform_texture(0, "uTexture", 0);
+    texture_load(*texture, TEXTURE_PATH);
 }
 
 time: float;
@@ -51,11 +88,8 @@ bootstrap_update :: (dt: float)
             far = 10
         }
     };
-    m: = camera_to_vp_matrix(camera);
-    push_camera(camera);
-    defer pop_camera();
 
-    begin_draw();
+    begin_draw(camera);
     defer end_draw();
 
     clear_color(.{0.0, 1.0, 0.0, 1.0});
@@ -70,58 +104,24 @@ bootstrap_update :: (dt: float)
         .{triangle_position + .{v3.x, v3.y, 0.0}, .{1.0, 1.0}, .{0.0, 0.0, 1.0, 1.0} },
     ];
 
-    draw_triangle(triangle);
+    renderer_draw_command(triangle, .[0, 1, 2], texture.handle);
+    draw_sprite(texture, .{300, 200});
 }
 
 bootstrap_shutdown :: ()
 {
     log("shutdown");
+    texture_unload(*texture);
 }
 
-main :: ()
-{
-    #if OS != .WASM
-    {
-        // normalize working directory
-        {
-            exe_directory: = path_strip_filename(get_path_of_running_executable());
-            root_directory: = tprint("%/..", exe_directory);
-            set_working_directory(root_directory);
-        }
-    }
-
-    params: = ApplicationParameters.{
-        width = 800,
-        height = 600,
-        name = "Bootstrap",
-
-        preload_function = bootstrap_preload,
-        init_function = bootstrap_init,
-        update_function = bootstrap_update,
-        shutdown_function = bootstrap_shutdown,
-    };
-
-    application_run(params);
-
-    #if DEBUG_MEMORY
-    {
-        report: = make_leak_report();
-        if report.sorted_summaries.count
-        {
-            log_error("\n=========\nMemory Leak!!\n=========");
-            log_leak_report(report);
-            assert(false);
-        }
-    }
-}
-
+// === Loads ===
 #if OS == .WASM
 {
     #load "../modules/yae/wasm_export.jai";
 }
 
+// === Imports ===
 #scope_file
-
 #import "Basic"()(MEMORY_DEBUGGER = DEBUG_MEMORY);
 #import "String";
 #import "System";
