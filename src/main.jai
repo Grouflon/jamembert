@@ -73,6 +73,16 @@ bootstrap_update :: (dt: float)
     {
         log("right released");
     }
+    if input_button_states[Key_Code.MOUSE_BUTTON_LEFT] & .START
+    {
+        log("mouse pressed");
+    }
+    if input_button_states[Key_Code.MOUSE_BUTTON_LEFT] & .END
+    {
+        log("mouse released");
+    }
+    p: = get_mouse_position();
+    // log("% %", p.x, p.y);
 
     width, height: = get_viewport_size();
     camera: = Camera.{
