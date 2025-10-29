@@ -1,0 +1,22 @@
+{
+	"app": {
+		"app_window_rect": {
+			"h": 628,
+			"w": 901,
+			"x": 333,
+			"y": 205
+		},
+		"console_window_rect": {
+			"h": 600,
+			"w": 800,
+			"x": 50,
+			"y": 80
+		},
+		"debugger_window_rect": {
+			"h": 880,
+			"w": 1477,
+			"x": -7,
+			"y": -7
+		}
+	}
+}

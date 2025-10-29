@@ -1,6 +1,6 @@
 #run build();
 
-BUILD_NAME :: "bootstrap";
+BUILD_NAME :: "jamembert";
 BUILD_OUTPUT_DIRECTORY :: "bin";
 
 build :: ()
@@ -59,7 +59,7 @@ build :: ()
                 //  -rluba, 2023-11-15
                 walloc_object_file_path := tprint("%/examples/wasm/walloc.o", compiler_get_base_path());
                 print("%\n", walloc_object_file_path);
-                options.output_executable_name = tprint("%0%0064", BUILD_NAME);
+                // options.output_executable_name = tprint("%0%0064", BUILD_NAME);
 
                 STACK_SIZE :: 24 * 1024;
                 options.additional_linker_arguments = .[
@@ -70,6 +70,7 @@ build :: ()
                 ];
 
                 import_path : [..]string;
+                array_add(*import_path, tprint("%/modules/yae/modules", #filepath));
                 array_add(*import_path, ..options.import_path);
                 array_add(*import_path, ...[
                     tprint("%/examples/wasm/modules", compiler_get_base_path()),
@@ -94,6 +95,9 @@ build :: ()
         while true
         {
             message: = compiler_wait_for_message();
+
+            yae_notify_compiler_message(w, message);
+            
             if message.kind == {
                 case .ERROR; error_count += 1;
                 case .COMPLETE;
@@ -123,12 +127,12 @@ build :: ()
             case .WASM;
             {
                 // Convert wasm64 to wasm32
-                wasm64_path: = tprint("./%1/%2%0064.wasm", BUILD_OUTPUT_DIRECTORY, BUILD_NAME);
-                wasm32_path: = tprint("./%1/%2.wasm", BUILD_OUTPUT_DIRECTORY, BUILD_NAME);
-                cmd := string.["./modules/yae/thirdparty/wasm64232.exe", "-o", wasm32_path, wasm64_path];
-                log("%", cmd);
-                run_command(..cmd, capture_and_return_output= true, print_captured_output= true);
-                file_delete(wasm64_path);
+                // wasm64_path: = tprint("./%1/%2%0064.wasm", BUILD_OUTPUT_DIRECTORY, BUILD_NAME);
+                // wasm32_path: = tprint("./%1/%2.wasm", BUILD_OUTPUT_DIRECTORY, BUILD_NAME);
+                // cmd := string.["./modules/yae/thirdparty/wasm64232.exe", "-o", wasm32_path, wasm64_path];
+                // log("%", cmd);
+                // run_command(..cmd, capture_and_return_output= true, print_captured_output= true);
+                // file_delete(wasm64_path);
             }
         }
     }
@@ -157,7 +161,7 @@ build :: ()
 }
 
 #import "Basic";
-#import "File";
-#import "File_Utilities";
+File :: #import "File";
 #import "Compiler";
 #import "Process";
+#import "yae";
