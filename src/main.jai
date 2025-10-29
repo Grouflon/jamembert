@@ -30,15 +30,16 @@ main :: ()
         // Draw
         ()
         {
+            w, h: = get_viewport_size();
             camera: = Camera.{
                 position = .{},
                 rotation = .{},
                 type = .ORTHOGRAPHIC,
                 orthographic = .{
-                    top = xx get_window_height(),
+                    top = xx w,
                     left = 0,
                     bottom = 0,
-                    right = xx get_window_width(),
+                    right = xx h,
                     near = -10,
                     far = 10
                 }

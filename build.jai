@@ -24,6 +24,13 @@ build :: ()
     // Make bin directory
     make_directory_if_it_does_not_exist(BUILD_OUTPUT_DIRECTORY, recursive = true);
 
+    // Kill previous process
+    #if OS == .WINDOWS
+    {
+        exe_path: = tprint("%/%.exe", BUILD_OUTPUT_DIRECTORY, BUILD_NAME);
+        kill_process_by_path(exe_path);
+    }
+
     // Compile
     if compile
     {
@@ -140,7 +147,6 @@ build :: ()
     // Run
     if os_target == .WINDOWS
     {
-        exe_path: = tprint("%/%.exe", BUILD_OUTPUT_DIRECTORY, BUILD_NAME);
         if debug
         {
             cmd: []string = .[
@@ -153,9 +159,9 @@ build :: ()
         }
         else if run
         {
-            result, output_string: = run_command(exe_path, capture_and_return_output= true);
-            print("\n");
-            log(output_string);
+            process: Process;
+            args: []string = .["cmd", "/C", "start", get_absolute_path(exe_path)];
+            result: = create_process(*process, ..args, kill_process_if_parent_exits= false);
         }
     }
 }
