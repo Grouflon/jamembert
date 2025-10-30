@@ -65,10 +65,10 @@ build :: ()
                 // We should probably port this allocator to Jai instead…
                 //  -rluba, 2023-11-15
                 walloc_object_file_path := tprint("%/examples/wasm/walloc.o", compiler_get_base_path());
-                print("%\n", walloc_object_file_path);
+                // print("%\n", walloc_object_file_path);
                 // options.output_executable_name = tprint("%0%0064", BUILD_NAME);
 
-                STACK_SIZE :: 24 * 1024;
+                STACK_SIZE :: 32 * 1024;
                 options.additional_linker_arguments = .[
                     "--stack-first", "-z", tprint("stack-size=%", STACK_SIZE),
                     "--export-table",
@@ -133,13 +133,11 @@ build :: ()
         {
             case .WASM;
             {
-                // Convert wasm64 to wasm32
-                // wasm64_path: = tprint("./%1/%2%0064.wasm", BUILD_OUTPUT_DIRECTORY, BUILD_NAME);
-                // wasm32_path: = tprint("./%1/%2.wasm", BUILD_OUTPUT_DIRECTORY, BUILD_NAME);
-                // cmd := string.["./modules/yae/thirdparty/wasm64232.exe", "-o", wasm32_path, wasm64_path];
-                // log("%", cmd);
-                // run_command(..cmd, capture_and_return_output= true, print_captured_output= true);
-                // file_delete(wasm64_path);
+                wasm_path: = tprint("%/%.wasm", BUILD_OUTPUT_DIRECTORY, BUILD_NAME);
+                cmd := string.["./modules/yae/third_party/wasm-opt.exe", wasm_path, "--asyncify", "-o", wasm_path];
+                log("%", cmd);
+                run_command(..cmd, capture_and_return_output= true, print_captured_output= true);
+                // File.file_delete(temp_wasm_path);
             }
         }
     }
