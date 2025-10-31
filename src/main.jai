@@ -23,11 +23,11 @@ main :: ()
 
 update :: (dt: float)
 {
-    if input_button_states[Key_Code.ARROW_LEFT] & .DOWN
+    if is_key_down(.ARROW_LEFT)
     {
         angle += dt;
     }
-    if input_button_states[Key_Code.ARROW_RIGHT] & .DOWN
+    if is_key_down(.ARROW_RIGHT)
     {
         angle -= dt;
     }
