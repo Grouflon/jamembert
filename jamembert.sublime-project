@@ -33,6 +33,10 @@
 					"name" : "wasm - build",
 					"shell_cmd" : "jai build.jai - compile wasm",
 				},
+				{
+					"name" : "wasm - run web server",
+					"shell_cmd" : "cmd /C start run_web_server.bat",
+				},
 			]
 		}
 	]
