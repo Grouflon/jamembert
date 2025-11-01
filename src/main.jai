@@ -23,11 +23,11 @@ main :: ()
 
 update :: (dt: float)
 {
-    if is_key_down(.ARROW_LEFT)
+    if is_down(.ARROW_LEFT)
     {
         angle += dt;
     }
-    if is_key_down(.ARROW_RIGHT)
+    if is_down(.ARROW_RIGHT)
     {
         angle -= dt;
     }
@@ -36,15 +36,16 @@ update :: (dt: float)
 draw :: ()
 {
     w, h: = get_viewport_size();
+    half_size: = Vector2.{xx w, xx h} / 2;
     camera: = Camera.{
-        position = .{-cast(float)w/2, -cast(float)h/2, 0},
+        position = .{},
         rotation = .{},
         type = .ORTHOGRAPHIC,
         orthographic = .{
-            top = xx h,
-            left = 0,
-            bottom = 0,
-            right = xx w,
+            top = half_size.y,
+            left = -half_size.x,
+            bottom = -half_size.y,
+            right = half_size.x,
             near = -10,
             far = 10
         }
