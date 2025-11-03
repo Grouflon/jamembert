@@ -9,25 +9,26 @@ main :: ()
 {
     register_resources(*resources);
 
-    // note: can we remove the compile time argument with a macro ?
+    // Init
     yae_init(*YAE_COMPILE_TIME_INFO, 800, 600, "jamembert");
-
     load_all_resources();
 
+    // Loop
     yae_loop(update, draw);
     if OS == .WASM return; // wasm needs to exit immediately. Everything will happen async later
 
+    // Shutdown
     unload_all_resources();
     yae_shutdown();
 }
 
 update :: (dt: float)
 {
-    if is_down(.ARROW_LEFT)
+    if is_down(#char "a")
     {
         angle += dt;
     }
-    if is_down(.ARROW_RIGHT)
+    if is_down(#char "d")
     {
         angle -= dt;
     }
@@ -76,6 +77,7 @@ draw :: ()
 // === Loads ===
 #if OS == .WASM
 {
+    // @NOTE(remi): We can remove this with functions that send callbacks as argument to wasm
     #load "../modules/yae/wasm_export.jai";
 }
 
