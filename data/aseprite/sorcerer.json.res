@@ -1,0 +1,3 @@
+{
+	"texture": "sorcerer_texture"
+}

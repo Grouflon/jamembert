@@ -1,9 +1,12 @@
 resources: struct
 {
-    oro: TextureFile = .{ path = "./data/oro_avatar.png" };
+    // oro: TextureFile = .{ path = "./data/oro_avatar.png" };
+    sorcerer_texture: TextureFile = .{ path = "./data/aseprite/sorcerer.png" };
+    sorcerer_aseprite: AsepriteFile = .{ path = "./data/aseprite/sorcerer.json" };
 };
 
 angle: float;
+player: AsepriteAnimationPlayer;
 
 main :: ()
 {
@@ -12,6 +15,8 @@ main :: ()
     // Init
     yae_init(*YAE_COMPILE_TIME_INFO, 800, 600, "jamembert");
     load_all_resources();
+
+    animation_player_play(*player, *resources.sorcerer_aseprite, "walk");
 
     // Loop
     yae_loop(update, draw);
@@ -32,6 +37,8 @@ update :: (dt: float)
     {
         angle -= dt;
     }
+
+    animation_player_update(*player, dt);
 }
 
 draw :: ()
@@ -56,21 +63,27 @@ draw :: ()
         begin_camera(camera);
         defer end_camera();
 
-        clear_background(GREEN);
+        clear_background(.{0,30,61,255});
 
-        triangle_radius: = 100.0;
-        v1: = rotate(.{0, triangle_radius}, angle);
-        v2: = rotate(.{0, triangle_radius}, angle + D2R * 120);
-        v3: = rotate(.{0, triangle_radius}, angle + D2R * 240);
-        triangle_position: = Vector3.{0, 0, 0};
-        triangle: = Vertex.[
-            .{triangle_position + .{v1.x, v1.y, 0.0}, .{0.0, 0.0}, .{1.0, 0.0, 0.0, 1.0} },
-            .{triangle_position + .{v2.x, v2.y, 0.0}, .{0.0, 1.0}, .{0.0, 1.0, 0.0, 1.0} },
-            .{triangle_position + .{v3.x, v3.y, 0.0}, .{1.0, 1.0}, .{0.0, 0.0, 1.0, 1.0} },
-        ];
+        begin_transform();
+        defer end_transform();
 
-        draw_command(triangle, .[0, 1, 2], resources.oro.texture.handle);
-        draw_sprite(.{100, 100, 0}, resources.oro.texture, .{20, 20, 200, 200}, .{0,0, 100, 100}, false, false, RED);
+        transform_scale(.{5,5,1});
+        animation_player_draw(*player, .{0,0,0});
+
+        // triangle_radius: = 100.0;
+        // v1: = rotate(.{0, triangle_radius}, angle);
+        // v2: = rotate(.{0, triangle_radius}, angle + D2R * 120);
+        // v3: = rotate(.{0, triangle_radius}, angle + D2R * 240);
+        // triangle_position: = Vector3.{0, 0, 0};
+        // triangle: = Vertex.[
+        //     .{triangle_position + .{v1.x, v1.y, 0.0}, .{0.0, 0.0}, .{1.0, 0.0, 0.0, 1.0} },
+        //     .{triangle_position + .{v2.x, v2.y, 0.0}, .{0.0, 1.0}, .{0.0, 1.0, 0.0, 1.0} },
+        //     .{triangle_position + .{v3.x, v3.y, 0.0}, .{1.0, 1.0}, .{0.0, 0.0, 1.0, 1.0} },
+        // ];
+
+        // draw_command(triangle, .[0, 1, 2], resources.oro.texture.handle);
+        // draw_sprite(.{100, 100, 0}, resources.oro.texture, .{20, 20, 200, 200}, .{0,0, 100, 100}, false, false, RED);
     }
 }
 
