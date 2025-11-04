@@ -1,12 +1,13 @@
 resources: struct
 {
-    // oro: TextureFile = .{ path = "./data/oro_avatar.png" };
     sorcerer_texture: TextureFile = .{ path = "./data/aseprite/sorcerer.png" };
     sorcerer_aseprite: AsepriteFile = .{ path = "./data/aseprite/sorcerer.json" };
 };
 
-angle: float;
-player: AsepriteAnimationPlayer;
+sorcerer: Entity;
+movement: MovementComponent = .{ owner = *sorcerer, speed = 200.0 };
+animation_player: AsepriteAnimationPlayer;
+
 
 main :: ()
 {
@@ -15,8 +16,6 @@ main :: ()
     // Init
     yae_init(*YAE_COMPILE_TIME_INFO, 800, 600, "jamembert");
     load_all_resources();
-
-    animation_player_play(*player, *resources.sorcerer_aseprite, "walk");
 
     // Loop
     yae_loop(update, draw);
@@ -29,16 +28,16 @@ main :: ()
 
 update :: (dt: float)
 {
-    if is_down(#char "a")
+    mouse_pos: = get_mouse_position();
+    world_pos: = screen_to_world(mouse_pos);
+    if is_pressed(.MOUSE_BUTTON_LEFT)
     {
-        angle += dt;
-    }
-    if is_down(#char "d")
-    {
-        angle -= dt;
+        movement_component_go_to(*movement, world_pos);
     }
 
-    animation_player_update(*player, dt);
+    movement_component_update(*movement, dt);
+    animation_player_play(*animation_player, *resources.sorcerer_aseprite, ifx movement.is_moving then "walk" else "idle");
+    animation_player_update(*animation_player, dt);
 }
 
 draw :: ()
@@ -68,23 +67,17 @@ draw :: ()
         begin_transform();
         defer end_transform();
 
+        transform_translate(sorcerer.position);
         transform_scale(.{5,5,1});
-        animation_player_draw(*player, .{0,0,0});
-
-        // triangle_radius: = 100.0;
-        // v1: = rotate(.{0, triangle_radius}, angle);
-        // v2: = rotate(.{0, triangle_radius}, angle + D2R * 120);
-        // v3: = rotate(.{0, triangle_radius}, angle + D2R * 240);
-        // triangle_position: = Vector3.{0, 0, 0};
-        // triangle: = Vertex.[
-        //     .{triangle_position + .{v1.x, v1.y, 0.0}, .{0.0, 0.0}, .{1.0, 0.0, 0.0, 1.0} },
-        //     .{triangle_position + .{v2.x, v2.y, 0.0}, .{0.0, 1.0}, .{0.0, 1.0, 0.0, 1.0} },
-        //     .{triangle_position + .{v3.x, v3.y, 0.0}, .{1.0, 1.0}, .{0.0, 0.0, 1.0, 1.0} },
-        // ];
-
-        // draw_command(triangle, .[0, 1, 2], resources.oro.texture.handle);
-        // draw_sprite(.{100, 100, 0}, resources.oro.texture, .{20, 20, 200, 200}, .{0,0, 100, 100}, false, false, RED);
+        animation_player_draw(*animation_player, .{-8, -8, 0});
     }
+}
+
+screen_to_world :: (position: Vector2) -> Vector2
+{
+    w, h: = get_viewport_size();
+    half_size: = Vector2.{xx w, xx h} / 2;
+    return .{position.x - half_size.x, half_size.y - position.y};
 }
 
 // === Loads ===
@@ -93,6 +86,8 @@ draw :: ()
     // @NOTE(remi): We can remove this with functions that send callbacks as argument to wasm
     #load "../modules/yae/wasm_export.jai";
 }
+
+#load "components/movement_component.jai";
 
 // === Imports ===
 #scope_file
