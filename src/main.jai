@@ -70,7 +70,7 @@ draw :: ()
         ];
 
         draw_command(triangle, .[0, 1, 2], resources.oro.texture.handle);
-        draw_sprite(.{10, 10, 0}, resources.oro.texture, .{}, .{}, true, true, RED);
+        draw_sprite(.{100, 100, 0}, resources.oro.texture, .{20, 20, 200, 200}, .{0,0, 100, 100}, false, false, RED);
     }
 }
 
