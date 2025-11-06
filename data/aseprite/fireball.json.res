@@ -1,0 +1,3 @@
+{
+	"texture": "fireball_texture"
+}
