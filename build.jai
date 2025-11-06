@@ -16,6 +16,7 @@ build :: ()
     debug := array_find(args, "debug");
     wasm := array_find(args, "wasm");
     optimize := array_find(args, "optimize");
+    export := array_find(args, "export");
 
     // Set build type
     os_target: Operating_System_Tag = OS;
@@ -24,11 +25,19 @@ build :: ()
     // Make bin directory
     make_directory_if_it_does_not_exist(BUILD_OUTPUT_DIRECTORY, recursive = true);
 
+
+    extension: string;
+    if os_target ==
+    {
+        case .WINDOWS; extension = "exe";
+        case .WASM; extension = "wasm";
+    }
+    executable_path: = tprint("%/%.%", BUILD_OUTPUT_DIRECTORY, BUILD_NAME, extension);
+
     // Kill previous process
     #if OS == .WINDOWS
     {
-        exe_path: = tprint("%/%.exe", BUILD_OUTPUT_DIRECTORY, BUILD_NAME);
-        kill_process_by_path(exe_path);
+        kill_process_by_path(executable_path);
     }
 
     // Compile
@@ -133,12 +142,47 @@ build :: ()
         {
             case .WASM;
             {
-                wasm_path: = tprint("%/%.wasm", BUILD_OUTPUT_DIRECTORY, BUILD_NAME);
-                cmd := string.["./modules/yae/third_party/wasm-opt.exe", wasm_path, "--asyncify", "-o", wasm_path];
+                // Patch wasm to add asyncify routines
+                cmd := string.["./modules/yae/third_party/wasm-opt.exe", executable_path, "--asyncify", "-o", executable_path];
                 log("%", cmd);
                 run_command(..cmd, capture_and_return_output= true, print_captured_output= true);
-                // File.file_delete(temp_wasm_path);
             }
+        }
+    }
+
+    // Export
+    if export
+    {
+        if os_target == .WASM
+        {
+            log("Exporting...");
+
+            export_dir: = "./export/web";
+            File.delete_directory(export_dir);
+            make_directory_if_it_does_not_exist(export_dir, true);
+
+            // data
+            File_Utilities.copy_directory("./data", tprint("%/data", export_dir));
+            make_directory_if_it_does_not_exist(tprint("%/modules/yae", export_dir), true);
+            File_Utilities.copy_directory("./modules/yae/data", tprint("%/modules/yae/data", export_dir));
+            log("Copied data.");
+
+            // bin
+            make_directory_if_it_does_not_exist(tprint("%/%", export_dir, BUILD_OUTPUT_DIRECTORY));
+            File_Utilities.copy_file(executable_path, tprint("%/%", export_dir, executable_path));
+            log("Copied binaries.");
+
+            // index
+            File_Utilities.copy_file("./index.html", tprint("%/index.html", export_dir));
+            log("Copied index.");
+
+            log("Archiving export...");
+            zip_target: = tprint("%_web.zip", BUILD_NAME);
+            cmd := string.[tprint("%/modules/yae/third_party/7z.exe", get_absolute_path(".")), "a", "-tzip", zip_target, "*.*", "-r"];
+            log("%", cmd);
+            run_command(..cmd, export_dir, capture_and_return_output= true, print_captured_output= true);
+
+            log("Exported to \"%\"(%/%)", export_dir, export_dir, zip_target);
         }
     }
 
@@ -158,7 +202,7 @@ build :: ()
         else if run
         {
             process: Process;
-            args: []string = .["cmd", "/C", "start", get_absolute_path(exe_path)];
+            args: []string = .["cmd", "/C", "start", get_absolute_path(executable_path)];
             result: = create_process(*process, ..args, kill_process_if_parent_exits= false);
         }
     }
@@ -166,6 +210,7 @@ build :: ()
 
 #import "Basic";
 File :: #import "File";
+File_Utilities :: #import "File_Utilities";
 #import "Compiler";
 #import "Process";
 #import "yae";

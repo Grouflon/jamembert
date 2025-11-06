@@ -2,6 +2,7 @@
 	"folders":
 	[
 		{
+			"folder_exclude_patterns": ["//bin", "//export"],
 			"path": ".",
 		},
 		{
@@ -36,6 +37,10 @@
 				{
 					"name" : "wasm - run web server",
 					"shell_cmd" : "cmd /C start run_web_server.bat",
+				},
+				{
+					"name" : "wasm - export",
+					"shell_cmd" : "jai build.jai - compile wasm export",
 				},
 			]
 		}
