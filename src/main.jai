@@ -20,13 +20,13 @@ Fireball :: struct
 
 sorcerer: Entity;
 
-fireballs: [32]Fireball;
+fireballs: [64]Fireball;
 
 fireball_init :: (using fireball: *Fireball)
 {
     <<fireball = .{};
     movement.owner = fireball;
-    movement.speed = 400;
+    movement.speed = 80;
 
     animation_player_play(*animation, *resources.fireball_aseprite, "idle");
 }
@@ -59,7 +59,7 @@ shoot_fireball :: (start: Vector2, end: Vector2) -> *Fireball
     return null;
 }
 
-movement: MovementComponent = .{ owner = *sorcerer, speed = 200.0 };
+movement: MovementComponent = .{ owner = *sorcerer, speed = 40 };
 animation_player: AsepriteAnimationPlayer;
 
 init :: ()
@@ -74,16 +74,16 @@ shutdown :: ()
 
 update :: (dt: float)
 {
-    mouse_pos: = get_mouse_position();
-    world_pos: = screen_to_world(mouse_pos);
+    mouse_screen_pos: = get_mouse_position();
+    mouse_world_pos: = screen_to_world(mouse_screen_pos);
     if is_down(.MOUSE_BUTTON_LEFT)
     {
-        movement_component_go_to(*movement, world_pos);
+        movement_component_go_to(*movement, mouse_world_pos);
     }
 
     if is_pressed(.MOUSE_BUTTON_RIGHT)
     {
-        f: = shoot_fireball(sorcerer.position.xy, world_pos);
+        f: = shoot_fireball(sorcerer.position.xy, mouse_world_pos);
     }
 
     movement_component_update(*movement, dt);
@@ -98,10 +98,12 @@ update :: (dt: float)
     }
 }
 
+DRAW_SCALE :: 5;
+
 draw :: ()
 {
     w, h: = get_viewport_size();
-    half_size: = Vector2.{xx w, xx h} / 2;
+    half_size: = Vector2.{xx w, xx h} / (2 * DRAW_SCALE);
     camera: = Camera.{
         position = .{},
         rotation = .{},
@@ -122,14 +124,12 @@ draw :: ()
 
         clear_background(.{0,30,61,255});
 
-        DRAW_SCALE :: Vector3.{5, 5, 1};
 
         {
             begin_transform();
             defer end_transform();
 
             transform_translate(sorcerer.position);
-            transform_scale(DRAW_SCALE);
             animation_player_draw(*animation_player, .{-8, -8, 0});
         }
 
@@ -141,7 +141,11 @@ draw :: ()
             defer end_transform();
 
             transform_translate(f.position);
-            transform_scale(DRAW_SCALE);
+            r: Quaternion;
+            a: = signed_angle_between(f.movement.target - f.position.xy, .{1,0});
+            set_from_axis_and_angle(*r, .{0,0,1}, a);
+            transform_rotate(r);
+
             animation_player_draw(*f.animation, .{-8, -8, 0});
         }
     }
@@ -150,8 +154,8 @@ draw :: ()
 screen_to_world :: (position: Vector2) -> Vector2
 {
     w, h: = get_viewport_size();
-    half_size: = Vector2.{xx w, xx h} / 2;
-    return .{position.x - half_size.x, half_size.y - position.y};
+    half_size: = (Vector2.{xx w, xx h} / 2);
+    return Vector2.{position.x - half_size.x, half_size.y - position.y} / DRAW_SCALE;
 }
 
 
