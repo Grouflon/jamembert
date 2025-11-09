@@ -7,11 +7,12 @@
 #load "actors/fireball.jai";
 #load "actors/tree.jai";
 
-sorcerer: *Actor;
+sorcerer: ActorID;
 
 init :: ()
 {
     load_all_resources();
+    pool_init(*actors, 200, true);
 
     sorcerer = create_actor(*sorcerer_definition);
 
@@ -20,6 +21,7 @@ init :: ()
 
 shutdown :: ()
 {
+    pool_shutdown(*actors);
     unload_all_resources();
 }
 
@@ -29,12 +31,12 @@ update :: (dt: float)
     mouse_world_pos: = screen_to_world(mouse_screen_pos);
     if is_down(.MOUSE_BUTTON_LEFT)
     {
-        movement_component_go_to(*sorcerer.movement, mouse_world_pos);
+        movement_component_go_to(*get(sorcerer).movement, mouse_world_pos);
     }
 
-    if is_pressed(.MOUSE_BUTTON_RIGHT)
+    if is_down(.MOUSE_BUTTON_RIGHT)
     {
-        f: = shoot_fireball(sorcerer.position.xy, mouse_world_pos);
+        f: = shoot_fireball(get(sorcerer).position.xy, mouse_world_pos);
     }
 
     actors_update(dt);

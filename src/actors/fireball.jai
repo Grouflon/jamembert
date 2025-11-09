@@ -32,9 +32,9 @@ fireball_draw :: (using actor: *Actor)
 {
 }
 
-shoot_fireball :: (start: Vector2, end: Vector2) -> *Actor
+shoot_fireball :: (start: Vector2, end: Vector2) -> ActorID
 {
     f: = create_actor(*fireball_definition, start);
-    movement_component_go_to(*f.movement, end);
+    movement_component_go_to(*get(f).movement, end);
     return f;
 }

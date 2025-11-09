@@ -1,7 +1,11 @@
+ActorID :: PoolID(Actor);
+
 Actor :: struct
 {
     #as using e:Entity;
     angle: float;
+
+    id: ActorID;
 
     definition: *ActorDefinition;
 
@@ -12,9 +16,10 @@ Actor :: struct
     idle_animation: AsepriteAnimationHandle;
     move_animation: AsepriteAnimationHandle;
 
-    should_delete: bool;
+    colliders: [..]PoolID(Collider);
 }
-actors: [..]*Actor;
+actors: Pool(Actor);
+to_delete_actors: [..]ActorID;
 
 ActorDefinition :: struct
 {
@@ -28,23 +33,33 @@ ActorDefinition :: struct
     move_animation: AsepriteAnimation;
 }
 
-create_actor :: (definition: *ActorDefinition = null, position: Vector2 = .{}) -> *Actor
+create_actor :: (definition: *ActorDefinition = null, position: Vector2 = .{}) -> ActorID
 {
-    actor: = New(Actor);
-    array_add(*actors, actor);
+    pos: = position; // Prevent argument given by ref invalidated by the growing array crash
+    id, actor: = pool_add(*actors);
 
-    actor.position = .{position.x, position.y, 0};
-    actor.movement.owner = actor;
+    actor.id = id;
+    actor.position = .{pos.x, pos.y, 0};
+    actor.movement.owner_id = id;
 
     actor_set_definition(actor, definition);
 
-    return actor;
+    return id;
+}
+
+delete_actor :: (actor: ActorID)
+{
+    for id: to_delete_actors
+    {
+        if id == actor return;
+    }
+    array_add(*to_delete_actors, actor);
 }
 
 delete_actor :: (actor: *Actor)
 {
     assert(actor != null);
-    actor.should_delete = true;
+    delete_actor(actor.id);
 }
 
 actor_set_definition :: (actor: *Actor, definition: *ActorDefinition)
@@ -107,7 +122,7 @@ actor_shutdown :: (using actor: *Actor)
 
 actors_update :: (dt: float)
 {
-    for actor: actors
+    for *actor: actors
     {
         if !actor.active continue;
         if actor.definition == null continue;
@@ -115,19 +130,17 @@ actors_update :: (dt: float)
         actor_update(actor, dt);
     }
 
-    for actor: actors
+    for id: to_delete_actors
     {
-        if !actor.should_delete continue;
-
-        actor_set_definition(actor, null);
-        free(actor);
-        remove actor;
+        actor_set_definition(get(id), null);
+        pool_remove(*actors, id);
     }
+    to_delete_actors.count = 0;
 }
 
 actors_draw :: ()
 {
-    for actor: actors
+    for *actor: actors
     {
         if !actor.active continue;
         if actor.definition == null continue;
