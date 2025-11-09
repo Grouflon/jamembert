@@ -1,70 +1,21 @@
+#load "resources.jai";
+#load "actor.jai";
+
 #load "components/movement_component.jai";
 
-resources: struct
-{
-    sorcerer_texture: TextureFile = .{ path = "data://aseprite/sorcerer.png" };
-    sorcerer_aseprite: AsepriteFile = .{ path = "data://aseprite/sorcerer.json" };
+#load "actors/sorcerer.jai";
+#load "actors/fireball.jai";
+#load "actors/tree.jai";
 
-    fireball_texture: TextureFile = .{ path = "data://aseprite/fireball.png" };
-    fireball_aseprite: AsepriteFile = .{ path = "data://aseprite/fireball.json" };
-};
-
-Fireball :: struct
-{
-    #as using e:Entity;
-
-    movement: MovementComponent;
-    animation: AsepriteAnimationPlayer;
-    active: bool;
-}
-
-sorcerer: Entity;
-
-fireballs: [64]Fireball;
-
-fireball_init :: (using fireball: *Fireball)
-{
-    <<fireball = .{};
-    movement.owner = fireball;
-    movement.speed = 80;
-
-    animation_player_play(*animation, *resources.fireball_aseprite, "idle");
-}
-
-fireball_update :: (using fireball: *Fireball, dt: float)
-{
-    movement_component_update(*movement, dt);
-    animation_player_update(*animation, dt);
-
-    if !movement.is_moving
-    {
-        active = false;
-        return;
-    }
-}
-
-shoot_fireball :: (start: Vector2, end: Vector2) -> *Fireball
-{
-    for *f: fireballs
-    {
-        if f.active continue;
-
-        fireball_init(f);
-        f.position = .{start.x, start.y, 0.5};
-        movement_component_go_to(*f.movement, end);
-        f.active = true;
-
-        return f;
-    }
-    return null;
-}
-
-movement: MovementComponent = .{ owner = *sorcerer, speed = 40 };
-animation_player: AsepriteAnimationPlayer;
+sorcerer: *Actor;
 
 init :: ()
 {
     load_all_resources();
+
+    sorcerer = create_actor(*sorcerer_definition);
+
+    create_actor(*tree_definition, .{30, 10});
 }
 
 shutdown :: ()
@@ -78,7 +29,7 @@ update :: (dt: float)
     mouse_world_pos: = screen_to_world(mouse_screen_pos);
     if is_down(.MOUSE_BUTTON_LEFT)
     {
-        movement_component_go_to(*movement, mouse_world_pos);
+        movement_component_go_to(*sorcerer.movement, mouse_world_pos);
     }
 
     if is_pressed(.MOUSE_BUTTON_RIGHT)
@@ -86,16 +37,7 @@ update :: (dt: float)
         f: = shoot_fireball(sorcerer.position.xy, mouse_world_pos);
     }
 
-    movement_component_update(*movement, dt);
-    animation_player_play(*animation_player, *resources.sorcerer_aseprite, ifx movement.is_moving then "walk" else "idle");
-    animation_player_update(*animation_player, dt);
-
-    for *f: fireballs
-    {
-        if !f.active continue;
-
-        fireball_update(f, dt);
-    }
+    actors_update(dt);
 }
 
 DRAW_SCALE :: 5;
@@ -124,30 +66,7 @@ draw :: ()
 
         clear_background(.{0,30,61,255});
 
-
-        {
-            begin_transform();
-            defer end_transform();
-
-            transform_translate(sorcerer.position);
-            animation_player_draw(*animation_player, .{-8, -8, 0});
-        }
-
-        for *f: fireballs
-        {
-            if !f.active continue;
-
-            begin_transform();
-            defer end_transform();
-
-            transform_translate(f.position);
-            r: Quaternion;
-            a: = signed_angle_between(f.movement.target - f.position.xy, .{1,0});
-            set_from_axis_and_angle(*r, .{0,0,1}, a);
-            transform_rotate(r);
-
-            animation_player_draw(*f.animation, .{-8, -8, 0});
-        }
+        actors_draw();
     }
 }
 
@@ -157,7 +76,6 @@ screen_to_world :: (position: Vector2) -> Vector2
     half_size: = (Vector2.{xx w, xx h} / 2);
     return Vector2.{position.x - half_size.x, half_size.y - position.y} / DRAW_SCALE;
 }
-
 
 main :: ()
 {

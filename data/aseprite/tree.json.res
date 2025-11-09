@@ -1,0 +1,3 @@
+{
+	"texture": "tree_texture"
+}
