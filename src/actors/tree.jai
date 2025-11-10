@@ -9,6 +9,7 @@ tree_definition : = ActorDefinition.{
 
 tree_init :: (using actor: *Actor)
 {
+    actor_add_collider(actor, .{-2,-7,5,10}, LAYER_BODY, true);
 }
 
 tree_shutdown :: (using actor: *Actor)

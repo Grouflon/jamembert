@@ -11,6 +11,8 @@ sorcerer_definition : = ActorDefinition.{
 sorcerer_init :: (using actor: *Actor)
 {
     actor.movement.speed = 30;
+
+    c: = actor_add_collider(actor, .{-2,-4,3,7}, LAYER_BODY);
 }
 
 sorcerer_shutdown :: (using actor: *Actor)

@@ -7,12 +7,17 @@
 #load "actors/fireball.jai";
 #load "actors/tree.jai";
 
+LAYER_BODY :: 0;
+
 sorcerer: ActorID;
 
 init :: ()
 {
     load_all_resources();
+    physics_init();
     pool_init(*actors, 200, true);
+
+    physics_set_layer_response(LAYER_BODY, LAYER_BODY, .COLLIDE);
 
     sorcerer = create_actor(*sorcerer_definition);
 
@@ -21,7 +26,9 @@ init :: ()
 
 shutdown :: ()
 {
+    delete_all_actors();
     pool_shutdown(*actors);
+    physics_shutdown();
     unload_all_resources();
 }
 
@@ -34,12 +41,13 @@ update :: (dt: float)
         movement_component_go_to(*get(sorcerer).movement, mouse_world_pos);
     }
 
-    if is_down(.MOUSE_BUTTON_RIGHT)
+    if is_pressed(.MOUSE_BUTTON_RIGHT)
     {
         f: = shoot_fireball(get(sorcerer).position.xy, mouse_world_pos);
     }
 
     actors_update(dt);
+    physics_update(dt);
 }
 
 DRAW_SCALE :: 5;

@@ -47,24 +47,34 @@ create_actor :: (definition: *ActorDefinition = null, position: Vector2 = .{}) -
     return id;
 }
 
-delete_actor :: (actor: ActorID)
+request_delete_actor :: (_id: ActorID)
 {
     for id: to_delete_actors
     {
-        if id == actor return;
+        if id == _id return;
     }
-    array_add(*to_delete_actors, actor);
+    array_add(*to_delete_actors, _id);
 }
 
-delete_actor :: (actor: *Actor)
+request_delete_actor :: (actor: *Actor)
 {
     assert(actor != null);
-    delete_actor(actor.id);
+    request_delete_actor(actor.id);
+}
+
+delete_all_actors :: ()
+{
+    for *actor: actors
+    {
+        log("%", << actor);
+        delete_actor(actor);
+    }
 }
 
 actor_set_definition :: (actor: *Actor, definition: *ActorDefinition)
 {
     assert(actor != null);
+    if actor.definition == definition return;
 
     if actor.definition != null
     {
@@ -118,6 +128,8 @@ actor_shutdown :: (using actor: *Actor)
     {
         definition.shutdown(actor);
     }
+
+    actor_remove_all_colliders(actor);
 }
 
 actors_update :: (dt: float)
@@ -132,8 +144,8 @@ actors_update :: (dt: float)
 
     for id: to_delete_actors
     {
-        actor_set_definition(get(id), null);
-        pool_remove(*actors, id);
+        actor: = get(id);
+        delete_actor(actor);
     }
     to_delete_actors.count = 0;
 }
@@ -185,4 +197,45 @@ actor_draw :: (using actor: *Actor)
     {
         definition.draw(actor);
     }
+}
+
+actor_add_collider :: (using actor: *Actor, rect: Rect, layer: u8, static: bool = false) -> PoolID(Collider)
+{
+    collider_id: = physics_add_collider(actor, layer);
+    collider: *Collider = get(collider_id);
+    collider.rect = rect;
+    collider.static = static;
+    array_add(*colliders, collider_id);
+    return collider_id;
+}
+
+actor_remove_collider :: (using actor: *Actor, _id: PoolID(Collider))
+{
+    for id : colliders
+    {
+        if id == _id
+        {
+            remove id;
+            break;
+        }
+    }
+    physics_remove_collider(_id);
+}
+
+actor_remove_all_colliders :: (using actor: *Actor)
+{
+    for id : colliders
+    {
+        physics_remove_collider(id);
+    }
+    colliders.count = 0;
+}
+
+#scope_file
+
+delete_actor :: (using actor: *Actor)
+{
+    actor_set_definition(actor, null);
+    array_free(actor.colliders);
+    pool_remove(*actors, id);
 }

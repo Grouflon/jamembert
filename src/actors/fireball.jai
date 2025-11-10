@@ -21,7 +21,7 @@ fireball_update :: (using actor: *Actor, dt: float)
 {
     if !movement.is_moving
     {
-        delete_actor(actor);
+        request_delete_actor(actor);
         return;
     }
 
