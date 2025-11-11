@@ -9,7 +9,7 @@ fireball_definition : = ActorDefinition.{
 
 FireballData :: struct
 {
-    caster: ActorID;
+    caster: ID(Actor);
 }
 
 fireball_init :: (using actor: *Actor)
@@ -34,9 +34,9 @@ fireball_update :: (using actor: *Actor, dt: float)
 
     angle = signed_angle_between(movement.target - position.xy, .{1,0});
 
-    for o: get(colliders[0]).frame_overlaps
+    for o: colliders[0].frame_overlaps
     {
-        target: = cast(*Actor)get(o).parent;
+        target: = cast(*Actor)o.parent;
         if target.id == fireball.caster continue;
 
         actor_burn(target);

@@ -1,11 +1,10 @@
-ActorID :: PoolID(Actor);
 
 Actor :: struct
 {
     #as using e:Entity;
     angle: float;
 
-    id: ActorID;
+    id: ID(Actor);
 
     definition: *ActorDefinition;
 
@@ -16,7 +15,7 @@ Actor :: struct
     idle_animation: AsepriteAnimationHandle;
     move_animation: AsepriteAnimationHandle;
 
-    colliders: [..]PoolID(Collider);
+    colliders: [..]*Collider;
 
     union {
         fireball: FireballData;
@@ -24,7 +23,7 @@ Actor :: struct
     }
 }
 actors: Pool(Actor);
-to_delete_actors: [..]ActorID;
+to_delete_actors: [..]*Actor;
 
 ActorDefinition :: struct
 {
@@ -42,30 +41,21 @@ ActorDefinition :: struct
 create_actor :: (definition: *ActorDefinition = null, position: Vector2 = .{}) -> *Actor
 {
     pos: = position; // Prevent argument given by ref invalidated by the growing array crash
-    id, actor: = pool_add(*actors);
+    actor, id: = pool_add(*actors);
 
     actor.id = id;
     actor.position = .{pos.x, pos.y, 0};
-    actor.movement.owner_id = id;
+    actor.movement.owner = actor;
 
     actor_set_definition(actor, definition);
 
     return actor;
 }
 
-request_delete_actor :: (_id: ActorID)
-{
-    for id: to_delete_actors
-    {
-        if id == _id return;
-    }
-    array_add(*to_delete_actors, _id);
-}
-
 request_delete_actor :: (actor: *Actor)
 {
     assert(actor != null);
-    request_delete_actor(actor.id);
+    array_add_if_unique(*to_delete_actors, actor);
 }
 
 delete_all_actors :: ()
@@ -147,9 +137,8 @@ actors_update :: (dt: float)
         actor_update(actor, dt);
     }
 
-    for id: to_delete_actors
+    for actor: to_delete_actors
     {
-        actor: = get(id);
         delete_actor(actor);
     }
     to_delete_actors.count = 0;
@@ -215,34 +204,27 @@ actor_burn :: (using actor: *Actor)
     }
 }
 
-actor_add_collider :: (using actor: *Actor, rect: Rect, layer: u8, static: bool = false) -> PoolID(Collider)
+actor_add_collider :: (using actor: *Actor, rect: Rect, layer: u8, static: bool = false) -> *Collider
 {
-    collider_id: = physics_add_collider(actor, layer);
-    collider: *Collider = get(collider_id);
+    collider: = physics_add_collider(actor, layer);
     collider.rect = rect;
     collider.static = static;
-    array_add(*colliders, collider_id);
-    return collider_id;
+    array_add(*colliders, collider);
+    return collider;
 }
 
-actor_remove_collider :: (using actor: *Actor, _id: PoolID(Collider))
+actor_remove_collider :: (using actor: *Actor, collider: *Collider)
 {
-    for id : colliders
-    {
-        if id == _id
-        {
-            remove id;
-            break;
-        }
-    }
-    physics_remove_collider(_id);
+    removed_index: = array_unordered_remove_by_value(*colliders, collider);
+    assert(removed_index >= 0);
+    physics_remove_collider(collider);
 }
 
 actor_remove_all_colliders :: (using actor: *Actor)
 {
-    for id : colliders
+    for collider : colliders
     {
-        physics_remove_collider(id);
+        physics_remove_collider(collider);
     }
     colliders.count = 0;
 }
@@ -253,5 +235,5 @@ delete_actor :: (using actor: *Actor)
 {
     actor_set_definition(actor, null);
     array_free(actor.colliders);
-    pool_remove(*actors, id);
+    pool_remove(*actors, actor);
 }

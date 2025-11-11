@@ -1,6 +1,6 @@
 MovementComponent :: struct
 {
-    owner_id: ActorID;
+    owner: *Actor;
 
     speed: float = 10.0;
     target: Vector2;
@@ -11,7 +11,6 @@ movement_component_update :: (using c: *MovementComponent, dt: float)
 {
     if !is_moving return;
 
-    owner: = get(owner_id);
     last_position: = owner.position.xy;
     current_position: = last_position;
     direction: = normalize(target - current_position);
