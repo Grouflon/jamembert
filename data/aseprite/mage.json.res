@@ -1,0 +1,3 @@
+{
+	"texture": "mage_texture"
+}

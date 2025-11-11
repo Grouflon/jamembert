@@ -1,7 +1,7 @@
 resources : struct
 {
-    sorcerer_texture: TextureFile = .{ path = "data://aseprite/sorcerer.png" };
-    sorcerer_aseprite: AsepriteFile = .{ path = "data://aseprite/sorcerer.json" };
+    mage_texture: TextureFile = .{ path = "data://aseprite/mage.png" };
+    mage_aseprite: AsepriteFile = .{ path = "data://aseprite/mage.json" };
 
     fireball_texture: TextureFile = .{ path = "data://aseprite/fireball.png" };
     fireball_aseprite: AsepriteFile = .{ path = "data://aseprite/fireball.json" };

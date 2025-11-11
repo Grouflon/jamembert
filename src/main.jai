@@ -3,13 +3,14 @@
 
 #load "components/movement_component.jai";
 
-#load "actors/sorcerer.jai";
+#load "actors/mage.jai";
 #load "actors/fireball.jai";
 #load "actors/tree.jai";
 
-LAYER_BODY :: 0;
+PHYSIC_LAYER_BODY :: 0;
+PHYSIC_LAYER_SPELL :: 1;
 
-sorcerer: ActorID;
+mage: ActorID;
 
 init :: ()
 {
@@ -17,9 +18,9 @@ init :: ()
     physics_init();
     pool_init(*actors, 200, true);
 
-    physics_set_layer_response(LAYER_BODY, LAYER_BODY, .COLLIDE);
+    physics_set_layer_response(PHYSIC_LAYER_BODY, PHYSIC_LAYER_BODY, .COLLIDE);
 
-    sorcerer = create_actor(*sorcerer_definition);
+    mage = create_actor(*mage_definition);
 
     create_actor(*tree_definition, .{30, 10});
 }
@@ -38,12 +39,12 @@ update :: (dt: float)
     mouse_world_pos: = screen_to_world(mouse_screen_pos);
     if is_down(.MOUSE_BUTTON_LEFT)
     {
-        movement_component_go_to(*get(sorcerer).movement, mouse_world_pos);
+        movement_component_go_to(*get(mage).movement, mouse_world_pos);
     }
 
     if is_pressed(.MOUSE_BUTTON_RIGHT)
     {
-        f: = shoot_fireball(get(sorcerer).position.xy, mouse_world_pos);
+        f: = shoot_fireball(get(mage).position.xy, mouse_world_pos);
     }
 
     actors_update(dt);
