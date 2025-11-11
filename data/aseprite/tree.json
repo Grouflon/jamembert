@@ -64,7 +64,7 @@
   "frameTags": [
    { "name": "idle", "from": 0, "to": 0, "direction": "forward", "color": "#000000ff" },
    { "name": "burning", "from": 1, "to": 4, "direction": "forward", "color": "#000000ff" },
-   { "name": "burned", "from": 5, "to": 5, "direction": "forward", "color": "#000000ff" }
+   { "name": "burnt", "from": 5, "to": 5, "direction": "forward", "color": "#000000ff" }
   ]
  }
 }

@@ -19,15 +19,15 @@ init :: ()
     pool_init(*actors, 200, true);
 
     physics_set_layer_response(PHYSIC_LAYER_BODY, PHYSIC_LAYER_BODY, .COLLIDE);
+    physics_set_layer_response(PHYSIC_LAYER_BODY, PHYSIC_LAYER_SPELL, .OVERLAP);
 
-    mage = create_actor(*mage_definition);
-
-    create_actor(*tree_definition, .{30, 10});
+    game_start();
 }
 
 shutdown :: ()
 {
-    delete_all_actors();
+    game_stop();
+
     pool_shutdown(*actors);
     physics_shutdown();
     unload_all_resources();
@@ -44,11 +44,29 @@ update :: (dt: float)
 
     if is_pressed(.MOUSE_BUTTON_RIGHT)
     {
-        f: = shoot_fireball(get(mage).position.xy, mouse_world_pos);
+        f: = shoot_fireball(get(mage), mouse_world_pos);
     }
 
     actors_update(dt);
     physics_update(dt);
+
+    // Restart game
+    if is_down(.CTRL) && is_pressed(#char "r")
+    {
+        game_stop();
+        game_start();
+    }
+}
+
+game_start :: ()
+{
+    mage = create_actor(*mage_definition).id;
+    create_actor(*tree_definition, .{30, 10});
+}
+
+game_stop :: ()
+{
+    delete_all_actors();
 }
 
 DRAW_SCALE :: 5;

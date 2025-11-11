@@ -17,6 +17,11 @@ Actor :: struct
     move_animation: AsepriteAnimationHandle;
 
     colliders: [..]PoolID(Collider);
+
+    union {
+        fireball: FireballData;
+        burning_tree: BurningTreeData;
+    }
 }
 actors: Pool(Actor);
 to_delete_actors: [..]ActorID;
@@ -27,13 +32,14 @@ ActorDefinition :: struct
     shutdown: #type (actor: *Actor);
     update: #type (actor: *Actor, dt: float);
     draw: #type (actor: *Actor);
+    burn: #type (actor: *Actor);
 
     draw_offset: Vector2 = .{-8, -8};
     idle_animation: AsepriteAnimation;
     move_animation: AsepriteAnimation;
 }
 
-create_actor :: (definition: *ActorDefinition = null, position: Vector2 = .{}) -> ActorID
+create_actor :: (definition: *ActorDefinition = null, position: Vector2 = .{}) -> *Actor
 {
     pos: = position; // Prevent argument given by ref invalidated by the growing array crash
     id, actor: = pool_add(*actors);
@@ -44,7 +50,7 @@ create_actor :: (definition: *ActorDefinition = null, position: Vector2 = .{}) -
 
     actor_set_definition(actor, definition);
 
-    return id;
+    return actor;
 }
 
 request_delete_actor :: (_id: ActorID)
@@ -66,7 +72,6 @@ delete_all_actors :: ()
 {
     for *actor: actors
     {
-        log("%", << actor);
         delete_actor(actor);
     }
 }
@@ -196,6 +201,17 @@ actor_draw :: (using actor: *Actor)
     if definition.draw
     {
         definition.draw(actor);
+    }
+}
+
+actor_burn :: (using actor: *Actor)
+{
+    assert(actor != null);
+    assert(definition != null);
+
+    if definition.burn != null
+    {
+        definition.burn(actor);
     }
 }
 

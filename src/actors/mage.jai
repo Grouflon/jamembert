@@ -12,7 +12,7 @@ mage_init :: (using actor: *Actor)
 {
     actor.movement.speed = 30;
 
-    c: = actor_add_collider(actor, .{-2,-4,3,7}, PHYSIC_LAYER_BODY);
+    actor_add_collider(actor, .{-2,-4,3,7}, PHYSIC_LAYER_BODY);
 }
 
 mage_shutdown :: (using actor: *Actor)
