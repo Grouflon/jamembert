@@ -13,7 +13,7 @@ init :: ()
 {
     load_all_resources();
     physics_init();
-    pool_init(*actors, 1024 * 32);
+    pool_init(*actors);
 
     physics_set_layer_response(PHYSIC_LAYER_BODY, PHYSIC_LAYER_BODY, .COLLIDE);
     physics_set_layer_response(PHYSIC_LAYER_BODY, PHYSIC_LAYER_SPELL, .OVERLAP);
