@@ -2,19 +2,13 @@ DRAW_SCALE :: 5;
 PHYSIC_LAYER_BODY :: 0;
 PHYSIC_LAYER_SPELL :: 1;
 
-Alterations :: enum_flags u64
-{
-    BURNING :: 1 << 0;
-    SENTIENT :: 1 << 1;
-    LEGS :: 1 << 2;
-}
-
 mage: *Actor;
 
 game_start :: ()
 {
     mage = create_actor(*mage_definition);
     create_actor(*tree_definition, .{30, 10});
+    create_actor(*tree_definition, .{-30, -10});
 }
 
 game_stop :: ()
@@ -31,7 +25,7 @@ game_update :: (dt: float)
         movement_component_go_to(*mage.movement, mouse_world_pos);
     }
 
-    if is_down(.MOUSE_BUTTON_RIGHT)
+    if is_pressed(.MOUSE_BUTTON_RIGHT)
     {
         f: = shoot_fireball(mage, mouse_world_pos);
     }
@@ -44,6 +38,11 @@ game_update :: (dt: float)
     {
         game_stop();
         game_start();
+    }
+
+    if is_pressed(.ESCAPE)
+    {
+        yae_request_close();
     }
 }
 

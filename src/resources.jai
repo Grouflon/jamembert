@@ -8,4 +8,6 @@ resources : struct
 
     tree_texture: TextureFile = .{ path = "data://aseprite/tree.png" };
     tree_aseprite: AsepriteFile = .{ path = "data://aseprite/tree.json" };
+
+    flame_texture: TextureFile = .{ path = "data://aseprite/flame.png" };
 };

@@ -12,7 +12,8 @@ mage_init :: (using actor: *Actor)
 {
     actor.movement.speed = 30;
 
-    actor_add_collider(actor, .{-2,-4,3,7}, PHYSIC_LAYER_BODY);
+    body: = actor_add_collider(actor, .{-2,-4,3,7}, PHYSIC_LAYER_BODY);
+    actor.alterations.burning_collider.rect = dilate(body.rect, .{2,1});
 }
 
 mage_shutdown :: (using actor: *Actor)

@@ -1,4 +1,3 @@
-
 Actor :: struct
 {
     #as using e:Entity;
@@ -10,17 +9,14 @@ Actor :: struct
 
     movement: MovementComponent;
     animation: AsepriteAnimationPlayer;
+    alterations: AlterationComponent;
     active: bool = true;
 
     idle_animation: AsepriteAnimationHandle;
     move_animation: AsepriteAnimationHandle;
 
     colliders: [..]*Collider;
-
-    union {
-        fireball: FireballData;
-        burning_tree: BurningTreeData;
-    }
+    data: *void;
 }
 actors: Pool(Actor);
 to_delete_actors: [..]*Actor;
@@ -46,6 +42,8 @@ create_actor :: (definition: *ActorDefinition = null, position: Vector2 = .{}) -
     actor.id = id;
     actor.position = .{pos.x, pos.y, 0};
     actor.movement.owner = actor;
+
+    alteration_component_init(*actor.alterations, actor);
 
     actor_set_definition(actor, definition);
 
@@ -125,6 +123,8 @@ actor_shutdown :: (using actor: *Actor)
     }
 
     actor_remove_all_colliders(actor);
+    free(data);
+    data = null;
 }
 
 actors_update :: (dt: float)
@@ -173,6 +173,8 @@ actor_update :: (using actor: *Actor, dt: float)
     {
         definition.update(actor, dt);
     }
+
+    alteration_component_update(*alterations, dt);
 }
 
 actor_draw :: (using actor: *Actor)
@@ -191,6 +193,7 @@ actor_draw :: (using actor: *Actor)
     {
         definition.draw(actor);
     }
+    alteration_component_draw(*alterations);
 }
 
 actor_burn :: (using actor: *Actor)

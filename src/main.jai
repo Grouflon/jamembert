@@ -3,6 +3,7 @@
 #load "game.jai";
 
 #load "components/movement_component.jai";
+#load "components/alteration_component.jai";
 
 #load "actors/mage.jai";
 #load "actors/fireball.jai";
