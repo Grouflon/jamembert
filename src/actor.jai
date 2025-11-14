@@ -36,11 +36,10 @@ ActorDefinition :: struct
 
 create_actor :: (definition: *ActorDefinition = null, position: Vector2 = .{}) -> *Actor
 {
-    pos: = position; // Prevent argument given by ref invalidated by the growing array crash
     actor, id: = pool_add(*actors);
 
     actor.id = id;
-    actor.position = .{pos.x, pos.y, 0};
+    actor.position = .{position.x, position.y, 0};
     actor.movement.owner = actor;
 
     alteration_component_init(*actor.alterations, actor);

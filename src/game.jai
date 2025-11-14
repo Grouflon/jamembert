@@ -1,14 +1,19 @@
 DRAW_SCALE :: 5;
+
 PHYSIC_LAYER_BODY :: 0;
 PHYSIC_LAYER_SPELL :: 1;
 
 mage: *Actor;
+spellcaster: SpellCaster;
 
 game_start :: ()
 {
     mage = create_actor(*mage_definition);
     create_actor(*tree_definition, .{30, 10});
     create_actor(*tree_definition, .{-30, -10});
+
+    spellcaster.source = mage;
+    spellcaster.definition = *fireball_spell_definition;
 }
 
 game_stop :: ()
@@ -25,12 +30,13 @@ game_update :: (dt: float)
         movement_component_go_to(*mage.movement, mouse_world_pos);
     }
 
+    actors_update(dt);
+    spellcaster_update(*spellcaster, dt, mouse_world_pos);
     if is_pressed(.MOUSE_BUTTON_RIGHT)
     {
-        f: = shoot_fireball(mage, mouse_world_pos);
+        spellcaster_cast(*spellcaster);
     }
 
-    actors_update(dt);
     physics_update(dt);
 
     // Restart game
@@ -71,6 +77,7 @@ game_draw :: ()
         clear_background(.{0,30,61,255});
 
         actors_draw();
+        spellcaster_draw(*spellcaster);
     }
 }
 

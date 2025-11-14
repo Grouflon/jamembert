@@ -1,6 +1,7 @@
 #load "resources.jai";
 #load "actor.jai";
 #load "game.jai";
+#load "spell.jai";
 
 #load "components/movement_component.jai";
 #load "components/alteration_component.jai";

@@ -1,3 +1,19 @@
+// Spell
+fireball_spell_definition : = SpellDefinition.{
+    type = .PROJECTILE,
+    icon = .{},
+    range = 200,
+    cast_func = cast_fireball,
+};
+
+cast_fireball :: (params: SpellCastParams)
+{
+    f: = create_actor(*fireball_definition, params.source.position.xy);
+    f.data.(*FireballData).caster = params.source.id;
+    movement_component_go_to(*f.movement, params.source.position.xy + params.projectile.direction * fireball_spell_definition.range);
+}
+
+// Actor
 fireball_definition : = ActorDefinition.{
     init = fireball_init,
     update = fireball_update,
@@ -43,12 +59,4 @@ fireball_update :: (using actor: *Actor, dt: float)
         request_delete_actor(actor);
         return;
     }
-}
-
-shoot_fireball :: (caster: *Actor, end: Vector2) -> *Actor
-{
-    f: = create_actor(*fireball_definition, caster.position.xy);
-    f.data.(*FireballData).caster = caster.id;
-    movement_component_go_to(*f.movement, end);
-    return f;
 }
