@@ -1,0 +1,3 @@
+{
+	"texture": "icons_texture"
+}

@@ -1,3 +1,7 @@
+#load "actors/mage.jai";
+#load "actors/tree.jai";
+
+// ---
 Actor :: struct
 {
     #as using e:Entity;

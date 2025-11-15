@@ -6,11 +6,6 @@
 #load "components/movement_component.jai";
 #load "components/alteration_component.jai";
 
-#load "actors/mage.jai";
-#load "actors/fireball.jai";
-#load "actors/tree.jai";
-
-
 init :: ()
 {
     load_all_resources();

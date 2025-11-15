@@ -1,3 +1,14 @@
+#load "spells/bouledefeu.jai";
+#load "spells/lobotomie.jai";
+#load "spells/sentification.jai";
+
+spellbook: []*SpellDefinition = .[
+    *bouledefeu_spell_definition,
+    *sentification_spell_definition,
+    *lobotomie_spell_definition,
+];
+
+// ---
 SpellCastType :: enum
 {
     PROJECTILE;
@@ -43,6 +54,11 @@ spellcaster_update :: (using spellcaster: *SpellCaster, dt: float, target: Vecto
         case .PROJECTILE;
         {
             current_cast.projectile.direction = normalize(target - source.position.xy);
+        }
+
+        case .TARGET;
+        {
+            
         }
     } 
 }

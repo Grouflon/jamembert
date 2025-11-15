@@ -3,8 +3,12 @@ DRAW_SCALE :: 5;
 PHYSIC_LAYER_BODY :: 0;
 PHYSIC_LAYER_SPELL :: 1;
 
+spell_index: = 0;
+spell_change_cooldown: float = 0;
+
 mage: *Actor;
 spellcaster: SpellCaster;
+spell_swatch: AsepriteAnimationPlayer;
 
 game_start :: ()
 {
@@ -13,7 +17,6 @@ game_start :: ()
     create_actor(*tree_definition, .{-30, -10});
 
     spellcaster.source = mage;
-    spellcaster.definition = *fireball_spell_definition;
 }
 
 game_stop :: ()
@@ -31,7 +34,32 @@ game_update :: (dt: float)
     }
 
     actors_update(dt);
+
+    // Spellcaster
+    if spell_change_cooldown <= 0
+    {
+        if mouse_delta_z != 0
+        {
+            spell_index = positive_mod(spell_index + sign(mouse_delta_z), spellbook.count);
+            spell_change_cooldown = 0.04;
+        }
+    }
+    else
+    {
+        spell_change_cooldown -= dt;
+    }
+    spellcaster.definition = spellbook[spell_index];
     spellcaster_update(*spellcaster, dt, mouse_world_pos);
+
+    if spellcaster.definition != null
+    {
+        success, icon_animation: = get_animation_handle(spellcaster.definition.icon);
+        if success
+        {
+            animation_player_play(*spell_swatch, icon_animation);
+        }
+    }
+    animation_player_update(*spell_swatch, dt);
     if is_pressed(.MOUSE_BUTTON_RIGHT)
     {
         spellcaster_cast(*spellcaster);
@@ -56,28 +84,56 @@ game_draw :: ()
 {
     w, h: = get_viewport_size();
     half_size: = Vector2.{xx w, xx h} / (2 * DRAW_SCALE);
-    camera: = Camera.{
-        position = .{},
-        rotation = .{},
-        type = .ORTHOGRAPHIC,
-        orthographic = .{
-            top = half_size.y,
-            left = -half_size.x,
-            bottom = -half_size.y,
-            right = half_size.x,
-            near = -10,
-            far = 10
-        }
-    };
 
     {
-        begin_camera(camera);
-        defer end_camera();
-
         clear_background(.{0,30,61,255});
 
-        actors_draw();
-        spellcaster_draw(*spellcaster);
+        // Game
+        {
+            game_camera: = Camera.{
+                position = .{},
+                rotation = .{},
+                type = .ORTHOGRAPHIC,
+                orthographic = .{
+                    top = half_size.y,
+                    left = -half_size.x,
+                    bottom = -half_size.y,
+                    right = half_size.x,
+                    near = -10,
+                    far = 10
+                }
+            };
+
+            begin_camera(game_camera);
+            defer end_camera();
+
+            actors_draw();
+            spellcaster_draw(*spellcaster);
+        }
+
+        // UI
+        {
+            clear_depth_buffer();
+
+            ui_camera: = Camera.{
+                position = .{},
+                rotation = .{},
+                type = .ORTHOGRAPHIC,
+                orthographic = .{
+                    top = h.(float) / DRAW_SCALE,
+                    left = 0,
+                    bottom = 0,
+                    right = w.(float) / DRAW_SCALE,
+                    near = -10,
+                    far = 10
+                }
+            };
+
+            begin_camera(ui_camera);
+            defer end_camera();
+
+            animation_player_draw(*spell_swatch, .{3, 3, 0});
+        }
     }
 }
 
