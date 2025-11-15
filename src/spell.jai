@@ -49,7 +49,18 @@ spellcaster_update :: (using spellcaster: *SpellCaster, dt: float, target: Vecto
 
 spellcaster_draw :: (using spellcaster: *SpellCaster)
 {
-
+    if definition == null return;
+    if source == null return;
+    {
+        if definition.type ==
+        {
+            case .PROJECTILE;
+            {
+                direction: = Vector3.{current_cast.projectile.direction.x, current_cast.projectile.direction.y, 0};
+                draw_line(source.position + direction * 7, source.position + direction * 20, 3, .{255,255,255,100});
+            }
+        } 
+    }
 }
 
 spellcaster_cast :: (using spellcaster: *SpellCaster)
