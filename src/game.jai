@@ -84,13 +84,17 @@ game_update :: (dt: float)
 game_draw :: ()
 {
     w, h: = get_viewport_size();
-    half_size: = Vector2.{xx w, xx h} / (2 * DRAW_SCALE);
 
+    resize_render_texture(*rt_ground, xx w, xx h);
+    resize_render_texture(*rt_objects, xx w, xx h);
+    resize_render_texture(*rt_overlay, xx w, xx h);
+    resize_render_texture(*rt_ui, xx w, xx h);
+
+    // Render Pipeline
     {
-        clear_background(.{0,30,61,255});
-
         // Game
         {
+            half_size: = Vector2.{xx w, xx h} / (2 * DRAW_SCALE);
             game_camera: = Camera.{
                 position = .{},
                 rotation = .{},
@@ -108,13 +112,31 @@ game_draw :: ()
             begin_camera(game_camera);
             defer end_camera();
 
+            begin_render_texture(rt_objects);
+            clear_background();
             actors_draw();
+            end_render_texture();
+
+            begin_render_texture(rt_overlay);
+            clear_background();
             spellcaster_draw(*spellcaster);
+            end_render_texture();
+
+            begin_render_texture(rt_editor);
+            clear_background();
+            #if WITH_EDITOR
+            {
+                editor_draw();
+            }
+            end_render_texture();
         }
 
         // UI
         {
-            clear_depth_buffer();
+            begin_render_texture(rt_ui);
+            defer end_render_texture();
+
+            clear_background();
 
             ui_camera: = Camera.{
                 position = .{},
@@ -135,6 +157,35 @@ game_draw :: ()
 
             animation_player_draw(*spell_swatch, .{3, 3, 0});
         }
+
+        // Compositing
+        {
+            // We probably need a default camera on the stack
+            compositing_camera: = Camera.{
+                position = .{},
+                rotation = .{},
+                type = .ORTHOGRAPHIC,
+                orthographic = .{
+                    top = h.(float),
+                    left = 0,
+                    bottom = 0,
+                    right = w.(float),
+                    near = -10,
+                    far = 10
+                }
+            };
+
+            begin_camera(compositing_camera);
+            defer end_camera();
+
+            clear_background(.{0,30,61,255});
+            draw_sprite(.{0,0,0}, rt_ground.texture);
+            draw_sprite(.{0,0,1}, rt_objects.texture);
+            draw_sprite(.{0,0,2}, rt_overlay.texture);
+            draw_sprite(.{0,0,3}, rt_editor.texture);
+            draw_sprite(.{0,0,4}, rt_ui.texture);
+        }
+
     }
 }
 

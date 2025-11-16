@@ -6,6 +6,12 @@
 #load "components/movement_component.jai";
 #load "components/alteration_component.jai";
 
+rt_ground: RenderTexture;
+rt_objects: RenderTexture;
+rt_overlay: RenderTexture;
+rt_editor: RenderTexture;
+rt_ui: RenderTexture;
+
 init :: ()
 {
     load_all_resources();
@@ -15,12 +21,30 @@ init :: ()
     physics_set_layer_response(PHYSIC_LAYER_BODY, PHYSIC_LAYER_BODY, .COLLIDE);
     physics_set_layer_response(PHYSIC_LAYER_BODY, PHYSIC_LAYER_SPELL, .OVERLAP);
 
+    w, h: = get_viewport_size();
+    rt_ground = load_render_texture(xx w, xx h);
+    rt_objects = load_render_texture(xx w, xx h);
+    rt_overlay = load_render_texture(xx w, xx h);
+    rt_editor = load_render_texture(xx w, xx h);
+    rt_ui = load_render_texture(xx w, xx h);
+
     game_start();
 }
 
 shutdown :: ()
 {
     game_stop();
+
+    unload_render_texture(rt_ground);
+    unload_render_texture(rt_objects);
+    unload_render_texture(rt_overlay);
+    unload_render_texture(rt_editor);
+    unload_render_texture(rt_ui);
+    rt_ground = .{};
+    rt_objects = .{};
+    rt_overlay = .{};
+    rt_editor = .{};
+    rt_ui = .{};
 
     pool_shutdown(*actors);
     physics_shutdown();
