@@ -104,8 +104,8 @@ game_draw :: ()
                     left = -half_size.x,
                     bottom = -half_size.y,
                     right = half_size.x,
-                    near = -10,
-                    far = 10
+                    near = -1000,
+                    far = 1000
                 }
             };
 

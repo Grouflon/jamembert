@@ -185,7 +185,7 @@ actor_draw :: (using actor: *Actor)
     begin_transform();
     defer end_transform();
 
-    transform_translate(position);
+    transform_translate(.{position.x, position.y, -(position.y + position.z)});
     r: Quaternion;
     set_from_axis_and_angle(*r, .{0,0,1}, angle);
     transform_rotate(r);
