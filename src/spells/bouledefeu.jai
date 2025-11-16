@@ -6,7 +6,7 @@ bouledefeu_spell_definition : = SpellDefinition.{
     cast_func = (params: SpellCastParams)
     {
         f: = create_actor(*bouledefeu_definition, params.source.position.xy);
-        f.data.(*bouledefeuData).caster = params.source.id;
+        f.data.(*BouledefeuData).caster = params.source.id;
         movement_component_go_to(*f.movement, params.source.position.xy + params.projectile.direction * bouledefeu_spell_definition.range);
     },
 };
@@ -19,7 +19,7 @@ bouledefeu_definition : = ActorDefinition.{
     idle_animation = .{ "fireball_aseprite", "idle" },
 };
 
-bouledefeuData :: struct
+BouledefeuData :: struct
 {
     caster: ID(Actor);
     body: *Collider;
@@ -29,15 +29,15 @@ bouledefeu_init :: (using actor: *Actor)
 {
     movement.speed = 80;
     position.z = 1;
-    bouledefeu: = New(bouledefeuData);
-    bouledefeu.body = actor_add_collider(actor, .{-2,-2,4,4}, PHYSIC_LAYER_SPELL);
+    bouledefeu: = New(BouledefeuData);
+    bouledefeu.body = actor_add_collider(actor, .{ type = .BOX, box = .{.{-2,-2}, .{2,2}} }, PHYSIC_LAYER_SPELL);
 
     data = bouledefeu;
 }
 
 bouledefeu_update :: (using actor: *Actor, dt: float)
 {
-    bouledefeu: = data.(*bouledefeuData);
+    bouledefeu: = data.(*BouledefeuData);
     
     if !movement.is_moving
     {

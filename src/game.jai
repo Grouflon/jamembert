@@ -16,6 +16,7 @@ game_start :: ()
     create_actor(*tree_definition, .{30, 10});
     create_actor(*tree_definition, .{-30, -10});
 
+    spell_index = 0;
     spellcaster.source = mage;
 }
 

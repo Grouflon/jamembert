@@ -8,8 +8,8 @@ tree_definition : = ActorDefinition.{
 
 tree_init :: (using actor: *Actor)
 {
-    body: =actor_add_collider(actor, .{-2,-7,5,10}, PHYSIC_LAYER_BODY, true);
-    actor.alterations.burning_collider.rect = .{-5, -3, 12, 9};
+    body: =actor_add_collider(actor, .{ type = .BOX, box = .{.{-2,-7}, .{3,3}} }, PHYSIC_LAYER_BODY, true);
+    actor.alterations.burning_collider.shape = .{ type = .BOX, box = .{.{-5,-3}, .{7,6}} };
 }
 
 // tree_burn :: (using actor: *Actor)
@@ -55,5 +55,5 @@ burnt_tree_definition : = ActorDefinition.{
 
 burnt_tree_init :: (using actor: *Actor)
 {
-    actor_add_collider(actor, .{-2,-7,5,6}, PHYSIC_LAYER_BODY, true);
+    actor_add_collider(actor, .{ type = .BOX, box = .{.{-2,-7}, .{3,-1}} }, PHYSIC_LAYER_BODY, true);
 }

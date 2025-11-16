@@ -210,10 +210,10 @@ actor_burn :: (using actor: *Actor)
     }
 }
 
-actor_add_collider :: (using actor: *Actor, rect: Rect, layer: u8, static: bool = false) -> *Collider
+actor_add_collider :: (using actor: *Actor, shape: PhysicsShape, layer: u8, static: bool = false) -> *Collider
 {
     collider: = physics_add_collider(actor, layer);
-    collider.rect = rect;
+    collider.shape = shape;
     collider.static = static;
     array_add(*colliders, collider);
     return collider;

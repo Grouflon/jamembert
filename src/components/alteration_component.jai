@@ -59,8 +59,8 @@ alteration_component_draw :: (using component: *AlterationComponent)
             r2: = random_get_zero_to_one();
 
             origin: = Vector3.{
-                burning_collider.rect.x + r1 * burning_collider.rect.w,
-                burning_collider.rect.y + r2 * burning_collider.rect.h,
+                burning_collider.shape.box.min.x + r1 * width(burning_collider.shape.box),
+                burning_collider.shape.box.min.y + r2 * height(burning_collider.shape.box),
                 0.1,
             };
 

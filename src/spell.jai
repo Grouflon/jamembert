@@ -58,7 +58,7 @@ spellcaster_update :: (using spellcaster: *SpellCaster, dt: float, target: Vecto
 
         case .TARGET;
         {
-            
+            targets: = physics_cast(target, .{ type = .CIRCLE, circle = .{ .{}, 10 } }, .[PHYSIC_LAYER_BODY]);
         }
     } 
 }
