@@ -3,12 +3,13 @@ tree_definition : = ActorDefinition.{
     init = tree_init,
     // burn = tree_burn,
 
+    face_position = .{1,2},
     idle_animation = .{ "tree_aseprite", "idle" },
 };
 
 tree_init :: (using actor: *Actor)
 {
-    body: =actor_add_collider(actor, .{ type = .BOX, box = .{.{-2,0}, .{3,10}} }, PHYSIC_LAYER_BODY, true);
+    body: = actor_add_collider(actor, .{ type = .BOX, box = .{.{-2,0}, .{3,10}} }, PHYSIC_LAYER_BODY, true);
     actor.alterations.burning_collider.shape = .{ type = .BOX, box = .{.{-5,4}, .{7,14}} };
 }
 

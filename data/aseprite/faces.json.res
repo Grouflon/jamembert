@@ -1,0 +1,3 @@
+{
+	"texture": "faces_texture"
+}

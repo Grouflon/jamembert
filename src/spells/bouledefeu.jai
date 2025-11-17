@@ -16,7 +16,7 @@ bouledefeu_definition : = ActorDefinition.{
     init = bouledefeu_init,
     update = bouledefeu_update,
 
-    draw_offset = .{-8,-8},
+    sprite_origin = .{8,8},
     idle_animation = .{ "fireball_aseprite", "idle" },
 };
 

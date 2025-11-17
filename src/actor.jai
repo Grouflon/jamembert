@@ -9,6 +9,7 @@ Actor :: struct
 
     movement: MovementComponent;
     animation: AsepriteAnimationPlayer;
+    face_animation: AsepriteAnimationPlayer;
     alterations: AlterationComponent;
     active: bool = true;
 
@@ -29,7 +30,8 @@ ActorDefinition :: struct
     draw: #type (actor: *Actor);
     burn: #type (actor: *Actor);
 
-    draw_offset: Vector2 = .{-8, -1};
+    sprite_origin: Vector2 = .{8, 1};
+    face_position: Vector2 = .{0,3};
     idle_animation: AsepriteAnimation;
     move_animation: AsepriteAnimation;
 }
@@ -165,8 +167,24 @@ actor_update :: (using actor: *Actor, dt: float)
         animation_player_play(*animation, idle_animation);
     }
 
+    if is_sentient(actor)
+    {
+        face_animation_name: = "idle";
+        if is_burning(actor)
+        {
+            face_animation_name = "panic";
+        }
+        animation_player_play(*face_animation, *resources.faces_aseprite, face_animation_name);
+    }
+    else
+    {
+        animation_player_stop(*face_animation);
+
+    }
+
     movement_component_update(*movement, dt);
     animation_player_update(*animation, dt);
+    animation_player_update(*face_animation, dt);
 
     if definition.update
     {
@@ -186,7 +204,8 @@ actor_draw :: (using actor: *Actor)
     set_from_axis_and_angle(*r, .{0,0,1}, angle);
     transform_rotate(r);
 
-    animation_player_draw(*animation, .{definition.draw_offset.x, definition.draw_offset.y, 0});
+    animation_player_draw(*animation, -xyz(definition.sprite_origin, 0));
+    animation_player_draw(*face_animation, xyz(definition.face_position - .{8,8}, 0.01));
 
     if definition.draw
     {
