@@ -14,7 +14,7 @@ attack_definition : = ActorDefinition.{
     update = attack_update,
 
     sprite_origin = .{8,8},
-    render_layer = RENDER_LAYER_OVERLAY,
+    render_layer = .OVERLAY,
     // idle_animation = .{ "fireball_aseprite", "idle" },
 };
 

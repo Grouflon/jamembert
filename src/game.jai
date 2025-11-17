@@ -126,15 +126,15 @@ game_draw :: ()
             begin_camera(game_camera);
             defer end_camera();
 
-            begin_render_texture(render_layers[RENDER_LAYER_OBJECTS]);
+            begin_render_texture(render_layers[RenderLayer.OBJECTS]);
             actors_draw();
             end_render_texture();
 
-            begin_render_texture(render_layers[RENDER_LAYER_OVERLAY]);
+            begin_render_texture(render_layers[RenderLayer.OVERLAY]);
             spellcaster_draw(*spellcaster);
             end_render_texture();
 
-            begin_render_texture(render_layers[RENDER_LAYER_EDITOR]);
+            begin_render_texture(render_layers[RenderLayer.EDITOR]);
             #if WITH_EDITOR
             {
                 editor_draw();
@@ -144,7 +144,7 @@ game_draw :: ()
 
         // UI
         {
-            begin_render_texture(render_layers[RENDER_LAYER_UI]);
+            begin_render_texture(render_layers[RenderLayer.UI]);
             defer end_render_texture();
 
             ui_camera: = Camera.{

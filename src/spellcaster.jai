@@ -73,7 +73,7 @@ spellcaster_draw :: (using spellcaster: *SpellCaster)
                 target: = current_cast.target.target;
                 if target == null return;
 
-                begin_render_texture(render_layers[RENDER_LAYER_GROUND]);
+                begin_render_texture(render_layers[RenderLayer.GROUND]);
                 defer end_render_texture();
                 draw_rectangle(target.position, .{.{-5,-2},.{5,2}}, .{255,255,255,150});
             }

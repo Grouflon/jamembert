@@ -34,7 +34,7 @@ ActorDefinition :: struct
     face_position: Vector2 = .{0,3};
     idle_animation: AsepriteAnimation;
     move_animation: AsepriteAnimation;
-    render_layer: s32 = RENDER_LAYER_OBJECTS;
+    render_layer: RenderLayer = .OBJECTS;
 }
 
 create_actor :: (definition: *ActorDefinition = null, position: Vector2 = .{}) -> *Actor
@@ -200,7 +200,7 @@ actor_draw :: (using actor: *Actor)
     begin_transform();
     defer end_transform();
 
-    if definition.render_layer != RENDER_LAYER_OBJECTS
+    if definition.render_layer != .OBJECTS
     {
         begin_render_texture(render_layers[definition.render_layer]);
     }
@@ -219,7 +219,7 @@ actor_draw :: (using actor: *Actor)
     }
     alteration_component_draw(*alterations);
 
-    if definition.render_layer != RENDER_LAYER_OBJECTS
+    if definition.render_layer != .OBJECTS
     {
         end_render_texture();
     }

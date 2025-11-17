@@ -24,12 +24,15 @@ spellbook: []*SpellDefinition = .[
 #load "actors/tree.jai";
 
 // Render layers
-RENDER_LAYER_GROUND :: 0;
-RENDER_LAYER_OBJECTS :: 1;
-RENDER_LAYER_OVERLAY :: 2;
-RENDER_LAYER_EDITOR :: 3;
-RENDER_LAYER_UI :: 4;
-render_layers: [5]RenderTexture;
+RenderLayer :: enum
+{
+    GROUND :: 0;
+    OBJECTS :: 1;
+    OVERLAY :: 2;
+    EDITOR :: 3;
+    UI :: 4;
+}
+render_layers: [#run enum_highest_value(RenderLayer) + 1]RenderTexture;
 
 init :: ()
 {
