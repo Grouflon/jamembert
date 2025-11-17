@@ -112,6 +112,10 @@ game_draw :: ()
             begin_camera(game_camera);
             defer end_camera();
 
+            begin_render_texture(rt_ground);
+            clear_background();
+            end_render_texture();
+
             begin_render_texture(rt_objects);
             clear_background();
             actors_draw();

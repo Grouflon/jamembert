@@ -2,10 +2,27 @@
 #load "actor.jai";
 #load "game.jai";
 #load "spell.jai";
+#load "spellcaster.jai";
 
 #load "components/movement_component.jai";
 #load "components/alteration_component.jai";
 
+// Spells
+#load "spells/bouledefeu.jai";
+#load "spells/lobotomie.jai";
+#load "spells/sentification.jai";
+
+spellbook: []*SpellDefinition = .[
+    *bouledefeu_spell_definition,
+    *sentification_spell_definition,
+    *lobotomie_spell_definition,
+];
+
+// Actors
+#load "actors/mage.jai";
+#load "actors/tree.jai";
+
+// Render textures
 rt_ground: RenderTexture;
 rt_objects: RenderTexture;
 rt_overlay: RenderTexture;
