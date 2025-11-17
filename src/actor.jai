@@ -34,6 +34,7 @@ ActorDefinition :: struct
     face_position: Vector2 = .{0,3};
     idle_animation: AsepriteAnimation;
     move_animation: AsepriteAnimation;
+    render_layer: s32 = RENDER_LAYER_OBJECTS;
 }
 
 create_actor :: (definition: *ActorDefinition = null, position: Vector2 = .{}) -> *Actor
@@ -162,7 +163,7 @@ actor_update :: (using actor: *Actor, dt: float)
     {
         animation_player_play(*animation, move_animation);
     }
-    else
+    else if idle_animation.aseprite != null
     {
         animation_player_play(*animation, idle_animation);
     }
@@ -199,6 +200,11 @@ actor_draw :: (using actor: *Actor)
     begin_transform();
     defer end_transform();
 
+    if definition.render_layer != RENDER_LAYER_OBJECTS
+    {
+        begin_render_texture(render_layers[definition.render_layer]);
+    }
+
     transform_translate(.{position.x, position.y, -(position.y + position.z)});
     r: Quaternion;
     set_from_axis_and_angle(*r, .{0,0,1}, angle);
@@ -212,6 +218,11 @@ actor_draw :: (using actor: *Actor)
         definition.draw(actor);
     }
     alteration_component_draw(*alterations);
+
+    if definition.render_layer != RENDER_LAYER_OBJECTS
+    {
+        end_render_texture();
+    }
 }
 
 actor_burn :: (using actor: *Actor)

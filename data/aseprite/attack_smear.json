@@ -1,70 +1,59 @@
 { "frames": [
    {
-    "filename": "faces 0.aseprite",
+    "filename": "attack_smear 0.aseprite",
     "frame": { "x": 0, "y": 0, "w": 16, "h": 16 },
     "rotated": false,
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 },
     "sourceSize": { "w": 16, "h": 16 },
-    "duration": 100
+    "duration": 50
    },
    {
-    "filename": "faces 1.aseprite",
+    "filename": "attack_smear 1.aseprite",
     "frame": { "x": 17, "y": 0, "w": 16, "h": 16 },
     "rotated": false,
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 },
     "sourceSize": { "w": 16, "h": 16 },
-    "duration": 100
+    "duration": 50
    },
    {
-    "filename": "faces 2.aseprite",
+    "filename": "attack_smear 2.aseprite",
     "frame": { "x": 34, "y": 0, "w": 16, "h": 16 },
     "rotated": false,
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 },
     "sourceSize": { "w": 16, "h": 16 },
-    "duration": 100
+    "duration": 50
    },
    {
-    "filename": "faces 3.aseprite",
-    "frame": { "x": 34, "y": 0, "w": 16, "h": 16 },
-    "rotated": false,
-    "trimmed": false,
-    "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 },
-    "sourceSize": { "w": 16, "h": 16 },
-    "duration": 100
-   },
-   {
-    "filename": "faces 4.aseprite",
+    "filename": "attack_smear 3.aseprite",
     "frame": { "x": 51, "y": 0, "w": 16, "h": 16 },
     "rotated": false,
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 },
     "sourceSize": { "w": 16, "h": 16 },
-    "duration": 100
+    "duration": 50
    },
    {
-    "filename": "faces 5.aseprite",
-    "frame": { "x": 51, "y": 0, "w": 16, "h": 16 },
+    "filename": "attack_smear 4.aseprite",
+    "frame": { "x": 68, "y": 0, "w": 16, "h": 16 },
     "rotated": false,
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 },
     "sourceSize": { "w": 16, "h": 16 },
-    "duration": 100
+    "duration": 50
    }
  ],
  "meta": {
   "app": "https://www.aseprite.org/",
   "version": "1.3.15.5-x64",
-  "image": "faces.png",
+  "image": "attack_smear.png",
   "format": "RGBA8888",
-  "size": { "w": 67, "h": 16 },
+  "size": { "w": 84, "h": 16 },
   "scale": "1",
   "frameTags": [
-   { "name": "idle", "from": 0, "to": 0, "direction": "forward", "color": "#000000ff" },
-   { "name": "sad", "from": 1, "to": 1, "direction": "forward", "color": "#000000ff" },
-   { "name": "panic", "from": 2, "to": 5, "direction": "forward", "color": "#000000ff" }
+   { "name": "attack", "from": 0, "to": 4, "direction": "forward", "color": "#000000ff" }
   ]
  }
 }

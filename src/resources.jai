@@ -16,4 +16,7 @@ resources : struct
 
     faces_texture: TextureFile = .{ path = "data://aseprite/faces.png" };
     faces_aseprite: AsepriteFile = .{ path = "data://aseprite/faces.json" };
+
+    attack_smear_texture: TextureFile = .{ path = "data://aseprite/attack_smear.png" };
+    attack_smear_aseprite: AsepriteFile = .{ path = "data://aseprite/attack_smear.json" };
 };

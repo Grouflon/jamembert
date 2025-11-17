@@ -8,6 +8,7 @@
 #load "components/alteration_component.jai";
 
 // Spells
+#load "spells/attack.jai";
 #load "spells/bouledefeu.jai";
 #load "spells/lobotomie.jai";
 #load "spells/sentification.jai";
@@ -22,12 +23,13 @@ spellbook: []*SpellDefinition = .[
 #load "actors/mage.jai";
 #load "actors/tree.jai";
 
-// Render textures
-rt_ground: RenderTexture;
-rt_objects: RenderTexture;
-rt_overlay: RenderTexture;
-rt_editor: RenderTexture;
-rt_ui: RenderTexture;
+// Render layers
+RENDER_LAYER_GROUND :: 0;
+RENDER_LAYER_OBJECTS :: 1;
+RENDER_LAYER_OVERLAY :: 2;
+RENDER_LAYER_EDITOR :: 3;
+RENDER_LAYER_UI :: 4;
+render_layers: [5]RenderTexture;
 
 init :: ()
 {
@@ -39,11 +41,10 @@ init :: ()
     physics_set_layer_response(PHYSIC_LAYER_BODY, PHYSIC_LAYER_SPELL, .OVERLAP);
 
     w, h: = get_viewport_size();
-    rt_ground = load_render_texture(xx w, xx h);
-    rt_objects = load_render_texture(xx w, xx h);
-    rt_overlay = load_render_texture(xx w, xx h);
-    rt_editor = load_render_texture(xx w, xx h);
-    rt_ui = load_render_texture(xx w, xx h);
+    for i: 0..render_layers.count-1
+    {
+        render_layers[i] = load_render_texture(xx w, xx h);
+    }
 
     game_start();
 }
@@ -52,16 +53,11 @@ shutdown :: ()
 {
     game_stop();
 
-    unload_render_texture(rt_ground);
-    unload_render_texture(rt_objects);
-    unload_render_texture(rt_overlay);
-    unload_render_texture(rt_editor);
-    unload_render_texture(rt_ui);
-    rt_ground = .{};
-    rt_objects = .{};
-    rt_overlay = .{};
-    rt_editor = .{};
-    rt_ui = .{};
+    for i: 0..render_layers.count-1
+    {
+        unload_render_texture(render_layers[i]);
+        render_layers[i] = .{};
+    }
 
     pool_shutdown(*actors);
     physics_shutdown();

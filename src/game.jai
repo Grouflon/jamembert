@@ -67,6 +67,16 @@ game_update :: (dt: float)
         spellcaster_cast(*spellcaster);
     }
 
+    // Attack
+    if is_pressed(.MOUSE_BUTTON_MIDDLE)
+    {
+        params: SpellCastParams;
+        params.source = mage;
+        params.projectile.origin = mage.position.xy + spellcaster.cast_offset;
+        params.projectile.direction = normalize(mouse_world_pos - params.projectile.origin);
+        attack_spell_definition.cast_func(params);
+    }
+
     physics_update(dt);
 
     // Restart game
@@ -86,10 +96,13 @@ game_draw :: ()
 {
     w, h: = get_viewport_size();
 
-    resize_render_texture(*rt_ground, xx w, xx h);
-    resize_render_texture(*rt_objects, xx w, xx h);
-    resize_render_texture(*rt_overlay, xx w, xx h);
-    resize_render_texture(*rt_ui, xx w, xx h);
+    for i: 0..render_layers.count-1
+    {
+        resize_render_texture(*render_layers[i], xx w, xx h);
+        begin_render_texture(render_layers[i]);
+        clear_background();
+        end_render_texture();
+    }
 
     // Render Pipeline
     {
@@ -113,22 +126,15 @@ game_draw :: ()
             begin_camera(game_camera);
             defer end_camera();
 
-            begin_render_texture(rt_ground);
-            clear_background();
-            end_render_texture();
-
-            begin_render_texture(rt_objects);
-            clear_background();
+            begin_render_texture(render_layers[RENDER_LAYER_OBJECTS]);
             actors_draw();
             end_render_texture();
 
-            begin_render_texture(rt_overlay);
-            clear_background();
+            begin_render_texture(render_layers[RENDER_LAYER_OVERLAY]);
             spellcaster_draw(*spellcaster);
             end_render_texture();
 
-            begin_render_texture(rt_editor);
-            clear_background();
+            begin_render_texture(render_layers[RENDER_LAYER_EDITOR]);
             #if WITH_EDITOR
             {
                 editor_draw();
@@ -138,10 +144,8 @@ game_draw :: ()
 
         // UI
         {
-            begin_render_texture(rt_ui);
+            begin_render_texture(render_layers[RENDER_LAYER_UI]);
             defer end_render_texture();
-
-            clear_background();
 
             ui_camera: = Camera.{
                 position = .{},
@@ -184,11 +188,11 @@ game_draw :: ()
             defer end_camera();
 
             clear_background(.{0,30,61,255});
-            draw_sprite(.{0,0,0}, rt_ground.texture);
-            draw_sprite(.{0,0,1}, rt_objects.texture);
-            draw_sprite(.{0,0,2}, rt_overlay.texture);
-            draw_sprite(.{0,0,3}, rt_editor.texture);
-            draw_sprite(.{0,0,4}, rt_ui.texture);
+
+            for i: 0..render_layers.count-1
+            {
+                draw_sprite(.{0,0,i.(float)}, render_layers[i].texture);
+            }
         }
 
     }
