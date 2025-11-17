@@ -5,9 +5,9 @@ bouledefeu_spell_definition : = SpellDefinition.{
     range = 200,
     cast_func = (params: SpellCastParams)
     {
-        f: = create_actor(*bouledefeu_definition, params.source.position.xy);
+        f: = create_actor(*bouledefeu_definition, params.projectile.origin);
         f.data.(*BouledefeuData).caster = params.source.id;
-        movement_component_go_to(*f.movement, params.source.position.xy + params.projectile.direction * bouledefeu_spell_definition.range);
+        movement_component_go_to(*f.movement, params.projectile.origin + params.projectile.direction * bouledefeu_spell_definition.range);
     },
 };
 
@@ -16,6 +16,7 @@ bouledefeu_definition : = ActorDefinition.{
     init = bouledefeu_init,
     update = bouledefeu_update,
 
+    draw_offset = .{-8,-8},
     idle_animation = .{ "fireball_aseprite", "idle" },
 };
 

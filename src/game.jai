@@ -18,6 +18,7 @@ game_start :: ()
 
     spell_index = 0;
     spellcaster.source = mage;
+    spellcaster.cast_offset = .{0, 4};
 }
 
 game_stop :: ()

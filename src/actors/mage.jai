@@ -12,7 +12,7 @@ mage_init :: (using actor: *Actor)
 {
     actor.movement.speed = 30;
 
-    body: = actor_add_collider(actor, .{ type = .BOX, box = .{.{-2,-4}, .{1,3}} }, PHYSIC_LAYER_BODY);
+    body: = actor_add_collider(actor, .{ type = .BOX, box = .{.{-2, 0}, .{1,7}} }, PHYSIC_LAYER_BODY);
     actor.alterations.burning_collider.shape = .{ type = .BOX, box = dilate(body.shape.box, .{2,1}) };
 }
 

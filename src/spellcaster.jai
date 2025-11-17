@@ -8,6 +8,7 @@ SpellCaster :: struct
 {
     definition: *SpellDefinition;
     source: *Actor;
+    cast_offset: Vector2;
     current_cast: SpellCastParams;
 }
 
@@ -16,6 +17,7 @@ SpellCastParams :: struct
     source: *Actor;
     union {
         projectile: struct {
+            origin: Vector2;
             direction: Vector2;
         };
         target: struct {
@@ -35,7 +37,8 @@ spellcaster_update :: (using spellcaster: *SpellCaster, dt: float, target: Vecto
     {
         case .PROJECTILE;
         {
-            current_cast.projectile.direction = normalize(target - source.position.xy);
+            current_cast.projectile.origin = source.position.xy + cast_offset;
+            current_cast.projectile.direction = normalize(target - current_cast.projectile.origin);
         }
 
         case .TARGET;
@@ -53,13 +56,16 @@ spellcaster_draw :: (using spellcaster: *SpellCaster)
 {
     if definition == null return;
     if source == null return;
+
+    cast_position: = source.position.xy + cast_offset;
     {
         if definition.type ==
         {
             case .PROJECTILE;
             {
-                direction: = Vector3.{current_cast.projectile.direction.x, current_cast.projectile.direction.y, 0};
-                draw_line(source.position + direction * 7, source.position + direction * 20, 3, .{255,255,255,100});
+                origin: = xyz(current_cast.projectile.origin, 0);
+                direction: = xyz(current_cast.projectile.direction, 0);
+                draw_line(origin + direction * 7, origin + direction * 20, 3, .{255,255,255,100});
             }
 
             case .TARGET;
@@ -69,7 +75,7 @@ spellcaster_draw :: (using spellcaster: *SpellCaster)
 
                 begin_render_texture(rt_ground);
                 defer end_render_texture();
-                draw_rectangle(target.position, .{.{-4,-4},.{4,4}}, .{255,255,255,150});
+                draw_rectangle(target.position, .{.{-5,-2},.{5,2}}, .{255,255,255,150});
             }
         } 
     }

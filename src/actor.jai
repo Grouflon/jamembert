@@ -29,7 +29,7 @@ ActorDefinition :: struct
     draw: #type (actor: *Actor);
     burn: #type (actor: *Actor);
 
-    draw_offset: Vector2 = .{-8, -8};
+    draw_offset: Vector2 = .{-8, -1};
     idle_animation: AsepriteAnimation;
     move_animation: AsepriteAnimation;
 }
