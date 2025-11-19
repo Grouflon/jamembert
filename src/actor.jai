@@ -15,11 +15,13 @@ Actor :: struct
 
     idle_animation: AsepriteAnimationHandle;
     move_animation: AsepriteAnimationHandle;
+    dead_animation: AsepriteAnimationHandle;
 
     colliders: [..]*Collider;
     data: *void;
 
     last_hit_time: float = -100;
+    current_health: s32;
 }
 actors: Pool(Actor);
 to_delete_actors: [..]*Actor;
@@ -36,7 +38,9 @@ ActorDefinition :: struct
     face_position: Vector2 = .{0,3};
     idle_animation: AsepriteAnimation;
     move_animation: AsepriteAnimation;
+    dead_animation: AsepriteAnimation;
     render_layer: RenderLayer = .OBJECTS;
+    max_health: s32 = -1;
 }
 
 create_actor :: (definition: *ActorDefinition = null, position: Vector2 = .{}) -> *Actor
@@ -109,6 +113,15 @@ actor_init :: (using actor: *Actor)
             log_error("Could not find animation handle for %", definition.move_animation);
         }
     }
+    if definition.dead_animation.animation_name.count != 0
+    {
+        success=, dead_animation = get_animation_handle(definition.dead_animation);
+        if !success
+        {
+            log_error("Could not find animation handle for %", definition.dead_animation);
+        }
+    }
+    current_health = definition.max_health;
 
     if definition.init != null
     {
@@ -161,7 +174,11 @@ actors_draw :: ()
 
 actor_update :: (using actor: *Actor, dt: float)
 {
-    if movement.is_moving && move_animation.aseprite != null
+    if current_health == 0 && dead_animation.aseprite != null
+    {
+        animation_player_play(*animation, dead_animation);
+    }
+    else if movement.is_moving && move_animation.aseprite != null
     {
         animation_player_play(*animation, move_animation);
     }
@@ -173,7 +190,11 @@ actor_update :: (using actor: *Actor, dt: float)
     if is_sentient(actor)
     {
         face_animation_name: = "idle";
-        if is_burning(actor)
+        if current_health == 0
+        {
+            face_animation_name = "dead";
+        }
+        else if is_burning(actor)
         {
             face_animation_name = "panic";
         }
@@ -230,6 +251,19 @@ actor_draw :: (using actor: *Actor)
     {
         end_render_texture();
     }
+
+    if current_health != definition.max_health && current_health > 0
+    {
+        begin_render_texture(render_layers[RenderLayer.UI]);
+
+        draw_rectangle(.{0,18,0.1}, .{.{-6,-1}, .{6, 2}}, DARKGRAY);
+        draw_rectangle(.{0,18,0.2}, .{.{-5,0}, .{5, 1}}, .{30,30,30,255});
+
+        ratio: = current_health.(float) / definition.max_health.(float);
+        draw_rectangle(.{0,18,0.3}, .{.{-5,0}, .{-5 + ratio*10, 1}}, RED);
+
+        end_render_texture();
+    }
 }
 
 actor_hit :: (using actor: *Actor, source: *Actor)
@@ -238,10 +272,29 @@ actor_hit :: (using actor: *Actor, source: *Actor)
     assert(definition != null);
 
     last_hit_time = xx get_time();
+    actor_modify_health(actor, -1);
 
     if definition.on_hit != null
     {
         definition.on_hit(actor, source);
+    }
+}
+
+actor_modify_health :: (using actor: *Actor, value: s32)
+{
+    assert(actor != null);
+    if definition.max_health <= 0 return;
+
+    previous_health: = current_health;
+    current_health = clamp(current_health + value, 0, definition.max_health);
+
+    if previous_health > 0 && current_health == 0
+    {
+        // die
+    }
+    else if previous_health == 0 && current_health > 0
+    {
+        // revive
     }
 }
 

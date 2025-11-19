@@ -5,6 +5,8 @@ tree_definition : = ActorDefinition.{
 
     face_position = .{1,2},
     idle_animation = .{ "tree_aseprite", "idle" },
+    dead_animation = .{ "tree_aseprite", "burnt" },
+    max_health = 3,
 };
 
 tree_init :: (using actor: *Actor)
