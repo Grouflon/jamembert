@@ -32,7 +32,7 @@ alteration_component_update :: (using component: *AlterationComponent, dt: float
 {
     for collider: burning_collider.frame_overlaps
     {
-        set_burning(collider.parent.(*Actor), true);
+        actor_set_burning(collider.parent.(*Actor), true);
     }
 }
 
@@ -69,7 +69,7 @@ alteration_component_draw :: (using component: *AlterationComponent)
     }
 }
 
-set_burning :: (actor: *Actor, value: bool)
+actor_set_burning :: (actor: *Actor, value: bool)
 {
     assert(actor != null);
 
@@ -77,19 +77,19 @@ set_burning :: (actor: *Actor, value: bool)
     actor.alterations.burning_collider.enabled = value;
 }
 
-is_burning :: (actor: *Actor) -> bool
+actor_is_burning :: (actor: *Actor) -> bool
 {
     assert(actor != null);
     return actor.alterations.burning;
 }
 
-set_sentient :: (actor: *Actor, value: bool)
+actor_set_sentient :: (actor: *Actor, value: bool)
 {
     assert(actor != null);
     actor.alterations.sentient = value;
 }
 
-is_sentient :: (actor: *Actor) -> bool
+actor_is_sentient :: (actor: *Actor) -> bool
 {
     assert(actor != null);
     return actor.alterations.sentient;

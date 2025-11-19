@@ -21,4 +21,7 @@ resources : struct
 
     attack_smear_texture: TextureFile = .{ path = "data://aseprite/attack_smear.png" };
     attack_smear_aseprite: AsepriteFile = .{ path = "data://aseprite/attack_smear.json" };
+
+    goblin_texture: TextureFile = .{ path = "data://aseprite/goblin.png" };
+    goblin_aseprite: AsepriteFile = .{ path = "data://aseprite/goblin.json" };
 };

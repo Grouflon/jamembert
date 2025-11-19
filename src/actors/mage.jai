@@ -8,6 +8,8 @@ mage_definition : = ActorDefinition.{
 
     idle_animation = .{ "mage_aseprite", "idle" },
     move_animation = .{ "mage_aseprite", "walk" },
+
+    max_health = 6,
 };
 
 mage_init :: (using actor: *Actor)
@@ -16,7 +18,7 @@ mage_init :: (using actor: *Actor)
 
     body: = actor_add_collider(actor, .{ type = .BOX, box = .{.{-3, 0}, .{2,9}} }, PHYSIC_LAYER_BODY);
     actor.alterations.burning_collider.shape = .{ type = .BOX, box = dilate(body.shape.box, .{2,1}) };
-    set_sentient(actor, true);
+    actor_set_sentient(actor, true);
 }
 
 mage_shutdown :: (using actor: *Actor)

@@ -13,6 +13,7 @@ Actor :: struct
     alterations: AlterationComponent;
     active: bool = true;
 
+    idle_hollow_animation: AsepriteAnimationHandle;
     idle_animation: AsepriteAnimationHandle;
     move_animation: AsepriteAnimationHandle;
     dead_animation: AsepriteAnimationHandle;
@@ -36,6 +37,8 @@ ActorDefinition :: struct
 
     sprite_origin: Vector2 = .{8, 1};
     face_position: Vector2 = .{0,3};
+    dead_face_position: Vector2 = .{0,3};
+    idle_hollow_animation: AsepriteAnimation;
     idle_animation: AsepriteAnimation;
     move_animation: AsepriteAnimation;
     dead_animation: AsepriteAnimation;
@@ -121,6 +124,16 @@ actor_init :: (using actor: *Actor)
             log_error("Could not find animation handle for %", definition.dead_animation);
         }
     }
+    if definition.idle_hollow_animation.animation_name.count != 0
+    {
+        success=, idle_hollow_animation = get_animation_handle(definition.idle_hollow_animation);
+        if !success
+        {
+            log_error("Could not find animation handle for %", definition.idle_hollow_animation);
+        }
+    }
+
+    // Init stuff
     current_health = definition.max_health;
 
     if definition.init != null
@@ -184,17 +197,24 @@ actor_update :: (using actor: *Actor, dt: float)
     }
     else if idle_animation.aseprite != null
     {
-        animation_player_play(*animation, idle_animation);
+        if !actor_is_sentient(actor) && idle_hollow_animation.aseprite != null
+        {
+            animation_player_play(*animation, idle_hollow_animation);
+        }
+        else
+        {
+            animation_player_play(*animation, idle_animation);
+        }
     }
 
-    if is_sentient(actor)
+    if actor_is_sentient(actor)
     {
         face_animation_name: = "idle";
         if current_health == 0
         {
             face_animation_name = "dead";
         }
-        else if is_burning(actor)
+        else if actor_is_burning(actor)
         {
             face_animation_name = "panic";
         }
@@ -236,8 +256,13 @@ actor_draw :: (using actor: *Actor)
     shader_instance: = begin_shader(resources.sprite_shader.program);
     shader_instance_set_uniform(shader_instance, "uLastHitTime", last_hit_time);
 
+    face_position: = definition.face_position;
+    if actor_is_dead(actor)
+    {
+        face_position = definition.dead_face_position;
+    }
     animation_player_draw(*animation, -xyz(definition.sprite_origin, 0));
-    animation_player_draw(*face_animation, xyz(definition.face_position - .{8,8}, 0.01));
+    animation_player_draw(*face_animation, xyz(face_position - .{8,8}, 0.01));
 
     end_shader();
 
@@ -296,6 +321,12 @@ actor_modify_health :: (using actor: *Actor, value: s32)
     {
         // revive
     }
+}
+
+actor_is_dead :: (using actor: *Actor) -> bool
+{
+    assert(actor != null);
+    return current_health == 0;
 }
 
 actor_add_collider :: (using actor: *Actor, shape: PhysicsShape, layer: u8, static: bool = false) -> *Collider

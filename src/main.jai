@@ -1,12 +1,3 @@
-#load "resources.jai";
-#load "actor.jai";
-#load "game.jai";
-#load "spell.jai";
-#load "spellcaster.jai";
-
-#load "components/movement_component.jai";
-#load "components/alteration_component.jai";
-
 // Spells
 #load "spells/attack.jai";
 #load "spells/bouledefeu.jai";
@@ -22,7 +13,18 @@ spellbook: []*SpellDefinition = .[
 // Actors
 #load "actors/mage.jai";
 #load "actors/tree.jai";
+#load "actors/goblin.jai";
 #load "actors/simple_animation.jai";
+
+// Other
+#load "resources.jai";
+#load "actor.jai";
+#load "game.jai";
+#load "spell.jai";
+#load "spellcaster.jai";
+
+#load "components/movement_component.jai";
+#load "components/alteration_component.jai";
 
 // Render layers
 RenderLayer :: enum

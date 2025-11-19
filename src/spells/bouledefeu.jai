@@ -53,7 +53,7 @@ bouledefeu_update :: (using actor: *Actor, dt: float)
         target: = collider.parent.(*Actor);
         if target.id == bouledefeu.caster continue;
 
-        set_burning(target, true);
+        actor_set_burning(target, true);
 
         request_delete_actor(actor);
         return;

@@ -1,0 +1,3 @@
+{
+	"texture": "goblin_texture"
+}

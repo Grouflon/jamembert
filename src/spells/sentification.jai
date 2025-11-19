@@ -7,6 +7,6 @@ sentification_spell_definition : = SpellDefinition.{
     {
         target: = params.target.target;
         if target == null return;
-        set_sentient(target, true);
+        actor_set_sentient(target, true);
     },
 };
