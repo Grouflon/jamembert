@@ -17,15 +17,11 @@ goblin_definition : = ActorDefinition.{
 
 goblin_init :: (using actor: *Actor)
 {
-    actor.movement.speed = 30;
-
     body: = actor_add_collider(actor, .{ type = .BOX, box = .{.{-3, 0}, .{2,9}} }, PHYSIC_LAYER_BODY);
     actor.alterations.burning_collider.shape = .{ type = .BOX, box = dilate(body.shape.box, .{2,1}) };
     actor_set_sentient(actor, true);
 
-    actor.ai.mode = .WANDERING;
-    actor.ai.zone_center = actor.position.xy;
-    actor.ai.zone_radius = 30.0;
+    actor.ai.is_agressive = true;
 }
 
 goblin_shutdown :: (using actor: *Actor)

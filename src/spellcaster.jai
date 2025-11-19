@@ -8,7 +8,6 @@ SpellCaster :: struct
 {
     definition: *SpellDefinition;
     source: *Actor;
-    cast_offset: Vector2;
     current_cast: SpellCastParams;
 }
 
@@ -37,7 +36,7 @@ spellcaster_update :: (using spellcaster: *SpellCaster, dt: float, target: Vecto
     {
         case .PROJECTILE;
         {
-            current_cast.projectile.origin = source.position.xy + cast_offset;
+            current_cast.projectile.origin = source.position.xy + source.definition.cast_position;
             current_cast.projectile.direction = normalize(target - current_cast.projectile.origin);
         }
 
@@ -57,7 +56,7 @@ spellcaster_draw :: (using spellcaster: *SpellCaster)
     if definition == null return;
     if source == null return;
 
-    cast_position: = source.position.xy + cast_offset;
+    cast_position: = source.position.xy + source.definition.cast_position;
     {
         if definition.type ==
         {
@@ -84,7 +83,5 @@ spellcaster_draw :: (using spellcaster: *SpellCaster)
 spellcaster_cast :: (using spellcaster: *SpellCaster)
 {
     if definition == null return;
-    if definition.cast_func == null return;
-
-    definition.cast_func(current_cast);
+    spell_cast(definition, current_cast);
 }

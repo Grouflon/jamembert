@@ -10,12 +10,11 @@ mage_definition : = ActorDefinition.{
     move_animation = .{ "mage_aseprite", "walk" },
 
     max_health = 6,
+    speed = 30,
 };
 
 mage_init :: (using actor: *Actor)
 {
-    actor.movement.speed = 30;
-
     body: = actor_add_collider(actor, .{ type = .BOX, box = .{.{-3, 0}, .{2,9}} }, PHYSIC_LAYER_BODY);
     actor.alterations.burning_collider.shape = .{ type = .BOX, box = dilate(body.shape.box, .{2,1}) };
     actor_set_sentient(actor, true);

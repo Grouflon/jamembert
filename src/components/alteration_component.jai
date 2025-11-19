@@ -88,7 +88,14 @@ actor_is_burning :: (actor: *Actor) -> bool
 actor_set_sentient :: (actor: *Actor, value: bool)
 {
     assert(actor != null);
+    previous_sentient: = actor.alterations.sentient;
     actor.alterations.sentient = value;
+
+    // This is bit of a hack, everything should be centralized in a state machine
+    if previous_sentient && !value
+    {
+        movement_component_stop(*actor.movement);
+    }
 }
 
 actor_is_sentient :: (actor: *Actor) -> bool

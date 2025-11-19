@@ -17,6 +17,7 @@ bouledefeu_definition : = ActorDefinition.{
     update = bouledefeu_update,
 
     sprite_origin = .{8,8},
+    speed = 80,
     idle_animation = .{ "fireball_aseprite", "idle" },
 };
 
@@ -28,7 +29,6 @@ BouledefeuData :: struct
 
 bouledefeu_init :: (using actor: *Actor)
 {
-    movement.speed = 80;
     position.z = 1;
     bouledefeu: = New(BouledefeuData);
     bouledefeu.body = actor_add_collider(actor, .{ type = .BOX, box = .{.{-2,-2}, .{2,2}} }, PHYSIC_LAYER_SPELL);

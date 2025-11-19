@@ -12,6 +12,7 @@ Actor :: struct
     face_animation: AsepriteAnimationPlayer;
     alterations: AlterationComponent;
     ai: AIComponent;
+
     active: bool = true;
 
     idle_hollow_animation: AsepriteAnimationHandle;
@@ -22,6 +23,7 @@ Actor :: struct
     colliders: [..]*Collider;
     data: *void;
 
+    user_controlled: bool;
     last_hit_time: float = -100;
     current_health: s32;
 }
@@ -39,12 +41,14 @@ ActorDefinition :: struct
     sprite_origin: Vector2 = .{8, 1};
     face_position: Vector2 = .{0,3};
     dead_face_position: Vector2 = .{0,3};
+    cast_position: Vector2 = .{0,4};
     idle_hollow_animation: AsepriteAnimation;
     idle_animation: AsepriteAnimation;
     move_animation: AsepriteAnimation;
     dead_animation: AsepriteAnimation;
     render_layer: RenderLayer = .OBJECTS;
     max_health: s32 = -1;
+    speed: float = 20.0;
 }
 
 create_actor :: (definition: *ActorDefinition = null, position: Vector2 = .{}) -> *Actor
@@ -211,24 +215,7 @@ actor_update :: (using actor: *Actor, dt: float)
         }
     }
 
-    if actor_is_sentient(actor)
-    {
-        face_animation_name: = "idle";
-        if current_health == 0
-        {
-            face_animation_name = "dead";
-        }
-        else if actor_is_burning(actor)
-        {
-            face_animation_name = "panic";
-        }
-        animation_player_play(*face_animation, *resources.faces_aseprite, face_animation_name);
-    }
-    else
-    {
-        animation_player_stop(*face_animation);
-
-    }
+    actor_update_face(actor);
 
     movement_component_update(*movement, dt);
     animation_player_update(*animation, dt);
@@ -359,7 +346,42 @@ actor_remove_all_colliders :: (using actor: *Actor)
     colliders.count = 0;
 }
 
+actor_attack :: (using actor: *Actor, target: Vector2)
+{
+    params: SpellCastParams;
+    params.source = actor;
+    params.projectile.origin = actor.position.xy + actor.definition.cast_position;
+    params.projectile.direction = normalize(target - params.projectile.origin);
+    attack_spell_definition.cast_func(params);
+}
+
 #scope_file
+
+actor_update_face :: (using actor: *Actor)
+{
+    if actor_is_sentient(actor)
+    {
+        face_animation_name: = "idle";
+        if current_health == 0
+        {
+            face_animation_name = "dead";
+        }
+        else if actor_is_burning(actor)
+        {
+            face_animation_name = "panic";
+        }
+        else if ai.is_agressive
+        {
+            face_animation_name = "mad";
+        }
+        animation_player_play(*face_animation, *resources.faces_aseprite, face_animation_name);
+    }
+    else
+    {
+        animation_player_stop(*face_animation);
+
+    }
+}
 
 delete_actor :: (using actor: *Actor)
 {

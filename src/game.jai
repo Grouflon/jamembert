@@ -6,24 +6,26 @@ PHYSIC_LAYER_SPELL :: 1;
 spell_index: = 0;
 spell_change_cooldown: float = 0;
 
-mage: *Actor;
-spellcaster: SpellCaster;
+controlled_actor: *Actor;
 spell_swatch: AsepriteAnimationPlayer;
+spellcaster: SpellCaster;
 
 game_start :: ()
 {
-    mage = create_actor(*mage_definition);
+    mage: = create_actor(*mage_definition);
     create_actor(*tree_definition, .{30, 10});
     create_actor(*tree_definition, .{-30, -10});
-    create_actor(*goblin_definition, .{-10, -30});
+    goblin: = create_actor(*goblin_definition, .{70, -30});
 
+    set_controlled_actor(mage);
+    // set_controlled_actor(goblin);
+    // mage.ai.is_agressive = true;
     spell_index = 0;
-    spellcaster.source = mage;
-    spellcaster.cast_offset = .{0, 4};
 }
 
 game_stop :: ()
 {
+    set_controlled_actor(null);
     delete_all_actors();
 }
 
@@ -31,10 +33,6 @@ game_update :: (dt: float)
 {
     mouse_screen_pos: = get_mouse_position();
     mouse_world_pos: = screen_to_world(mouse_screen_pos);
-    if is_down(.MOUSE_BUTTON_LEFT)
-    {
-        movement_component_go_to(*mage.movement, mouse_world_pos);
-    }
 
     actors_update(dt);
 
@@ -52,8 +50,6 @@ game_update :: (dt: float)
         spell_change_cooldown -= dt;
     }
     spellcaster.definition = spellbook[spell_index];
-    spellcaster_update(*spellcaster, dt, mouse_world_pos);
-
     if spellcaster.definition != null
     {
         success, icon_animation: = get_animation_handle(spellcaster.definition.icon);
@@ -62,22 +58,30 @@ game_update :: (dt: float)
             animation_player_play(*spell_swatch, icon_animation);
         }
     }
+
+    spellcaster_update(*spellcaster, dt, mouse_world_pos);
     animation_player_update(*spell_swatch, dt);
-    if is_pressed(.MOUSE_BUTTON_RIGHT)
-    {
-        spellcaster_cast(*spellcaster);
-    }
 
-    // Attack
-    if is_pressed(.MOUSE_BUTTON_MIDDLE)
+    // Controlled Actor Input
+    if can_control_actor(controlled_actor)
     {
-        params: SpellCastParams;
-        params.source = mage;
-        params.projectile.origin = mage.position.xy + spellcaster.cast_offset;
-        params.projectile.direction = normalize(mouse_world_pos - params.projectile.origin);
-        attack_spell_definition.cast_func(params);
-    }
+        if is_down(.MOUSE_BUTTON_LEFT)
+        {
+            movement_component_go_to(*controlled_actor.movement, mouse_world_pos);
+        }
 
+        if is_pressed(.MOUSE_BUTTON_RIGHT)
+        {
+            spellcaster_cast(*spellcaster);
+        }
+
+        // Attack
+        if is_pressed(.MOUSE_BUTTON_MIDDLE)
+        {
+            actor_attack(controlled_actor, mouse_world_pos);
+        }
+    }
+    
     physics_update(dt);
 
     // Restart game
@@ -132,7 +136,10 @@ game_draw :: ()
             end_render_texture();
 
             begin_render_texture(render_layers[RenderLayer.OVERLAY]);
-            spellcaster_draw(*spellcaster);
+            if can_control_actor(controlled_actor)
+            {
+                spellcaster_draw(*spellcaster);
+            }
             end_render_texture();
 
             begin_render_texture(render_layers[RenderLayer.EDITOR]);
@@ -204,4 +211,29 @@ screen_to_world :: (position: Vector2) -> Vector2
     w, h: = get_viewport_size();
     half_size: = (Vector2.{xx w, xx h} / 2);
     return Vector2.{position.x - half_size.x, half_size.y - position.y} / DRAW_SCALE;
+}
+
+set_controlled_actor :: (actor: *Actor)
+{
+    if controlled_actor != null
+    {
+        assert(controlled_actor.user_controlled);
+        controlled_actor.user_controlled = false;
+        spellcaster.source = null;
+    }
+    controlled_actor = actor;
+    if controlled_actor != null
+    {
+        assert(!controlled_actor.user_controlled);
+        controlled_actor.user_controlled = true;
+        spellcaster.source = controlled_actor;
+    }
+}
+
+can_control_actor :: (actor: *Actor) -> bool
+{
+    if actor == null return false;
+    if actor_is_dead(actor) return false;
+    if !actor_is_sentient(actor) return false;
+    return true;
 }
