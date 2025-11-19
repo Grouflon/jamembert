@@ -29,3 +29,9 @@ movement_component_go_to :: (using c: *MovementComponent, _target: Vector2)
     target = _target;
     is_moving = true;
 }
+
+movement_component_stop :: (using c: *MovementComponent)
+{
+    is_moving = false;
+}
+

@@ -11,6 +11,7 @@ Actor :: struct
     animation: AsepriteAnimationPlayer;
     face_animation: AsepriteAnimationPlayer;
     alterations: AlterationComponent;
+    ai: AIComponent;
     active: bool = true;
 
     idle_hollow_animation: AsepriteAnimationHandle;
@@ -55,6 +56,7 @@ create_actor :: (definition: *ActorDefinition = null, position: Vector2 = .{}) -
     actor.movement.owner = actor;
 
     alteration_component_init(*actor.alterations, actor);
+    ai_component_init(*actor.ai, actor);
 
     actor_set_definition(actor, definition);
 
@@ -187,6 +189,8 @@ actors_draw :: ()
 
 actor_update :: (using actor: *Actor, dt: float)
 {
+    ai_component_update(*ai, dt);
+
     if current_health == 0 && dead_animation.aseprite != null
     {
         animation_player_play(*animation, dead_animation);
@@ -315,6 +319,7 @@ actor_modify_health :: (using actor: *Actor, value: s32)
 
     if previous_health > 0 && current_health == 0
     {
+        movement_component_stop(*movement);
         // die
     }
     else if previous_health == 0 && current_health > 0

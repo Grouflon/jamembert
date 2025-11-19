@@ -15,7 +15,7 @@ game_start :: ()
     mage = create_actor(*mage_definition);
     create_actor(*tree_definition, .{30, 10});
     create_actor(*tree_definition, .{-30, -10});
-    create_actor(*goblin_definition, .{-10, -50});
+    create_actor(*goblin_definition, .{-10, -30});
 
     spell_index = 0;
     spellcaster.source = mage;

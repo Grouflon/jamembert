@@ -25,6 +25,7 @@ spellbook: []*SpellDefinition = .[
 
 #load "components/movement_component.jai";
 #load "components/alteration_component.jai";
+#load "components/ai_component.jai";
 
 // Render layers
 RenderLayer :: enum

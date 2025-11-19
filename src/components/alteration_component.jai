@@ -12,6 +12,8 @@ AlterationComponent :: struct
     sentient: bool;
 
     burning_collider: *Collider;
+
+    rng: Random_State;
 }
 
 alteration_component_init :: (using component: *AlterationComponent, actor: *Actor)
@@ -53,10 +55,10 @@ alteration_component_draw :: (using component: *AlterationComponent)
             t: = positive_mod(p_time, TRAVEL_TIME) / TRAVEL_TIME;
             cycle_count: u64 = xx (p_time / TRAVEL_TIME);
             seed: = component.(u64) + (xx i + cycle_count) * 1000;
-            random_seed(seed);
-            r1: = random_get_zero_to_one();
-            random_seed(seed + 124414);
-            r2: = random_get_zero_to_one();
+            random_seed(*rng, seed);
+            r1: = random_get_zero_to_one(*rng);
+            random_seed(*rng, seed + 124414);
+            r2: = random_get_zero_to_one(*rng);
 
             origin: = Vector3.{
                 burning_collider.shape.box.min.x + r1 * width(burning_collider.shape.box),
