@@ -24,4 +24,7 @@ resources : struct
 
     goblin_texture: TextureFile = .{ path = "data://aseprite/goblin.png" };
     goblin_aseprite: AsepriteFile = .{ path = "data://aseprite/goblin.json" };
+
+    explosion_texture: TextureFile = .{ path = "data://aseprite/explosion.png" };
+    explosion_aseprite: AsepriteFile = .{ path = "data://aseprite/explosion.json" };
 };
