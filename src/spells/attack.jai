@@ -6,6 +6,8 @@ attack_spell_definition : = SpellDefinition.{
         attack: = create_actor(*attack_definition, params.projectile.origin + params.projectile.direction * 8);
         attack.angle = signed_angle_between(params.projectile.direction, .{1,0});
         attack.data.(*AttackData).caster = params.source.id;
+
+        attack.animation.flip_y = abs(attack.angle) > PI/2;
     },
 };
 
@@ -40,7 +42,6 @@ attack_shutdown :: (using actor: *Actor)
     attack: = data.(*AttackData);
     array_free(attack.hit_actors);
 }
-
 
 attack_update :: (using actor: *Actor, dt: float)
 {
