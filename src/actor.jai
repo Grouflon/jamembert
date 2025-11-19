@@ -18,6 +18,8 @@ Actor :: struct
 
     colliders: [..]*Collider;
     data: *void;
+
+    last_hit_time: float = -100;
 }
 actors: Pool(Actor);
 to_delete_actors: [..]*Actor;
@@ -28,7 +30,7 @@ ActorDefinition :: struct
     shutdown: #type (actor: *Actor);
     update: #type (actor: *Actor, dt: float);
     draw: #type (actor: *Actor);
-    burn: #type (actor: *Actor);
+    on_hit: #type (actor: *Actor, source: *Actor);
 
     sprite_origin: Vector2 = .{8, 1};
     face_position: Vector2 = .{0,3};
@@ -210,8 +212,13 @@ actor_draw :: (using actor: *Actor)
     set_from_axis_and_angle(*r, .{0,0,1}, angle);
     transform_rotate(r);
 
+    shader_instance: = begin_shader(resources.sprite_shader.program);
+    shader_instance_set_uniform(shader_instance, "uLastHitTime", last_hit_time);
+
     animation_player_draw(*animation, -xyz(definition.sprite_origin, 0));
     animation_player_draw(*face_animation, xyz(definition.face_position - .{8,8}, 0.01));
+
+    end_shader();
 
     if definition.draw
     {
@@ -225,14 +232,16 @@ actor_draw :: (using actor: *Actor)
     }
 }
 
-actor_burn :: (using actor: *Actor)
+actor_hit :: (using actor: *Actor, source: *Actor)
 {
     assert(actor != null);
     assert(definition != null);
 
-    if definition.burn != null
+    last_hit_time = xx get_time();
+
+    if definition.on_hit != null
     {
-        definition.burn(actor);
+        definition.on_hit(actor, source);
     }
 }
 

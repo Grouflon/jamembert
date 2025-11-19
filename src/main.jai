@@ -22,6 +22,7 @@ spellbook: []*SpellDefinition = .[
 // Actors
 #load "actors/mage.jai";
 #load "actors/tree.jai";
+#load "actors/simple_animation.jai";
 
 // Render layers
 RenderLayer :: enum
@@ -72,7 +73,7 @@ main :: ()
     register_resources(*resources);
 
     // Init
-    yae_init(*YAE_COMPILE_TIME_INFO, 800, 600, "jamembert");
+    yae_init(800, 600, "jamembert");
     init();
 
     // Loop

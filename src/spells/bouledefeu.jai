@@ -48,9 +48,9 @@ bouledefeu_update :: (using actor: *Actor, dt: float)
 
     angle = signed_angle_between(movement.target - position.xy, .{1,0});
 
-    for o: bouledefeu.body.frame_overlaps
+    for collider: bouledefeu.body.frame_overlaps
     {
-        target: = o.parent.(*Actor);
+        target: = collider.parent.(*Actor);
         if target.id == bouledefeu.caster continue;
 
         set_burning(target, true);

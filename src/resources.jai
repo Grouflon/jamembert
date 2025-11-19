@@ -1,5 +1,7 @@
 resources : struct
 {
+    sprite_shader: Shader = .{ fs_path = "data://shaders/sprite.fs" };
+
     mage_texture: TextureFile = .{ path = "data://aseprite/mage.png" };
     mage_aseprite: AsepriteFile = .{ path = "data://aseprite/mage.json" };
 
