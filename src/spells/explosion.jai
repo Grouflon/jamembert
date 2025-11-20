@@ -28,7 +28,10 @@ ExplosionData :: struct
     caster: ID(Actor);
     body: *Collider;
     hit_actors: [..]*Actor;
+    explosion_timing: float = 0.05;
 }
+
+
 
 explosion_init :: (using actor: *Actor)
 {
@@ -51,27 +54,31 @@ explosion_update :: (using actor: *Actor, dt: float)
         return;
     }
 
-    //dammages
-    for collider: explosion.body.frame_overlaps
+    if explosion.explosion_timing <=0
     {
-        target: = collider.parent.(*Actor);
-
-        if array_find(explosion.hit_actors, target) continue;
-
-        if target.id == explosion.caster 
+        //dammages
+        for collider: explosion.body.frame_overlaps
         {
-            actor_hit(target, 1, get(explosion.caster));
-        }
-        else
-        {
-            actor_hit(target, 3, get(explosion.caster));
-        }
+            target: = collider.parent.(*Actor);
 
-        array_add_if_unique(*explosion.hit_actors, target);
+            if array_find(explosion.hit_actors, target) continue;
 
-        return;
+            if target.id == explosion.caster 
+            {
+                actor_hit(target, 1, get(explosion.caster));
+            }
+            else
+            {
+                actor_hit(target, 3, get(explosion.caster));
+            }
+
+            array_add_if_unique(*explosion.hit_actors, target);
+
+            return;
+        }
     }
 
+    explosion.explosion_timing -= dt;
 
 }
 
