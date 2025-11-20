@@ -1,0 +1,3 @@
+{
+	"texture": "sentification_texture"
+}

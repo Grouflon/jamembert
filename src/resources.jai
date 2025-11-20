@@ -27,4 +27,10 @@ resources : struct
 
     explosion_texture: TextureFile = .{ path = "data://aseprite/explosion.png" };
     explosion_aseprite: AsepriteFile = .{ path = "data://aseprite/explosion.json" };
+
+    lobotomie_texture: TextureFile = .{ path = "data://aseprite/lobotomie.png" };
+    lobotomie_aseprite: AsepriteFile = .{ path = "data://aseprite/lobotomie.json" };
+
+    sentification_texture: TextureFile = .{ path = "data://aseprite/sentification.png" };
+    sentification_aseprite: AsepriteFile = .{ path = "data://aseprite/sentification.json" };
 };

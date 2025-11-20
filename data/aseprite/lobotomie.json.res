@@ -1,0 +1,3 @@
+{
+	"texture": "lobotomie_texture"
+}
