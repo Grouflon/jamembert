@@ -13,19 +13,21 @@ explosion_spell_definition : = SpellDefinition.{
     },
 };
 
+
 // Actor
 explosion_definition : = ActorDefinition.{
     init = explosion_init,
     update = explosion_update,
 
     sprite_origin = .{16,16},
-    idle_animation = .{ "explosion_aseprite", "idle" },
+    render_layer = .OVERLAY
 };
 
 ExplosionData :: struct
 {
     caster: ID(Actor);
     body: *Collider;
+    hit_actors: [..]*Actor;
 }
 
 explosion_init :: (using actor: *Actor)
@@ -35,10 +37,26 @@ explosion_init :: (using actor: *Actor)
 
     data = explosion;
 
+    animation_player_play(*animation, *resources.explosion_aseprite, "idle", false);
+}
+
+
+explosion_update :: (using actor: *Actor, dt: float)
+{
+    explosion: = data.(*ExplosionData);
+
+    if !animation.is_playing
+    {
+        request_delete_actor(actor);
+        return;
+    }
+
     //dammages
     for collider: explosion.body.frame_overlaps
     {
         target: = collider.parent.(*Actor);
+
+        if array_find(explosion.hit_actors, target) continue;
 
         if target.id == explosion.caster 
         {
@@ -48,20 +66,17 @@ explosion_init :: (using actor: *Actor)
         {
             actor_hit(target, 3, get(explosion.caster));
         }
-        
+
+        array_add_if_unique(*explosion.hit_actors, target);
+
         return;
     }
+
+
 }
 
-
-explosion_update :: (using actor: *Actor, dt: float)
+explosion_shutdown :: (using actor: *Actor)
 {
-    //explosion: = data.(*ExplosionData);
-    
-    if !animation.is_playing
-    {
-        request_delete_actor(actor);
-        return;
-    }
-
+    explosion: = data.(*ExplosionData);
+    array_free(explosion.hit_actors);
 }
