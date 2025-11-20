@@ -14,7 +14,11 @@ AlterationComponent :: struct
     burning_collider: *Collider;
 
     rng: Random_State;
+
+    particle_seeds: [..]u64;
 }
+
+PARTICLE_SEEDS :: 100;
 
 alteration_component_init :: (using component: *AlterationComponent, actor: *Actor)
 {
@@ -22,11 +26,18 @@ alteration_component_init :: (using component: *AlterationComponent, actor: *Act
 
     burning_collider = actor_add_collider(owner, .{}, PHYSIC_LAYER_SPELL);
     burning_collider.enabled = false;
+
+    array_resize(*particle_seeds, PARTICLE_SEEDS);
+    for i: 0..PARTICLE_SEEDS-1
+    {
+        particle_seeds[i] = random_get();
+    }
 }
 
 alteration_component_shutdown :: (using component: *AlterationComponent)
 {
     actor_remove_collider(owner, burning_collider);
+    array_reset(*particle_seeds);
     burning_collider = null;
 }
 
@@ -44,20 +55,22 @@ alteration_component_draw :: (using component: *AlterationComponent)
 
     if burning
     {
-        PARTICLE_COUNT :: 5;
+        PARTICLE_PER_SQUARE_UNIT_COUNT :: 0.04;
         TRAVEL_LENGTH :: 6;
         TRAVEL_TIME :: 0.7;
 
+        collider_size: = size(collider_get_bounds(burning_collider));
+        particle_count: = ceil_to_s32(collider_size.x * collider_size.y * PARTICLE_PER_SQUARE_UNIT_COUNT);
 
-        for i: 0..PARTICLE_COUNT-1
+        for i: 0..particle_count-1
         {
-            p_time: = time + (i.(float) * TRAVEL_TIME / PARTICLE_COUNT);
+            p_time: = time + (i.(float) * TRAVEL_TIME / particle_count);
             t: = positive_mod(p_time, TRAVEL_TIME) / TRAVEL_TIME;
             cycle_count: u64 = xx (p_time / TRAVEL_TIME);
-            seed: = component.(u64) + (xx i + cycle_count) * 1000;
+            seed: = particle_seeds[i%PARTICLE_SEEDS] + cycle_count*9472;
             random_seed(*rng, seed);
             r1: = random_get_zero_to_one(*rng);
-            random_seed(*rng, seed + 124414);
+            // random_seed(*rng, seed + 124414);
             r2: = random_get_zero_to_one(*rng);
 
             origin: = Vector3.{

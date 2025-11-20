@@ -1,62 +1,18 @@
 // Tree
 tree_definition : = ActorDefinition.{
     init = tree_init,
-    // burn = tree_burn,
 
-    face_position = .{1,2},
+    sprite_origin = .{15,1},
+    face_position = .{0,5},
+    idle_hollow_animation = .{ "tree_aseprite", "idle_hollow" },
     idle_animation = .{ "tree_aseprite", "idle" },
-    dead_animation = .{ "tree_aseprite", "burnt" },
-    max_health = 3,
+    move_animation = .{ "tree_aseprite", "walk" },
+    dead_animation = .{ "tree_aseprite", "dead" },
+    max_health = 10,
 };
 
 tree_init :: (using actor: *Actor)
 {
-    body: = actor_add_collider(actor, .{ type = .BOX, box = .{.{-2,0}, .{3,10}} }, PHYSIC_LAYER_BODY, true);
-    actor.alterations.burning_collider.shape = .{ type = .BOX, box = .{.{-5,4}, .{7,14}} };
-}
-
-// tree_burn :: (using actor: *Actor)
-// {
-//     actor_set_definition(actor, *burning_tree_definition);
-// }
-
-// Burning Tree
-// burning_tree_definition : = ActorDefinition.{
-//     init = burning_tree_init,
-//     update = burning_tree_update,
-
-//     idle_animation = .{ "tree_aseprite", "burning" },
-// };
-
-// BurningTreeData :: struct
-// {
-//     timer: float;
-// };
-
-// burning_tree_init :: (using actor: *Actor)
-// {
-//     actor_add_collider(actor, .{-2,-7,5,10}, PHYSIC_LAYER_BODY, true);
-//     burning_tree.timer = 2.0;
-// }
-
-// burning_tree_update :: (using actor: *Actor, dt: float)
-// {
-//     burning_tree.timer -= dt;
-//     if burning_tree.timer <= 0
-//     {
-//         actor_set_definition(actor, *burnt_tree_definition);
-//         return;
-//     }
-// }
-
-// Burnt tree
-burnt_tree_definition : = ActorDefinition.{
-    init = burnt_tree_init,
-
-    idle_animation = .{ "tree_aseprite", "burnt" },
-};
-
-burnt_tree_init :: (using actor: *Actor)
-{
-    actor_add_collider(actor, .{ type = .BOX, box = .{.{-2,-7}, .{3,-1}} }, PHYSIC_LAYER_BODY, true);
+    body: = actor_add_collider(actor, .{ type = .BOX, box = .{.{-5,0}, .{2,10}} }, PHYSIC_LAYER_BODY, true);
+    actor.alterations.burning_collider.shape = .{ type = .BOX, box = .{.{-9,4}, .{9,23}} };
 }
