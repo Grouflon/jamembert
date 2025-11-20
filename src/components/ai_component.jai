@@ -236,7 +236,7 @@ update_wandering :: (using ai: *AIComponent, dt: float, params: WanderingParams)
         }
     }
 
-    if !owner.movement.is_moving || has_collision
+    if !owner.movement.is_moving_to || has_collision
     {
         if wait_time <= 0
         {

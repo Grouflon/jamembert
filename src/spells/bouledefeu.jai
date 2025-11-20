@@ -40,7 +40,7 @@ bouledefeu_update :: (using actor: *Actor, dt: float)
 {
     bouledefeu: = data.(*BouledefeuData);
     
-    if !movement.is_moving
+    if !movement.is_moving_to
     {
         request_delete_actor(actor);
         return;

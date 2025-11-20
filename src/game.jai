@@ -65,21 +65,43 @@ game_update :: (dt: float)
     // Controlled Actor Input
     if can_control_actor(controlled_actor)
     {
-        if is_down(.MOUSE_BUTTON_LEFT)
+        // Movement
+        input: Vector2;
+        if is_down(#char "a") || is_down(#char "q")
         {
-            movement_component_go_to(*controlled_actor.movement, mouse_world_pos);
+            input += .{-1, 0};
+        }
+        if is_down(#char "d")
+        {
+            input += .{1, 0};
+        }
+        if is_down(#char "s")
+        {
+            input += .{0, -1};
+        }
+        if is_down(#char "w") || is_down(#char "z")
+        {
+            input += .{0, 1};
+        }
+        if length_squared(input) > 1.0
+        {
+            input = normalize(input);
+        }
+        movement_component_add_input(*controlled_actor.movement, input);
+
+        // Attack
+        if is_pressed(.MOUSE_BUTTON_LEFT)
+        {
+            actor_attack(controlled_actor, mouse_world_pos);
         }
 
+        // Spell
         if is_pressed(.MOUSE_BUTTON_RIGHT)
         {
             spellcaster_cast(*spellcaster);
         }
 
-        // Attack
-        if is_pressed(.MOUSE_BUTTON_MIDDLE)
-        {
-            actor_attack(controlled_actor, mouse_world_pos);
-        }
+        
     }
     
     physics_update(dt);

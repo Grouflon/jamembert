@@ -215,7 +215,7 @@ actor_update :: (using actor: *Actor, dt: float)
     {
         animation_player_play(*animation, dead_animation);
     }
-    else if movement.is_moving && move_animation.aseprite != null
+    else if length_squared(movement.velocity) > 0.1 && move_animation.aseprite != null
     {
         animation_player_play(*animation, move_animation);
     }
