@@ -298,7 +298,7 @@ actor_draw :: (using actor: *Actor)
     }
 }
 
-actor_hit :: (using actor: *Actor, source: *Actor, damage: s32)
+actor_hit :: (using actor: *Actor, damage: s32, source: *Actor = null)
 {
     assert(actor != null);
     assert(definition != null);

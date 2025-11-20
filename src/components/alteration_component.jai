@@ -9,6 +9,9 @@ AlterationComponent :: struct
     owner: *Actor;
 
     burning: bool;
+    remaining_burning_time: float;
+    consecutive_burning_time: float;
+
     sentient: bool;
 
     burning_collider: *Collider;
@@ -17,6 +20,10 @@ AlterationComponent :: struct
 
     particle_seeds: [..]u64;
 }
+
+BURNING_TICK_COUNT :: 2;
+BURNING_TICK_TIME :: 2.5;
+BURNING_TICK_DAMAGE :: 1;
 
 PARTICLE_SEEDS :: 100;
 
@@ -43,6 +50,27 @@ alteration_component_shutdown :: (using component: *AlterationComponent)
 
 alteration_component_update :: (using component: *AlterationComponent, dt: float)
 {
+    if burning
+    {
+        // Damage
+        previous_consecutive_burning_time: = consecutive_burning_time;
+        consecutive_burning_time += dt;
+        remaining_burning_time -= dt;
+
+        previous_consecutive_ticks: = floor_to_s32(previous_consecutive_burning_time / BURNING_TICK_TIME);
+        consecutive_ticks: = floor_to_s32(consecutive_burning_time / BURNING_TICK_TIME);
+
+        if previous_consecutive_ticks != consecutive_ticks
+        {
+            actor_hit(owner, BURNING_TICK_DAMAGE, null);
+        }
+
+        if remaining_burning_time <= 0
+        {
+            actor_set_burning(owner, false);
+        }
+    }
+
     for collider: burning_collider.frame_overlaps
     {
         actor_set_burning(collider.parent.(*Actor), true);
@@ -55,6 +83,7 @@ alteration_component_draw :: (using component: *AlterationComponent)
 
     if burning
     {
+        // Particles
         PARTICLE_PER_SQUARE_UNIT_COUNT :: 0.04;
         TRAVEL_LENGTH :: 6;
         TRAVEL_TIME :: 0.7;
@@ -91,6 +120,16 @@ actor_set_burning :: (actor: *Actor, value: bool)
     actor.alterations.burning = value;
     actor.alterations.burning_collider.enabled = value;
     actor.ai.is_panicking = value;
+
+    if value
+    {
+        actor.alterations.remaining_burning_time = BURNING_TICK_TIME * BURNING_TICK_COUNT;
+    }
+    else
+    {
+        actor.alterations.consecutive_burning_time = 0;
+        actor.alterations.remaining_burning_time = 0;
+    }
 }
 
 actor_is_burning :: (actor: *Actor) -> bool

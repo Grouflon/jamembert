@@ -42,11 +42,11 @@ explosion_init :: (using actor: *Actor)
 
         if target.id == explosion.caster 
         {
-            actor_hit(target, get(explosion.caster), 1);
+            actor_hit(target, 1, get(explosion.caster));
         }
         else
         {
-            actor_hit(target, get(explosion.caster), 3);
+            actor_hit(target, 3, get(explosion.caster));
         }
         
         return;

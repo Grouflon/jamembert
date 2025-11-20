@@ -60,7 +60,7 @@ attack_update :: (using actor: *Actor, dt: float)
         if target.id == attack.caster continue;
         if array_find(attack.hit_actors, target) continue;
 
-        actor_hit(target, caster, caster.definition.attack_damage);
+        actor_hit(target, caster.definition.attack_damage, caster);
         array_add_if_unique(*attack.hit_actors, target);
     }
 }
