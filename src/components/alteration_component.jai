@@ -116,6 +116,7 @@ alteration_component_draw :: (using component: *AlterationComponent)
 actor_set_burning :: (actor: *Actor, value: bool)
 {
     assert(actor != null);
+    if actor.alterations.burning == value return;
 
     actor.alterations.burning = value;
     actor.alterations.burning_collider.enabled = value;
