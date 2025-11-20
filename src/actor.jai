@@ -310,6 +310,11 @@ actor_hit :: (using actor: *Actor, damage: s32, source: *Actor = null)
     {
         definition.on_hit(actor, source);
     }
+
+    if source != null && actor_is_sentient(actor) && !actor.user_controlled
+    {
+        ai.target = source;
+    }
 }
 
 actor_modify_health :: (using actor: *Actor, value: s32)
@@ -391,7 +396,7 @@ actor_update_face :: (using actor: *Actor)
         {
             face_animation_name = "panic";
         }
-        else if ai.is_agressive
+        else if ai.is_agressive || ai.target != null
         {
             face_animation_name = "mad";
         }

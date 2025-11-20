@@ -7,7 +7,7 @@ AIComponent :: struct
     is_agressive: bool;
     is_panicking: bool;
 
-    detection_zone_radius: float = 35;
+    detection_zone_radius: float = 50;
     wandering_zone_radius: float;
     zone_center: Vector2;
     wait_time: float;
@@ -78,7 +78,7 @@ ai_component_update :: (using ai: *AIComponent, dt: float)
         }
         else if !owner.user_controlled
         {
-            if target != null
+            if target != null && !actor_is_dead(target)
             {
                 set_state(ai, .CHASING);
             }
@@ -111,7 +111,7 @@ ai_component_update :: (using ai: *AIComponent, dt: float)
             update_wandering(ai, dt, agressive_wandering_params);
             if target == null
             {
-                potential_targets: = physics_cast(zone_center, .{ type = .CIRCLE, circle = .{.{}, detection_zone_radius}}, .[PHYSIC_LAYER_BODY]);
+                potential_targets: = physics_cast(owner.position.xy, .{ type = .CIRCLE, circle = .{.{}, detection_zone_radius}}, .[PHYSIC_LAYER_BODY]);
                 closest_target: *Actor;
                 closest_target_squared_distance: float = FLOAT32_MAX;
                 for collider: potential_targets
