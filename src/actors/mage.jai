@@ -5,9 +5,12 @@ mage_definition : = ActorDefinition.{
     draw = mage_draw,
 
     face_position = .{0,6},
+    face_dead_position = .{0,0},
 
+    idle_hollow_animation = .{ "mage_aseprite", "idle_hollow" },
     idle_animation = .{ "mage_aseprite", "idle" },
     move_animation = .{ "mage_aseprite", "walk" },
+    dead_animation = .{ "mage_aseprite", "dead" },
 
     max_health = 6,
     speed = 30,

@@ -26,6 +26,7 @@ Actor :: struct
     user_controlled: bool;
     last_hit_time: float = -100;
     current_health: s32;
+    attack_cooldown: float;
 }
 actors: Pool(Actor);
 to_delete_actors: [..]*Actor;
@@ -40,15 +41,21 @@ ActorDefinition :: struct
 
     sprite_origin: Vector2 = .{8, 1};
     face_position: Vector2 = .{0,3};
-    dead_face_position: Vector2 = .{0,3};
-    cast_position: Vector2 = .{0,4};
+    face_dead_position: Vector2 = .{0,3};    
     idle_hollow_animation: AsepriteAnimation;
     idle_animation: AsepriteAnimation;
     move_animation: AsepriteAnimation;
     dead_animation: AsepriteAnimation;
     render_layer: RenderLayer = .OBJECTS;
+
     max_health: s32 = -1;
     speed: float = 20.0;
+
+    cast_position: Vector2 = .{0,4};
+
+    attack_cooldown: float = 1.0;
+    attack_range: float = 8.0;
+    attack_damage: s32 = 1;
 }
 
 create_actor :: (definition: *ActorDefinition = null, position: Vector2 = .{}) -> *Actor
@@ -57,10 +64,6 @@ create_actor :: (definition: *ActorDefinition = null, position: Vector2 = .{}) -
 
     actor.id = id;
     actor.position = .{position.x, position.y, 0};
-    actor.movement.owner = actor;
-
-    alteration_component_init(*actor.alterations, actor);
-    ai_component_init(*actor.ai, actor);
 
     actor_set_definition(actor, definition);
 
@@ -103,6 +106,10 @@ actor_init :: (using actor: *Actor)
 {
     assert(actor != null);
     assert(definition != null);
+
+    movement_component_init(*actor.movement, actor);
+    alteration_component_init(*actor.alterations, actor);
+    ai_component_init(*actor.ai, actor);
 
     // Cache animation handles
     success: bool;
@@ -158,6 +165,10 @@ actor_shutdown :: (using actor: *Actor)
         definition.shutdown(actor);
     }
 
+    ai_component_shutdown(*actor.ai);
+    alteration_component_shutdown(*actor.alterations);
+    movement_component_shutdown(*actor.movement);
+
     actor_remove_all_colliders(actor);
     free(data);
     data = null;
@@ -194,6 +205,11 @@ actors_draw :: ()
 actor_update :: (using actor: *Actor, dt: float)
 {
     ai_component_update(*ai, dt);
+
+    if attack_cooldown > 0
+    {
+        attack_cooldown -= dt;
+    }
 
     if current_health == 0 && dead_animation.aseprite != null
     {
@@ -250,7 +266,7 @@ actor_draw :: (using actor: *Actor)
     face_position: = definition.face_position;
     if actor_is_dead(actor)
     {
-        face_position = definition.dead_face_position;
+        face_position = definition.face_dead_position;
     }
     animation_player_draw(*animation, -xyz(definition.sprite_origin, 0));
     animation_player_draw(*face_animation, xyz(face_position - .{8,8}, 0.01));
@@ -282,13 +298,13 @@ actor_draw :: (using actor: *Actor)
     }
 }
 
-actor_hit :: (using actor: *Actor, source: *Actor)
+actor_hit :: (using actor: *Actor, source: *Actor, damage: s32)
 {
     assert(actor != null);
     assert(definition != null);
 
     last_hit_time = xx get_time();
-    actor_modify_health(actor, -1);
+    actor_modify_health(actor, -damage);
 
     if definition.on_hit != null
     {
@@ -346,13 +362,18 @@ actor_remove_all_colliders :: (using actor: *Actor)
     colliders.count = 0;
 }
 
-actor_attack :: (using actor: *Actor, target: Vector2)
+actor_attack :: (using actor: *Actor, target: Vector2) -> bool
 {
+    if attack_cooldown > 0 return false;
+
+    attack_cooldown = definition.attack_cooldown;
+
     params: SpellCastParams;
     params.source = actor;
     params.projectile.origin = actor.position.xy + actor.definition.cast_position;
     params.projectile.direction = normalize(target - params.projectile.origin);
     attack_spell_definition.cast_func(params);
+    return true;
 }
 
 #scope_file

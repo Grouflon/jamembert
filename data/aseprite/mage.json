@@ -233,7 +233,7 @@
   "size": { "w": 461, "h": 32 },
   "scale": "1",
   "frameTags": [
-   { "name": "idle static", "from": 0, "to": 0, "direction": "forward", "color": "#000000ff" },
+   { "name": "idle_hollow", "from": 0, "to": 0, "direction": "forward", "color": "#000000ff" },
    { "name": "dead", "from": 1, "to": 1, "direction": "forward", "color": "#000000ff" },
    { "name": "idle", "from": 2, "to": 3, "direction": "forward", "color": "#000000ff" },
    { "name": "walk", "from": 4, "to": 15, "direction": "forward", "color": "#000000ff" },

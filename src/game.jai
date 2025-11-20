@@ -235,5 +235,6 @@ can_control_actor :: (actor: *Actor) -> bool
     if actor == null return false;
     if actor_is_dead(actor) return false;
     if !actor_is_sentient(actor) return false;
+    if actor.ai.state == .PANICKING return false;
     return true;
 }

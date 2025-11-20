@@ -77,6 +77,7 @@ actor_set_burning :: (actor: *Actor, value: bool)
 
     actor.alterations.burning = value;
     actor.alterations.burning_collider.enabled = value;
+    actor.ai.is_panicking = value;
 }
 
 actor_is_burning :: (actor: *Actor) -> bool

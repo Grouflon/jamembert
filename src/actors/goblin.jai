@@ -5,7 +5,7 @@ goblin_definition : = ActorDefinition.{
     draw = goblin_draw,
 
     face_position = .{0,7},
-    dead_face_position = .{0,2},
+    face_dead_position = .{0,2},
 
     idle_hollow_animation = .{ "goblin_aseprite", "idle_hollow" },
     idle_animation = .{ "goblin_aseprite", "idle" },
@@ -13,6 +13,8 @@ goblin_definition : = ActorDefinition.{
     dead_animation = .{ "goblin_aseprite", "dead" },
 
     max_health = 3,
+    
+    attack_cooldown = 0.5,
 };
 
 goblin_init :: (using actor: *Actor)

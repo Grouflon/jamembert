@@ -3,7 +3,7 @@ attack_spell_definition : = SpellDefinition.{
     type = .PROJECTILE,
     cast_func = (params: SpellCastParams)
     {
-        attack: = create_actor(*attack_definition, params.projectile.origin + params.projectile.direction * 8);
+        attack: = create_actor(*attack_definition, params.projectile.origin + params.projectile.direction * params.source.definition.attack_range);
         attack.angle = signed_angle_between(params.projectile.direction, .{1,0});
         attack.data.(*AttackData).caster = params.source.id;
 
@@ -56,10 +56,11 @@ attack_update :: (using actor: *Actor, dt: float)
     for collider: attack.body.frame_overlaps
     {
         target: = collider.parent.(*Actor);
+        caster: = get(attack.caster);
         if target.id == attack.caster continue;
         if array_find(attack.hit_actors, target) continue;
 
-        actor_hit(target, get(attack.caster));
+        actor_hit(target, caster, caster.definition.attack_damage);
         array_add_if_unique(*attack.hit_actors, target);
     }
 }
