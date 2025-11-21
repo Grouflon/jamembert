@@ -282,6 +282,9 @@ actor_draw :: (using actor: *Actor)
             if has_face_override
             {
                 face_position = face_bounds.min - definition.sprite_origin + .{3,1};
+                
+                //this is a hack to be able to get the face position from an actor
+                definition.face_position = face_position;
             }
         }
         animation_player_draw(*face_animation, xyz(face_position - .{8,8}, 0.01));
