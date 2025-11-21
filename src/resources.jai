@@ -12,6 +12,7 @@ resources : struct
     tree_aseprite: AsepriteFile = .{ path = "data://aseprite/tree.json" };
 
     flame_texture: TextureFile = .{ path = "data://aseprite/flame.png" };
+    flame_aseprite: TextureFile = .{ path = "data://aseprite/flame.json" };
 
     icons_texture: TextureFile = .{ path = "data://aseprite/icons.png" };
     icons_aseprite: AsepriteFile = .{ path = "data://aseprite/icons.json" };

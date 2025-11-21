@@ -72,6 +72,8 @@ game_start :: ()
     spell_index = 0;
 
     spell_slots[0] = *sentification_spell_definition;
+    spell_slots[1] = *bouledefeu_spell_definition;
+    spell_slots[2] = *explosion_spell_definition;
     //spell_slots[1] = *transposition_spell_definition;
     //spell_slots[0] = *spawngobelin_spell_definition;
     //spell_slots[1] = *spawngobelin_spell_definition;

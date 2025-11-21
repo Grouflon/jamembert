@@ -38,7 +38,7 @@ ExplosionData :: struct
 explosion_init :: (using actor: *Actor)
 {
     explosion: = New(ExplosionData);
-    explosion.body = actor_add_collider(actor, .{ type = .BOX, box = .{.{-10,-10}, .{10,10}} }, PHYSIC_LAYER_SPELL);
+    explosion.body = actor_add_collider(actor, .{ type = .BOX, box = .{.{-15,-15}, .{15,15}} }, PHYSIC_LAYER_SPELL);
 
     data = explosion;
 
@@ -78,6 +78,8 @@ explosion_update :: (using actor: *Actor, dt: float)
 
             return;
         }
+
+        explosion.body.enabled = false;
     }
 
     explosion.explosion_timing -= dt;
