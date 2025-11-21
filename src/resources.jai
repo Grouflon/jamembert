@@ -33,4 +33,7 @@ resources : struct
 
     sentification_texture: TextureFile = .{ path = "data://aseprite/sentification.png" };
     sentification_aseprite: AsepriteFile = .{ path = "data://aseprite/sentification.json" };
+
+    bookshelf_texture: TextureFile = .{ path = "data://aseprite/bookshelf.png" };
+    bookshelf_aseprite: AsepriteFile = .{ path = "data://aseprite/bookshelf.json" };
 };

@@ -9,6 +9,7 @@ tree_definition : = ActorDefinition.{
     move_animation = .{ "tree_aseprite", "walk" },
     dead_animation = .{ "tree_aseprite", "dead" },
     max_health = 10,
+    speed = 10,
 };
 
 tree_init :: (using actor: *Actor)

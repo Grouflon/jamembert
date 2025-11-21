@@ -260,30 +260,43 @@ actor_draw :: (using actor: *Actor)
     set_from_axis_and_angle(*r, .{0,0,1}, angle);
     transform_rotate(r);
 
-    shader_instance: = begin_shader(resources.sprite_shader.program);
-    shader_instance_set_uniform(shader_instance, "uLastHitTime", last_hit_time);
-
-    face_position: = definition.face_position;
-    if actor_is_dead(actor)
+    // Sprites
     {
-        face_position = definition.face_dead_position;
+        shader_instance: = begin_shader(resources.sprite_shader.program);
+        defer end_shader();
+
+        shader_instance_set_uniform(shader_instance, "uLastHitTime", last_hit_time);
+
+        // Draw body
+        animation_player_draw(*animation, -xyz(definition.sprite_origin, 0));
+
+        // Draw face
+        face_position: = definition.face_position;
+        if actor_is_dead(actor)
+        {
+            face_position = definition.face_dead_position;
+        }
+        if animation.aseprite != null
+        {
+            has_face_override, face_bounds: = aseprite_get_slice(*animation.aseprite.data, "face", animation.current_aseprite_frame, true);
+            if has_face_override
+            {
+                face_position = face_bounds.min - definition.sprite_origin + .{3,1};
+            }
+        }
+        animation_player_draw(*face_animation, xyz(face_position - .{8,8}, 0.01));
     }
-    animation_player_draw(*animation, -xyz(definition.sprite_origin, 0));
-    animation_player_draw(*face_animation, xyz(face_position - .{8,8}, 0.01));
 
-    end_shader();
-
+    // Custom draw
     if definition.draw
     {
         definition.draw(actor);
     }
+
+    // Alterations
     alteration_component_draw(*alterations);
 
-    if definition.render_layer != .OBJECTS
-    {
-        end_render_texture();
-    }
-
+    // Draw Healthbar
     if current_health != definition.max_health && current_health > 0
     {
         begin_render_texture(render_layers[RenderLayer.UI]);
@@ -294,6 +307,11 @@ actor_draw :: (using actor: *Actor)
         ratio: = current_health.(float) / definition.max_health.(float);
         draw_rectangle(.{0,18,0.3}, .{.{-5,0}, .{-5 + ratio*10, 1}}, RED);
 
+        end_render_texture();
+    }
+
+    if definition.render_layer != .OBJECTS
+    {
         end_render_texture();
     }
 }

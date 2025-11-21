@@ -14,8 +14,10 @@ game_start :: ()
 {
     mage: = create_actor(*mage_definition);
     create_actor(*tree_definition, .{30, 10});
-    create_actor(*tree_definition, .{-30, -10});
+    create_actor(*tree_definition, .{-30, -20});
     goblin: = create_actor(*goblin_definition, .{70, -30});
+
+    create_actor(*bookshelf_definition, .{-8, 10});
 
     set_controlled_actor(mage);
     // set_controlled_actor(goblin);
