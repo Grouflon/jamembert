@@ -4,12 +4,14 @@
 #load "spells/lobotomie.jai";
 #load "spells/sentification.jai";
 #load "spells/explosion.jai";
+#load "spells/transposition.jai";
 
 spellbook: []*SpellDefinition = .[
     *bouledefeu_spell_definition,
     *sentification_spell_definition,
     *lobotomie_spell_definition,
     *explosion_spell_definition,
+    *transposition_spell_definition,
 ];
 
 // Actors

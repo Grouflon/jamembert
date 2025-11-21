@@ -45,4 +45,7 @@ resources : struct
 
     healing_texture: TextureFile = .{ path = "data://aseprite/healing.png" };
     healing_aseprite: AsepriteFile = .{ path = "data://aseprite/healing.json" };
+
+    transposition_texture: TextureFile = .{ path = "data://aseprite/transposition.png" };
+    transposition_aseprite: AsepriteFile = .{ path = "data://aseprite/transposition.json" };
 };

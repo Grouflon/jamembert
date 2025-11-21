@@ -9,7 +9,7 @@ cheese_definition : = ActorDefinition.{
     idle_animation = .{ "cheese_aseprite", "idle" },
     move_animation = .{ "cheese_aseprite", "walk" },
     dead_animation = .{ "cheese_aseprite", "dead" },
-    max_health = 10,
+    max_health = 2,
     speed = 10,
 };
 

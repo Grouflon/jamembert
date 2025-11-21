@@ -72,6 +72,7 @@ game_start :: ()
     spell_index = 0;
 
     spell_slots[0] = *sentification_spell_definition;
+    spell_slots[1] = *transposition_spell_definition;
 }
 
 game_stop :: ()
