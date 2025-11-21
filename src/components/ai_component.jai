@@ -65,6 +65,12 @@ ai_component_shutdown :: (using ai: *AIComponent)
 
 ai_component_update :: (using ai: *AIComponent, dt: float)
 {
+    // Check target is still valid
+    if !actor_is_chasable(ai, target)
+    {
+        target = null;
+    }
+
     // Transitions
     if actor_is_dead(owner) || !actor_is_sentient(owner)
     {
@@ -78,7 +84,7 @@ ai_component_update :: (using ai: *AIComponent, dt: float)
         }
         else if !owner.user_controlled
         {
-            if target != null && !actor_is_dead(target)
+            if target != null
             {
                 set_state(ai, .CHASING);
             }
@@ -109,27 +115,29 @@ ai_component_update :: (using ai: *AIComponent, dt: float)
         case .AGRESSIVE;
         {
             update_wandering(ai, dt, agressive_wandering_params);
-            if target == null
+
+            assert(target == null);
+
+            potential_targets: = physics_cast(owner.position.xy, .{ type = .CIRCLE, circle = .{.{}, detection_zone_radius}}, .[PHYSIC_LAYER_BODY]);
+            closest_target: *Actor;
+            closest_target_squared_distance: float = FLOAT32_MAX;
+            for collider: potential_targets
             {
-                potential_targets: = physics_cast(owner.position.xy, .{ type = .CIRCLE, circle = .{.{}, detection_zone_radius}}, .[PHYSIC_LAYER_BODY]);
-                closest_target: *Actor;
-                closest_target_squared_distance: float = FLOAT32_MAX;
-                for collider: potential_targets
-                {
-                    if collider.parent == owner continue;
+                potential_target: = collider.parent.(*Actor);
+                if potential_target == owner continue;
+                if !actor_is_chasable(ai, potential_target) continue;
 
-                    d: = distance_squared(owner.position, collider.parent.position);
-                    if d < closest_target_squared_distance
-                    {
-                        closest_target_squared_distance = d;
-                        closest_target = collider.parent.(*Actor);
-                    }
-                }
-
-                if closest_target != null
+                d: = distance_squared(owner.position, collider.parent.position);
+                if d < closest_target_squared_distance
                 {
-                    target = closest_target;
+                    closest_target_squared_distance = d;
+                    closest_target = collider.parent.(*Actor);
                 }
+            }
+
+            if closest_target != null
+            {
+                target = closest_target;
             }
         }
 
@@ -140,26 +148,17 @@ ai_component_update :: (using ai: *AIComponent, dt: float)
 
         case .CHASING;
         {
-            if target != null
+            assert(target != null);
+            target_attack_range: = owner.definition.attack_range + 5;
+            can_attack_range: = owner.definition.attack_range + 6;
+
+            target_to_self: = (owner.position - target.position).xy;
+            distance: = length(target_to_self);
+            movement_component_go_to(*owner.movement, target.position.xy + normalize(target_to_self) * target_attack_range);
+
+            if distance <= can_attack_range
             {
-                if !actor_is_sentient(target) || actor_is_dead(target)
-                {
-                    target = null;
-                }
-                else
-                {
-                    target_attack_range: = owner.definition.attack_range + 5;
-                    can_attack_range: = owner.definition.attack_range + 6;
-
-                    target_to_self: = (owner.position - target.position).xy;
-                    distance: = length(target_to_self);
-                    movement_component_go_to(*owner.movement, target.position.xy + normalize(target_to_self) * target_attack_range);
-
-                    if distance <= can_attack_range
-                    {
-                        actor_attack(owner, target.position.xy);
-                    }
-                }
+                actor_attack(owner, target.position.xy);
             }
         }
     }
@@ -255,4 +254,13 @@ update_wandering :: (using ai: *AIComponent, dt: float, params: WanderingParams)
             wait_time -= dt;
         }
     }
+}
+
+actor_is_chasable :: (using ai: *AIComponent, actor: *Actor) -> bool
+{
+    if actor == null return false;
+    if actor == owner return false;
+    if !actor_is_sentient(actor) return false;
+    if actor_is_dead(actor) return false;
+    return true;
 }
