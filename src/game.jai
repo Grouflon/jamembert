@@ -102,13 +102,13 @@ game_update :: (dt: float)
         movement_component_add_input(*controlled_actor.movement, input);
 
         // Attack
-        if is_pressed(.MOUSE_BUTTON_LEFT)
+        if is_down(.MOUSE_BUTTON_LEFT)
         {
             actor_attack(controlled_actor, mouse_world_pos);
         }
 
         // Spell
-        if is_pressed(.MOUSE_BUTTON_RIGHT)
+        if is_down(.MOUSE_BUTTON_RIGHT)
         {
             if spellcaster_cast(*spellcaster)
             {
