@@ -54,7 +54,14 @@ game_update :: (dt: float)
     {
         if mouse_delta_z != 0
         {
-            spell_index = positive_mod(spell_index + sign(mouse_delta_z), SPELL_SLOTS_COUNT);
+            if mouse_delta_z > 0
+            {
+                select_next_spell();
+            }
+            else
+            {
+                select_previous_spell();
+            }
             spell_change_cooldown = 0.12;
         }
     }
@@ -113,11 +120,12 @@ game_update :: (dt: float)
         }
 
         // Spell
-        if is_down(.MOUSE_BUTTON_RIGHT)
+        if is_pressed(.MOUSE_BUTTON_RIGHT)
         {
             if spellcaster_cast(*spellcaster)
             {
                 spell_slots[spell_index] = null;
+                select_closest_spell();
             }
         }
     }
@@ -219,7 +227,10 @@ game_draw :: ()
             {
                 animation_player_draw(*spell_swatches[i], xyz(spell_swatches_origin + spell_swatches_step * i.(float), 0));
             }
-            draw_rectangle(xyz(spell_swatches_origin + spell_index.(float) * spell_swatches_step + selector_offset, 0), .{.{-1,-1}, .{1,1}}, WHITE);
+            if spell_slots[spell_index] != null
+            {
+                draw_rectangle(xyz(spell_swatches_origin + spell_index.(float) * spell_swatches_step + selector_offset, 0), .{.{-1,-1}, .{1,1}}, WHITE);
+            }
         }
 
         // Compositing
@@ -298,8 +309,43 @@ try_learn_spell :: (actor: *Actor, spell: *SpellDefinition) -> bool
         if spell_slots[i] == null
         {
             spell_slots[i] = spell;
+            select_closest_spell();
             return true;
         }
     }
     return false;
+}
+
+select_closest_spell :: ()
+{
+    if spell_slots[spell_index] != null return;
+    select_previous_spell();
+}
+
+select_previous_spell :: ()
+{
+    for i: 1..SPELL_SLOTS_COUNT
+    {
+        index: = positive_mod(spell_index - i, SPELL_SLOTS_COUNT);
+
+        if spell_slots[index] != null
+        {
+            spell_index = index;
+            return;
+        }
+    }
+}
+
+select_next_spell :: ()
+{
+    for i: 1..SPELL_SLOTS_COUNT
+    {
+        index: = positive_mod(spell_index + i, SPELL_SLOTS_COUNT);
+
+        if spell_slots[index] != null
+        {
+            spell_index = index;
+            return;
+        }
+    }
 }
