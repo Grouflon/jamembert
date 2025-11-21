@@ -3,11 +3,13 @@ bouledefeu_spell_definition : = SpellDefinition.{
     type = .PROJECTILE,
     icon = .{ "icons_aseprite", "bouledefeu" },
     range = 200,
-    cast_func = (params: SpellCastParams)
+    cast_func = (params: SpellCastParams) -> bool
     {
         f: = create_actor(*bouledefeu_definition, params.projectile.origin);
         f.data.(*BouledefeuData).caster = params.source.id;
         movement_component_go_to(*f.movement, params.projectile.origin + params.projectile.direction * bouledefeu_spell_definition.range);
+
+        return true;
     },
 };
 

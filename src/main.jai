@@ -13,6 +13,7 @@ spellbook: []*SpellDefinition = .[
 ];
 
 // Actors
+#load "actors/book.jai";
 #load "actors/bookshelf.jai";
 #load "actors/mage.jai";
 #load "actors/tree.jai";

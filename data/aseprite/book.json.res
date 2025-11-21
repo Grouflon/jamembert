@@ -1,0 +1,3 @@
+{
+	"texture": "book_texture"
+}

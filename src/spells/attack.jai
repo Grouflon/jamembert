@@ -1,13 +1,14 @@
 // Spell
 attack_spell_definition : = SpellDefinition.{
     type = .PROJECTILE,
-    cast_func = (params: SpellCastParams)
+    cast_func = (params: SpellCastParams) -> bool
     {
         attack: = create_actor(*attack_definition, params.projectile.origin + params.projectile.direction * params.source.definition.attack_range);
         attack.angle = signed_angle_between(params.projectile.direction, .{1,0});
         attack.data.(*AttackData).caster = params.source.id;
 
         attack.animation.flip_y = abs(attack.angle) > PI/2;
+        return true;
     },
 };
 

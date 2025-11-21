@@ -3,26 +3,32 @@ DRAW_SCALE :: 5;
 PHYSIC_LAYER_BODY :: 0;
 PHYSIC_LAYER_SPELL :: 1;
 
+SPELL_SLOTS_COUNT :: 3;
+spell_slots: [SPELL_SLOTS_COUNT]*SpellDefinition;
+spell_swatches: [SPELL_SLOTS_COUNT]AsepriteAnimationPlayer;
 spell_index: = 0;
 spell_change_cooldown: float = 0;
+spellcaster: SpellCaster;
 
 controlled_actor: *Actor;
-spell_swatch: AsepriteAnimationPlayer;
-spellcaster: SpellCaster;
 
 game_start :: ()
 {
+    random_seed(Some_Big_Time_Value.{current_time_consensus().low, current_time_consensus().high}); // Will need something for wasm, but we should change our own get_time() api first to have different calls for time_since_init and absolute time
+
     mage: = create_actor(*mage_definition);
     create_actor(*tree_definition, .{30, 10});
     create_actor(*tree_definition, .{-30, -20});
     goblin: = create_actor(*goblin_definition, .{70, -30});
 
     create_actor(*bookshelf_definition, .{-8, 10});
+    create_actor(*book_definition, .{-8, -10});
 
     set_controlled_actor(mage);
     // set_controlled_actor(goblin);
     // mage.ai.is_agressive = true;
     spell_index = 0;
+
 }
 
 game_stop :: ()
@@ -38,31 +44,35 @@ game_update :: (dt: float)
 
     actors_update(dt);
 
-    // Spellcaster
+    // Spells
     if spell_change_cooldown <= 0
     {
         if mouse_delta_z != 0
         {
-            spell_index = positive_mod(spell_index + sign(mouse_delta_z), spellbook.count);
-            spell_change_cooldown = 0.04;
+            spell_index = positive_mod(spell_index + sign(mouse_delta_z), SPELL_SLOTS_COUNT);
+            spell_change_cooldown = 0.12;
         }
     }
     else
     {
         spell_change_cooldown -= dt;
     }
-    spellcaster.definition = spellbook[spell_index];
-    if spellcaster.definition != null
-    {
-        success, icon_animation: = get_animation_handle(spellcaster.definition.icon);
-        if success
-        {
-            animation_player_play(*spell_swatch, icon_animation);
-        }
-    }
-
+    spellcaster.definition = spell_slots[spell_index];
     spellcaster_update(*spellcaster, dt, mouse_world_pos);
-    animation_player_update(*spell_swatch, dt);
+
+    for i: 0..spell_slots.count-1
+    {
+        spell_swatch: = *spell_swatches[i];
+        if spell_slots[i] != null
+        {
+            animation_player_play(spell_swatch, spell_slots[i].icon);
+        }
+        else
+        {
+            animation_player_play(spell_swatch, .{"icons_aseprite", "empty"});
+        }
+        animation_player_update(spell_swatch, dt);
+    }
 
     // Controlled Actor Input
     if can_control_actor(controlled_actor)
@@ -100,7 +110,10 @@ game_update :: (dt: float)
         // Spell
         if is_pressed(.MOUSE_BUTTON_RIGHT)
         {
-            spellcaster_cast(*spellcaster);
+            if spellcaster_cast(*spellcaster)
+            {
+                spell_slots[spell_index] = null;
+            }
         }
 
         
@@ -196,7 +209,14 @@ game_draw :: ()
             begin_camera(ui_camera);
             defer end_camera();
 
-            animation_player_draw(*spell_swatch, .{3, 3, 0});
+            spell_swatches_origin: = Vector2.{3, 3};
+            spell_swatches_step: = Vector2.{17, 0};
+            selector_offset: = Vector2.{8,17};
+            for i: 0..spell_slots.count-1
+            {
+                animation_player_draw(*spell_swatches[i], xyz(spell_swatches_origin + spell_swatches_step * i.(float), 0));
+            }
+            draw_rectangle(xyz(spell_swatches_origin + spell_index.(float) * spell_swatches_step + selector_offset, 0), .{.{-1,-1}, .{1,1}}, WHITE);
         }
 
         // Compositing
@@ -261,4 +281,22 @@ can_control_actor :: (actor: *Actor) -> bool
     if !actor_is_sentient(actor) return false;
     if actor.ai.state == .PANICKING return false;
     return true;
+}
+
+try_learn_spell :: (actor: *Actor, spell: *SpellDefinition) -> bool
+{
+    if actor == null return false;
+    if spell == null return false;
+    if actor != controlled_actor return false;
+
+
+    for i: 0..spell_slots.count-1
+    {
+        if spell_slots[i] == null
+        {
+            spell_slots[i] = spell;
+            return true;
+        }
+    }
+    return false;
 }

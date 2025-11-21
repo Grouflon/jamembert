@@ -1,6 +1,6 @@
 { "frames": [
    {
-    "filename": "icons 0.aseprite",
+    "filename": "book 0.aseprite",
     "frame": { "x": 0, "y": 0, "w": 16, "h": 16 },
     "rotated": false,
     "trimmed": false,
@@ -9,7 +9,7 @@
     "duration": 100
    },
    {
-    "filename": "icons 1.aseprite",
+    "filename": "book 1.aseprite",
     "frame": { "x": 17, "y": 0, "w": 16, "h": 16 },
     "rotated": false,
     "trimmed": false,
@@ -18,7 +18,7 @@
     "duration": 100
    },
    {
-    "filename": "icons 2.aseprite",
+    "filename": "book 2.aseprite",
     "frame": { "x": 34, "y": 0, "w": 16, "h": 16 },
     "rotated": false,
     "trimmed": false,
@@ -27,7 +27,7 @@
     "duration": 100
    },
    {
-    "filename": "icons 3.aseprite",
+    "filename": "book 3.aseprite",
     "frame": { "x": 51, "y": 0, "w": 16, "h": 16 },
     "rotated": false,
     "trimmed": false,
@@ -36,7 +36,25 @@
     "duration": 100
    },
    {
-    "filename": "icons 4.aseprite",
+    "filename": "book 4.aseprite",
+    "frame": { "x": 51, "y": 0, "w": 16, "h": 16 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 },
+    "sourceSize": { "w": 16, "h": 16 },
+    "duration": 100
+   },
+   {
+    "filename": "book 5.aseprite",
+    "frame": { "x": 68, "y": 0, "w": 16, "h": 16 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 16 },
+    "sourceSize": { "w": 16, "h": 16 },
+    "duration": 100
+   },
+   {
+    "filename": "book 6.aseprite",
     "frame": { "x": 68, "y": 0, "w": 16, "h": 16 },
     "rotated": false,
     "trimmed": false,
@@ -48,18 +66,18 @@
  "meta": {
   "app": "https://www.aseprite.org/",
   "version": "1.3.15.5-x64",
-  "image": "icons.png",
+  "image": "book.png",
   "format": "RGBA8888",
   "size": { "w": 84, "h": 16 },
   "scale": "1",
   "frameTags": [
-   { "name": "empty", "from": 0, "to": 0, "direction": "forward", "color": "#000000ff" },
-   { "name": "bouledefeu", "from": 1, "to": 1, "direction": "forward", "color": "#000000ff" },
-   { "name": "sentification", "from": 2, "to": 2, "direction": "forward", "color": "#000000ff" },
-   { "name": "lobotomie", "from": 3, "to": 3, "direction": "forward", "color": "#000000ff" },
-   { "name": "explosion", "from": 4, "to": 4, "direction": "forward", "color": "#000000ff" }
+   { "name": "idle_hollow", "from": 0, "to": 0, "direction": "forward", "color": "#000000ff" },
+   { "name": "dead", "from": 1, "to": 1, "direction": "forward", "color": "#000000ff" },
+   { "name": "idle", "from": 2, "to": 2, "direction": "forward", "color": "#000000ff" },
+   { "name": "walk", "from": 3, "to": 6, "direction": "forward", "color": "#000000ff" }
   ],
   "slices": [
+   { "name": "face", "color": "#0000ffff", "keys": [{ "frame": 1, "bounds": {"x": 5, "y": 10, "w": 5, "h": 4 } }, { "frame": 2, "bounds": {"x": 5, "y": 6, "w": 5, "h": 4 } }] }
   ]
  }
 }

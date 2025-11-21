@@ -3,13 +3,13 @@ SpellDefinition :: struct
     type: SpellCastType;
     icon: AsepriteAnimation;
     range: float;
-    cast_func: #type (params: SpellCastParams);
+    cast_func: #type (params: SpellCastParams) -> bool;
 }
 
-spell_cast :: (definition: *SpellDefinition, params: SpellCastParams)
+spell_cast :: (definition: *SpellDefinition, params: SpellCastParams) -> bool
 {
     assert(definition != null);
-    if definition.cast_func == null return;
+    if definition.cast_func == null return false;
 
-    definition.cast_func(params);
+    return definition.cast_func(params);
 }

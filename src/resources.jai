@@ -36,4 +36,7 @@ resources : struct
 
     bookshelf_texture: TextureFile = .{ path = "data://aseprite/bookshelf.png" };
     bookshelf_aseprite: AsepriteFile = .{ path = "data://aseprite/bookshelf.json" };
+
+    book_texture: TextureFile = .{ path = "data://aseprite/book.png" };
+    book_aseprite: AsepriteFile = .{ path = "data://aseprite/book.json" };
 };

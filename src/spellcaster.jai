@@ -80,8 +80,8 @@ spellcaster_draw :: (using spellcaster: *SpellCaster)
     }
 }
 
-spellcaster_cast :: (using spellcaster: *SpellCaster)
+spellcaster_cast :: (using spellcaster: *SpellCaster) -> bool
 {
-    if definition == null return;
-    spell_cast(definition, current_cast);
+    if definition == null return false;
+    return spell_cast(definition, current_cast);
 }

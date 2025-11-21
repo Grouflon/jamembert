@@ -3,13 +3,14 @@ explosion_spell_definition : = SpellDefinition.{
     type = .TARGET,
     icon = .{ "icons_aseprite", "explosion" },
     range = 200,
-    cast_func = (params: SpellCastParams)
+    cast_func = (params: SpellCastParams) -> bool
     {
         target: = params.target.target;
-        if target == null return;
+        if target == null return false;
 
         exp: = create_actor(*explosion_definition, params.target.target.position.xy);
         exp.data.(*ExplosionData).caster = params.source.id;
+        return true;
     },
 };
 
