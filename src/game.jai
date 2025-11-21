@@ -22,19 +22,24 @@ game_start :: ()
     goblin: = create_actor(*goblin_definition, .{70, -30});
 
     create_actor(*bookshelf_definition, .{-8, 10});
-    create_actor(*book_definition, .{-8, -10});
 
     set_controlled_actor(mage);
     // set_controlled_actor(goblin);
     // mage.ai.is_agressive = true;
     spell_index = 0;
 
+    spell_slots[0] = *sentification_spell_definition;
 }
 
 game_stop :: ()
 {
     set_controlled_actor(null);
     delete_all_actors();
+
+    for i: 0..spell_slots.count-1
+    {
+        spell_slots[i] = null;
+    }
 }
 
 game_update :: (dt: float)
@@ -115,8 +120,6 @@ game_update :: (dt: float)
                 spell_slots[spell_index] = null;
             }
         }
-
-        
     }
     
     physics_update(dt);

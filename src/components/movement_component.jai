@@ -8,6 +8,9 @@ MovementComponent :: struct
     is_moving_to: = false;
     speed_modifiers: Table(StringHash, float);
 
+    push_velocity: Vector2;
+    push_dampening: float = 200.0;
+
     last_position: Vector2;
     velocity: Vector2;
 }
@@ -52,6 +55,13 @@ movement_component_update :: (using c: *MovementComponent, dt: float)
         input = .{};
     }
 
+    dampening: = Vector2.{
+        -sign(push_velocity.x) * clamp(push_dampening * dt, 0, abs(push_velocity.x)),
+        -sign(push_velocity.y) * clamp(push_dampening * dt, 0, abs(push_velocity.y))
+    };
+    owner.position += xyz(push_velocity * dt, 0);
+    push_velocity += dampening;
+
     velocity = (owner.position.xy - last_position) / dt;
     last_position = owner.position.xy;
 }
@@ -70,6 +80,23 @@ movement_component_add_input :: (using c: *MovementComponent, _input: Vector2)
 movement_component_stop :: (using c: *MovementComponent)
 {
     is_moving_to = false;
+}
+
+movement_component_push :: (using c: *MovementComponent, push: Vector2)
+{
+    // HACK: static body detection
+    is_static: bool;
+    for collider: owner.colliders
+    {
+        if collider.enabled && collider.static
+        {
+            is_static = true;
+            break;
+        }
+    }
+    if is_static return;
+
+    push_velocity += push;
 }
 
 movement_component_set_speed_modifer :: (using c: *MovementComponent, name: string, value: float)

@@ -18,6 +18,7 @@ BookData :: struct
     body: *Collider;
     pickup_trigger: *Collider;
     spell: *SpellDefinition;
+    enabled_collisions: bool;
 }
 
 book_init :: (using actor: *Actor)
@@ -27,6 +28,8 @@ book_init :: (using actor: *Actor)
 
     book.body = actor_add_collider(actor, .{ type = .BOX, box = .{.{-4, 0}, .{4,8}} }, PHYSIC_LAYER_BODY);
     book.pickup_trigger = actor_add_collider(actor, .{ type = .BOX, box = dilate(book.body.shape.box, .{1,1}) }, PHYSIC_LAYER_SPELL);
+    book.body.enabled = false;
+    book.pickup_trigger.enabled = false;
 
     actor.alterations.burning_collider.shape = .{ type = .BOX, box = dilate(book.body.shape.box, .{2,1}) };
 
@@ -37,6 +40,14 @@ book_init :: (using actor: *Actor)
 book_update :: (using actor: *Actor, dt: float)
 {
     book: = data.(*BookData);
+
+    if !book.enabled_collisions
+    {
+        if length(movement.velocity) < 0.001
+        {
+            book.enabled_collisions = true;
+        }
+    }
 
     for collider: book.pickup_trigger.frame_overlaps
     {
@@ -49,7 +60,8 @@ book_update :: (using actor: *Actor, dt: float)
         }
     }
 
-    book.pickup_trigger.enabled == !actor_is_sentient(actor) && !actor_is_dead(actor);
+    book.body.enabled = book.enabled_collisions;
+    book.pickup_trigger.enabled = book.enabled_collisions && !actor_is_sentient(actor) && !actor_is_dead(actor);
 }
 
 #scope_file

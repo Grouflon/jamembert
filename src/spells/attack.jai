@@ -61,7 +61,9 @@ attack_update :: (using actor: *Actor, dt: float)
         if target.id == attack.caster continue;
         if array_find(attack.hit_actors, target) continue;
 
+        ATTACK_PUSH_FORCE :: 50;
         actor_hit(target, caster.definition.attack_damage, caster);
+        movement_component_push(*target.movement, normalize(target.position - caster.position).xy * ATTACK_PUSH_FORCE);
         array_add_if_unique(*attack.hit_actors, target);
     }
 }
