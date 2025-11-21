@@ -1,0 +1,3 @@
+{
+	"texture": "healing_texture"
+}

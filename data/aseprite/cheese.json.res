@@ -1,0 +1,3 @@
+{
+	"texture": "cheese_texture"
+}

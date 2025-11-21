@@ -16,16 +16,59 @@ game_start :: ()
 {
     random_seed(Some_Big_Time_Value.{current_time_consensus().low, current_time_consensus().high}); // Will need something for wasm, but we should change our own get_time() api first to have different calls for time_since_init and absolute time
 
+    //Player mage is spawn at origin
     mage: = create_actor(*mage_definition);
-    create_actor(*tree_definition, .{30, 10});
-    create_actor(*tree_definition, .{-30, -20});
+
+    //Actor placement
     goblin: = create_actor(*goblin_definition, .{70, -30});
+    create_actor(*cheese_definition, .{-70, 0});
+    create_actor(*cheese_definition, .{0, -50});
 
-    create_actor(*bookshelf_definition, .{-8, 10});
+    //Trees
+    for i : 0..17 
+    {
+        //top
+        rand_y:= random_get_within_range(60,75);
+        rand_x:= random_get_within_range(0,20);
+        create_actor(*tree_definition, .{-150+(i*16)+rand_x, rand_y});
+    }
+    for i : 0..17
+    {
+        //bottom
+        rand_y:= random_get_within_range(-110,-90);
+        rand_x:= random_get_within_range(0,20);
+        create_actor(*tree_definition, .{-150+(i*16)+rand_x, rand_y});
+    }
+    for i : 0..17
+    {
+        //left
+        rand_y:= random_get_within_range(0,20);
+        rand_x:= random_get_within_range(-160,-130);
+        create_actor(*tree_definition, .{rand_x, -75+(i*16)+rand_y});
+    }
+    for i : 0..17
+    {
+        //left
+        rand_y:= random_get_within_range(0,20);
+        rand_x:= random_get_within_range(130,160);
+        create_actor(*tree_definition, .{rand_x, -75+(i*16)+rand_y});
+    }
+    create_actor(*tree_definition, .{30, 45});
+    create_actor(*tree_definition, .{-100, -20});
+    create_actor(*tree_definition, .{40, 5});
 
+    //Bookshelves
+    create_actor(*bookshelf_definition, .{-75, 40});
+    create_actor(*bookshelf_definition, .{75, 40});
+    create_actor(*bookshelf_definition, .{-75, -40});
+    create_actor(*bookshelf_definition, .{75, -40});
+
+    //Set controlled
     set_controlled_actor(mage);
     // set_controlled_actor(goblin);
     // mage.ai.is_agressive = true;
+
+    //Spell init
     spell_index = 0;
 
     spell_slots[0] = *sentification_spell_definition;

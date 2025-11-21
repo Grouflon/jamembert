@@ -18,6 +18,7 @@ spellbook: []*SpellDefinition = .[
 #load "actors/mage.jai";
 #load "actors/tree.jai";
 #load "actors/goblin.jai";
+#load "actors/cheese.jai";
 #load "actors/simple_animation.jai";
 
 // Other

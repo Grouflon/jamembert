@@ -39,4 +39,10 @@ resources : struct
 
     book_texture: TextureFile = .{ path = "data://aseprite/book.png" };
     book_aseprite: AsepriteFile = .{ path = "data://aseprite/book.json" };
+
+    cheese_texture: TextureFile = .{ path = "data://aseprite/cheese.png" };
+    cheese_aseprite: AsepriteFile = .{ path = "data://aseprite/cheese.json" };
+
+    healing_texture: TextureFile = .{ path = "data://aseprite/healing.png" };
+    healing_aseprite: AsepriteFile = .{ path = "data://aseprite/healing.json" };
 };
