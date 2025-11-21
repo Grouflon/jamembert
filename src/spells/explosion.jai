@@ -18,6 +18,7 @@ explosion_spell_definition : = SpellDefinition.{
 explosion_definition : = ActorDefinition.{
     init = explosion_init,
     update = explosion_update,
+    shutdown = explosion_shutdown,
 
     sprite_origin = .{16,16},
     render_layer = .OVERLAY
