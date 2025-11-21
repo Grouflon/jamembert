@@ -5,6 +5,7 @@ cheese_definition : = ActorDefinition.{
 
     sprite_origin = .{8,1},
     face_position = .{0,5},
+    face_dead_position = .{0,2},
     idle_hollow_animation = .{ "cheese_aseprite", "idle_hollow" },
     idle_animation = .{ "cheese_aseprite", "idle" },
     move_animation = .{ "cheese_aseprite", "walk" },
@@ -31,7 +32,7 @@ cheese_init :: (using actor: *Actor)
     cheese.body.enabled = false;
     cheese.pickup_trigger.enabled = false;
 
-    actor.alterations.burning_collider.shape = .{ type = .BOX, box = .{.{-9,4}, .{9,23}} };
+    actor.alterations.burning_collider.shape = .{ type = .BOX, box = .{.{-8,0}, .{8,8}} };
 }
 
 cheese_update :: (using actor: *Actor, dt: float)

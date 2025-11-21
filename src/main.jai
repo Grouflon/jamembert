@@ -5,6 +5,7 @@
 #load "spells/sentification.jai";
 #load "spells/explosion.jai";
 #load "spells/transposition.jai";
+#load "spells/spawngobelin.jai";
 
 spellbook: []*SpellDefinition = .[
     *bouledefeu_spell_definition,
@@ -12,6 +13,7 @@ spellbook: []*SpellDefinition = .[
     *lobotomie_spell_definition,
     *explosion_spell_definition,
     *transposition_spell_definition,
+    *spawngobelin_spell_definition,
 ];
 
 // Actors

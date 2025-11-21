@@ -2,6 +2,7 @@ SpellCastType :: enum
 {
     PROJECTILE;
     TARGET;
+    POSITION;
 }
 
 SpellCaster :: struct
@@ -21,6 +22,9 @@ SpellCastParams :: struct
         };
         target: struct {
             target: *Actor;
+        };
+        position: struct {
+            origin: Vector2;
         };
     }
 }
@@ -47,6 +51,10 @@ spellcaster_update :: (using spellcaster: *SpellCaster, dt: float, target: Vecto
             {
                 current_cast.target.target = targets[0].parent.(*Actor);
             }
+        }
+        case .POSITION;
+        {
+            current_cast.position.origin = target;
         }
     } 
 }
@@ -75,6 +83,11 @@ spellcaster_draw :: (using spellcaster: *SpellCaster)
                 begin_render_texture(render_layers[RenderLayer.GROUND]);
                 defer end_render_texture();
                 draw_rectangle(target.position, .{.{-5,-2},.{5,2}}, .{255,255,255,150});
+            }
+            case .POSITION;
+            {
+                pos: = make_vector3(screen_to_world(get_mouse_position()), 0);
+                draw_rectangle(pos, .{.{-5,-5},.{5,5}}, .{255,255,255,150});
             }
         } 
     }
