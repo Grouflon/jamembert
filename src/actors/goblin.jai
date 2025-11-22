@@ -7,6 +7,9 @@ goblin_definition : = ActorDefinition.{
     face_position = .{0,7},
     face_dead_position = .{0,2},
 
+    face_idle_animation = "goblin_idle",
+    face_mad_animation = "goblin_mad",
+
     idle_hollow_animation = .{ "goblin_aseprite", "idle_hollow" },
     idle_animation = .{ "goblin_aseprite", "idle" },
     move_animation = .{ "goblin_aseprite", "walk" },

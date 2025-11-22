@@ -40,12 +40,21 @@ ActorDefinition :: struct
     on_hit: #type (actor: *Actor, source: *Actor);
 
     sprite_origin: Vector2 = .{8, 1};
+
     face_position: Vector2 = .{0,3};
-    face_dead_position: Vector2 = .{0,3};    
+    face_dead_position: Vector2 = .{0,3};   
+
+    face_idle_animation: = "idle";
+    face_dead_animation: = "dead";
+    face_panic_animation: = "panic";
+    face_mad_animation: = "mad";
+    face_sad_animation: = "sad";
+
     idle_hollow_animation: AsepriteAnimation;
     idle_animation: AsepriteAnimation;
     move_animation: AsepriteAnimation;
     dead_animation: AsepriteAnimation;
+
     render_layer: RenderLayer = .OBJECTS;
 
     max_health: s32 = -1;
@@ -430,18 +439,18 @@ actor_update_face :: (using actor: *Actor)
 {
     if actor_is_sentient(actor)
     {
-        face_animation_name: = "idle";
+        face_animation_name: = actor.definition.face_idle_animation;
         if current_health == 0
         {
-            face_animation_name = "dead";
+            face_animation_name = actor.definition.face_dead_animation;
         }
         else if actor_is_burning(actor)
         {
-            face_animation_name = "panic";
+            face_animation_name = actor.definition.face_panic_animation;
         }
         else if ai.is_agressive || ai.target != null
         {
-            face_animation_name = "mad";
+            face_animation_name = actor.definition.face_mad_animation;
         }
         animation_player_play(*face_animation, *resources.faces_aseprite, face_animation_name);
     }
