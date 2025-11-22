@@ -20,6 +20,8 @@ game_start :: ()
     spell_index = 0;
 
     spell_slots[0] = *sentification_spell_definition;
+    //spell_slots[1] = *mindswap_spell_definition;
+    //spell_slots[2] = *mindswap_spell_definition;
     //spell_slots[1] = *bouledefeu_spell_definition;
     //spell_slots[0] = *darkbook_spell_definition;
     //spell_slots[1] = *darkbook_spell_definition;

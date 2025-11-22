@@ -60,8 +60,10 @@ skull_update :: (using actor: *Actor, dt: float)
     for collider: skull.body.frame_overlaps
     {
         target: = collider.parent.(*Actor);
+
         if target.id == skull.caster continue;
         if array_find(skull.hit_actors, target) continue;
+        if actor_is_dead(target) continue;
 
         actor_hit(target, skull.dammage, get(skull.caster));
         movement_component_go_to(*actor.movement, rotate(.{200, 0}, random_get_within_range(0, 360)));

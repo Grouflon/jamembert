@@ -135,9 +135,9 @@
    { "name": "reanimation", "from": 7, "to": 7, "direction": "forward", "color": "#000000ff" },
    { "name": "mitose", "from": 8, "to": 8, "direction": "forward", "color": "#000000ff" },
    { "name": "skull", "from": 9, "to": 9, "direction": "forward", "color": "#000000ff" },
-   { "name": "mindswap", "from": 10, "to": 10, "direction": "forward", "color": "#000000ff" },
-   { "name": "cupidon", "from": 11, "to": 11, "direction": "forward", "color": "#000000ff" },
-   { "name": "darkbook", "from": 12, "to": 12, "direction": "forward", "color": "#000000ff" }
+   { "name": "cupidon", "from": 10, "to": 10, "direction": "forward", "color": "#000000ff" },
+   { "name": "darkbook", "from": 11, "to": 11, "direction": "forward", "color": "#000000ff" },
+   { "name": "mindswap", "from": 12, "to": 12, "direction": "forward", "color": "#000000ff" }
   ]
  }
 }

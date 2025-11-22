@@ -11,6 +11,7 @@
 #load "spells/darkbook.jai";
 #load "spells/skull.jai";
 #load "spells/cupidon.jai";
+#load "spells/mindswap.jai";
 
 spellbook: []*SpellDefinition = .[
     *bouledefeu_spell_definition,
@@ -24,6 +25,7 @@ spellbook: []*SpellDefinition = .[
     *darkbook_spell_definition,
     *skull_spell_definition,
     *cupidon_spell_definition,
+    *mindswap_spell_definition,
 ];
 
 // Actors
