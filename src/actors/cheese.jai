@@ -32,7 +32,7 @@ cheese_init :: (using actor: *Actor)
     cheese.body.enabled = false;
     cheese.pickup_trigger.enabled = false;
 
-    actor.alterations.burning_collider.shape = .{ type = .BOX, box = .{.{-8,0}, .{8,8}} };
+    actor.alterations.burning_collider.shape = .{ type = .BOX, box = .{.{-9,-1}, .{5,9}} };
 }
 
 cheese_update :: (using actor: *Actor, dt: float)

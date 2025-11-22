@@ -24,6 +24,12 @@ game_start :: ()
     create_actor(*cheese_definition, .{-70, 0});
     create_actor(*cheese_definition, .{0, -50});
 
+    //Bookshelves
+    create_actor(*bookshelf_definition, .{-75, 40});
+    create_actor(*bookshelf_definition, .{75, 40});
+    create_actor(*bookshelf_definition, .{-75, -40});
+    create_actor(*bookshelf_definition, .{75, -40});
+
     //Trees
     for i : 0..17 
     {
@@ -57,13 +63,8 @@ game_start :: ()
     create_actor(*tree_definition, .{-100, -20});
     create_actor(*tree_definition, .{40, 5});
 
-    //Bookshelves
-    create_actor(*bookshelf_definition, .{-75, 40});
-    create_actor(*bookshelf_definition, .{75, 40});
-    create_actor(*bookshelf_definition, .{-75, -40});
-    create_actor(*bookshelf_definition, .{75, -40});
 
-    //Set controlled
+    //Set player controlled actor
     set_controlled_actor(mage);
     // set_controlled_actor(goblin);
     // mage.ai.is_agressive = true;
@@ -77,13 +78,13 @@ game_start :: ()
     //spell_slots[1] = *darkbook_spell_definition;
     //spell_slots[2] = *darkbook_spell_definition;
     spell_slots[1] = *cupidon_spell_definition;
-    spell_slots[2] = *cupidon_spell_definition;
+    //spell_slots[2] = *cupidon_spell_definition;
     //spell_slots[0] = *skull_spell_definition;
     //spell_slots[1] = *skull_spell_definition;
     //spell_slots[2] = *skull_spell_definition;
     //spell_slots[1] = *explosion_spell_definition;
     //spell_slots[2] = *mitose_spell_definition;
-    //spell_slots[2] = *reanimation_spell_definition;
+    spell_slots[2] = *reanimation_spell_definition;
     //spell_slots[1] = *transposition_spell_definition;
     //spell_slots[0] = *spawngobelin_spell_definition;
 }

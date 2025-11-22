@@ -59,7 +59,11 @@ cupidon_update :: (using actor: *Actor, dt: float)
         if target.id == cupidon.caster continue;
         if !actor_is_sentient(target) continue;
 
-        //actor_hit(target, cupidon.dammage, get(cupidon.caster));
+        if target.ai.is_agressive == true
+        {
+            target.ai.target = null;
+            target.ai.is_agressive = false;
+        }
         
         request_delete_actor(actor);
         return;
