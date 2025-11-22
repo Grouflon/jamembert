@@ -1,14 +1,11 @@
 // Spell
 explosion_spell_definition : = SpellDefinition.{
-    type = .TARGET,
+    type = .POSITION,
     icon = .{ "icons_aseprite", "explosion" },
     range = 200,
     cast_func = (params: SpellCastParams) -> bool
     {
-        target: = params.target.target;
-        if target == null return false;
-
-        exp: = create_actor(*explosion_definition, params.target.target.position.xy);
+        exp: = create_actor(*explosion_definition, params.position.origin);
         exp.data.(*ExplosionData).caster = params.source.id;
         return true;
     },
@@ -73,6 +70,10 @@ explosion_update :: (using actor: *Actor, dt: float)
             {
                 actor_hit(target, 3, get(explosion.caster));
             }
+
+            projection_strength: = random_get_within_range(80, 110);
+            direction: = unit_vector(target.position - actor.position);
+            movement_component_push(*target.movement, direction.xy * projection_strength);
 
             array_add_if_unique(*explosion.hit_actors, target);
 

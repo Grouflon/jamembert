@@ -1,0 +1,3 @@
+{
+	"texture": "skull_texture"
+}

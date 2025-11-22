@@ -1,0 +1,3 @@
+{
+	"texture": "darkbook_texture"
+}

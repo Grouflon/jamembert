@@ -72,12 +72,20 @@ game_start :: ()
     spell_index = 0;
 
     spell_slots[0] = *sentification_spell_definition;
-    spell_slots[1] = *bouledefeu_spell_definition;
-    spell_slots[2] = *explosion_spell_definition;
+    //spell_slots[1] = *bouledefeu_spell_definition;
+    //spell_slots[0] = *darkbook_spell_definition;
+    //spell_slots[1] = *darkbook_spell_definition;
+    //spell_slots[2] = *darkbook_spell_definition;
+    spell_slots[1] = *cupidon_spell_definition;
+    spell_slots[2] = *cupidon_spell_definition;
+    //spell_slots[0] = *skull_spell_definition;
+    //spell_slots[1] = *skull_spell_definition;
+    //spell_slots[2] = *skull_spell_definition;
+    //spell_slots[1] = *explosion_spell_definition;
+    //spell_slots[2] = *mitose_spell_definition;
+    //spell_slots[2] = *reanimation_spell_definition;
     //spell_slots[1] = *transposition_spell_definition;
     //spell_slots[0] = *spawngobelin_spell_definition;
-    //spell_slots[1] = *spawngobelin_spell_definition;
-    //spell_slots[2] = *spawngobelin_spell_definition;
 }
 
 game_stop :: ()

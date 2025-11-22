@@ -6,6 +6,11 @@
 #load "spells/explosion.jai";
 #load "spells/transposition.jai";
 #load "spells/spawngobelin.jai";
+#load "spells/reanimation.jai";
+#load "spells/mitose.jai";
+#load "spells/darkbook.jai";
+#load "spells/skull.jai";
+#load "spells/cupidon.jai";
 
 spellbook: []*SpellDefinition = .[
     *bouledefeu_spell_definition,
@@ -14,6 +19,11 @@ spellbook: []*SpellDefinition = .[
     *explosion_spell_definition,
     *transposition_spell_definition,
     *spawngobelin_spell_definition,
+    *reanimation_spell_definition,
+    *mitose_spell_definition,
+    *darkbook_spell_definition,
+    *skull_spell_definition,
+    *cupidon_spell_definition,
 ];
 
 // Actors

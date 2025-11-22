@@ -49,4 +49,16 @@ resources : struct
 
     transposition_texture: TextureFile = .{ path = "data://aseprite/transposition.png" };
     transposition_aseprite: AsepriteFile = .{ path = "data://aseprite/transposition.json" };
+
+    reanimation_texture: TextureFile = .{ path = "data://aseprite/reanimation.png" };
+    reanimation_aseprite: AsepriteFile = .{ path = "data://aseprite/reanimation.json" };
+
+    darkbook_texture: TextureFile = .{ path = "data://aseprite/darkbook.png" };
+    darkbook_aseprite: AsepriteFile = .{ path = "data://aseprite/darkbook.json" };
+
+    skull_texture: TextureFile = .{ path = "data://aseprite/skull.png" };
+    skull_aseprite: AsepriteFile = .{ path = "data://aseprite/skull.json" };
+
+    cupidon_texture: TextureFile = .{ path = "data://aseprite/cupidon.png" };
+    cupidon_aseprite: AsepriteFile = .{ path = "data://aseprite/cupidon.json" };
 };

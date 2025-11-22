@@ -18,6 +18,7 @@ bouledefeu_definition : = ActorDefinition.{
     init = bouledefeu_init,
     update = bouledefeu_update,
 
+    render_layer = .OVERLAY,
     sprite_origin = .{16,16},
     speed = 80,
     idle_animation = .{ "fireball_aseprite", "idle" },
@@ -27,6 +28,8 @@ BouledefeuData :: struct
 {
     caster: ID(Actor);
     body: *Collider;
+    trail_cooldown: = 0.0;
+    trail_duration: = 0.2;
 }
 
 bouledefeu_init :: (using actor: *Actor)
@@ -60,4 +63,12 @@ bouledefeu_update :: (using actor: *Actor, dt: float)
         request_delete_actor(actor);
         return;
     }
+
+    if bouledefeu.trail_cooldown <= 0
+    {
+
+        create_simple_animation_actor(actor.position.xy - .{10, 16}, .{*resources.fireball_aseprite, string_hash("trail")} , .OBJECTS);
+        bouledefeu.trail_cooldown = bouledefeu.trail_duration;
+    }
+    bouledefeu.trail_cooldown -= dt;
 }

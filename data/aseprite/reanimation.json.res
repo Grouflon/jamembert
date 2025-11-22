@@ -1,0 +1,3 @@
+{
+	"texture": "reanimation_texture"
+}
