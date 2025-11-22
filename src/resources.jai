@@ -61,4 +61,7 @@ resources : struct
 
     cupidon_texture: TextureFile = .{ path = "data://aseprite/cupidon.png" };
     cupidon_aseprite: AsepriteFile = .{ path = "data://aseprite/cupidon.json" };
+
+    chest_texture: TextureFile = .{ path = "data://aseprite/chest.png" };
+    chest_aseprite: AsepriteFile = .{ path = "data://aseprite/chest.json" };
 };

@@ -16,11 +16,32 @@ game_start :: ()
 {
     random_seed(Some_Big_Time_Value.{current_time_consensus().low, current_time_consensus().high}); // Will need something for wasm, but we should change our own get_time() api first to have different calls for time_since_init and absolute time
 
+    //Spell init
+    spell_index = 0;
+
+    spell_slots[0] = *sentification_spell_definition;
+    //spell_slots[1] = *bouledefeu_spell_definition;
+    //spell_slots[0] = *darkbook_spell_definition;
+    //spell_slots[1] = *darkbook_spell_definition;
+    //spell_slots[2] = *darkbook_spell_definition;
+    //spell_slots[1] = *cupidon_spell_definition;
+    //spell_slots[2] = *cupidon_spell_definition;
+    //spell_slots[0] = *skull_spell_definition;
+    //spell_slots[1] = *skull_spell_definition;
+    //spell_slots[2] = *skull_spell_definition;
+    //spell_slots[1] = *explosion_spell_definition;
+    //spell_slots[2] = *mitose_spell_definition;
+    //spell_slots[2] = *reanimation_spell_definition;
+    //spell_slots[1] = *transposition_spell_definition;
+    //spell_slots[0] = *spawngobelin_spell_definition;
+
+
     //Player mage is spawn at origin
     mage: = create_actor(*mage_definition);
 
     //Actor placement
     goblin: = create_actor(*goblin_definition, .{70, -30});
+    chest: = create_actor(*chest_definition, .{-15, 40});
     create_actor(*cheese_definition, .{-70, 0});
     create_actor(*cheese_definition, .{0, -50});
 
@@ -68,25 +89,8 @@ game_start :: ()
     set_controlled_actor(mage);
     // set_controlled_actor(goblin);
     // mage.ai.is_agressive = true;
-
-    //Spell init
-    spell_index = 0;
-
-    spell_slots[0] = *sentification_spell_definition;
-    //spell_slots[1] = *bouledefeu_spell_definition;
-    //spell_slots[0] = *darkbook_spell_definition;
-    //spell_slots[1] = *darkbook_spell_definition;
-    //spell_slots[2] = *darkbook_spell_definition;
-    spell_slots[1] = *cupidon_spell_definition;
-    //spell_slots[2] = *cupidon_spell_definition;
-    //spell_slots[0] = *skull_spell_definition;
-    //spell_slots[1] = *skull_spell_definition;
-    //spell_slots[2] = *skull_spell_definition;
-    //spell_slots[1] = *explosion_spell_definition;
-    //spell_slots[2] = *mitose_spell_definition;
-    spell_slots[2] = *reanimation_spell_definition;
-    //spell_slots[1] = *transposition_spell_definition;
-    //spell_slots[0] = *spawngobelin_spell_definition;
+    //actor_set_sentient(chest, true);
+    //set_controlled_actor(chest);
 }
 
 game_stop :: ()

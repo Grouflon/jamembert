@@ -27,13 +27,14 @@ spellbook: []*SpellDefinition = .[
 ];
 
 // Actors
+#load "actors/simple_animation.jai";
 #load "actors/book.jai";
 #load "actors/bookshelf.jai";
 #load "actors/mage.jai";
 #load "actors/tree.jai";
 #load "actors/goblin.jai";
 #load "actors/cheese.jai";
-#load "actors/simple_animation.jai";
+#load "actors/chest.jai";
 
 // Other
 #load "resources.jai";

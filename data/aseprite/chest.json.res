@@ -1,0 +1,3 @@
+{
+	"texture": "chest_texture"
+}
