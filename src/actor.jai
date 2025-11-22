@@ -350,6 +350,28 @@ actor_modify_health :: (using actor: *Actor, value: s32)
     {
         movement_component_stop(*movement);
         // die
+
+        //auto cast reanimation for player if possible
+        if actor.user_controlled
+        {
+            for i : 0..spell_slots.count-1 
+            {
+                if spell_slots[i] == *reanimation_spell_definition
+                {
+                    //cast
+                    
+                    log("cast reanimation");
+                    spellcaster.current_cast.position.origin = actor.position.xy;
+                    if spell_cast(*reanimation_spell_definition, spellcaster.current_cast)
+                    {
+                        spell_slots[i] = null;
+                        select_closest_spell();
+                    }
+
+                    continue;
+                }
+            }
+        }
     }
     else if previous_health == 0 && current_health > 0
     {
