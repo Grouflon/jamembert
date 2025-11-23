@@ -47,9 +47,15 @@ spellcaster_update :: (using spellcaster: *SpellCaster, dt: float, target: Vecto
         case .TARGET;
         {
             targets: = physics_cast(target, .{ type = .CIRCLE, circle = .{ .{}, 10 } }, .[PHYSIC_LAYER_BODY]);
-            if targets.count != 0
+            closest_squared_distance: float = FLOAT32_MAX;
+            for collider: targets
             {
-                current_cast.target.target = targets[0].parent.(*Actor);
+                squared_distance: = distance_squared(target, collider.parent.position.xy);
+                if squared_distance < closest_squared_distance
+                {
+                    closest_squared_distance = squared_distance;
+                    current_cast.target.target = collider.parent.(*Actor);
+                }
             }
         }
         case .POSITION;
