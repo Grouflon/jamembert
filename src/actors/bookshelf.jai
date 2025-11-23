@@ -9,8 +9,12 @@ bookshelf_definition : = ActorDefinition.{
 
     sprite_origin = .{16,1},
 
-    max_health = -1,
+    max_health = 10,
     speed = 3,
+
+    attack_cooldown = 5,
+    attack_range = 12,
+    attack_push = 100,
 };
 
 bookshelf_init :: (using actor: *Actor)

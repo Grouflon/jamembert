@@ -63,7 +63,7 @@ attack_update :: (using actor: *Actor, dt: float)
 
         ATTACK_PUSH_FORCE :: 50;
         actor_hit(target, caster.definition.attack_damage, caster);
-        movement_component_push(*target.movement, normalize(target.position - caster.position).xy * ATTACK_PUSH_FORCE);
+        movement_component_push(*target.movement, normalize(target.position - caster.position).xy * caster.definition.attack_push);
         array_add_if_unique(*attack.hit_actors, target);
     }
 }

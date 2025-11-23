@@ -14,6 +14,8 @@ mage_definition : = ActorDefinition.{
 
     max_health = 6,
     speed = 30,
+
+    attack_damage = 0,
 };
 
 mage_init :: (using actor: *Actor)

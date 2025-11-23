@@ -18,6 +18,7 @@ goblin_definition : = ActorDefinition.{
     max_health = 3,
     
     attack_cooldown = 0.5,
+    attack_range = 9,
 };
 
 goblin_init :: (using actor: *Actor)

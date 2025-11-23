@@ -65,6 +65,7 @@ ActorDefinition :: struct
     attack_cooldown: float = 1.0;
     attack_range: float = 8.0;
     attack_damage: s32 = 1;
+    attack_push: float = 50;
 }
 
 create_actor :: (definition: *ActorDefinition = null, position: Vector2 = .{}) -> *Actor
