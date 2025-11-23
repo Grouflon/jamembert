@@ -337,6 +337,8 @@ screen_to_world :: (position: Vector2) -> Vector2
 
 set_controlled_actor :: (actor: *Actor)
 {
+    if actor == controlled_actor return;
+
     if controlled_actor != null
     {
         assert(controlled_actor.user_controlled);
