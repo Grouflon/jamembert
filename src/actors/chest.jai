@@ -29,7 +29,7 @@ chest_init :: (using actor: *Actor)
     actor.alterations.burning_collider.shape = .{ type = .BOX, box = dilate(body.shape.box, .{2,1}) };
     //actor_set_sentient(actor, true);
 
-    //actor.ai.is_agressive = true;
+    actor.ai.is_agressive = true;
 }
 
 chest_shutdown :: (using actor: *Actor)
