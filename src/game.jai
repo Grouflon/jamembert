@@ -12,6 +12,9 @@ spellcaster: SpellCaster;
 
 controlled_actor: *Actor;
 
+GAME_WIDTH :: 1920;
+GAME_HEIGHT :: 1080;
+
 game_start :: ()
 {
     random_seed(Some_Big_Time_Value.{current_time_consensus().low, current_time_consensus().high}); // Will need something for wasm, but we should change our own get_time() api first to have different calls for time_since_init and absolute time
@@ -211,11 +214,9 @@ game_update :: (dt: float)
 
 game_draw :: ()
 {
-    w, h: = get_viewport_size();
-
     for i: 0..render_layers.count-1
     {
-        resize_render_texture(*render_layers[i], xx w, xx h);
+        resize_render_texture(*render_layers[i], GAME_WIDTH, GAME_HEIGHT);
         begin_render_texture(render_layers[i]);
         clear_background();
         end_render_texture();
@@ -225,7 +226,7 @@ game_draw :: ()
     {
         // Game
         {
-            half_size: = Vector2.{xx w, xx h} / (2 * DRAW_SCALE);
+            half_size: = Vector2.{GAME_WIDTH, GAME_HEIGHT} / (2 * DRAW_SCALE);
             game_camera: = Camera.{
                 position = .{},
                 rotation = .{},
@@ -242,6 +243,10 @@ game_draw :: ()
 
             begin_camera(game_camera);
             defer end_camera();
+
+            begin_render_texture(render_layers[RenderLayer.GROUND]);
+            clear_background(.{0,30,61,255});
+            end_render_texture();
 
             begin_render_texture(render_layers[RenderLayer.OBJECTS]);
             actors_draw();
@@ -272,10 +277,10 @@ game_draw :: ()
                 rotation = .{},
                 type = .ORTHOGRAPHIC,
                 orthographic = .{
-                    top = h.(float) / DRAW_SCALE,
+                    top = GAME_HEIGHT / DRAW_SCALE,
                     left = 0,
                     bottom = 0,
-                    right = w.(float) / DRAW_SCALE,
+                    right = GAME_WIDTH / DRAW_SCALE,
                     near = -10,
                     far = 10
                 }
@@ -299,6 +304,8 @@ game_draw :: ()
 
         // Compositing
         {
+            w, h: = get_viewport_size();
+
             // We probably need a default camera on the stack
             compositing_camera: = Camera.{
                 position = .{},
@@ -317,22 +324,49 @@ game_draw :: ()
             begin_camera(compositing_camera);
             defer end_camera();
 
-            clear_background(.{0,30,61,255});
+            clear_background(.{0,0,0,255});
 
+            draw_rect: = get_compositing_screen_bounds();
             for i: 0..render_layers.count-1
             {
-                draw_sprite(.{0,0,i.(float)}, render_layers[i].texture);
+                draw_sprite(.{0,0,i.(float)}, render_layers[i].texture, draw_rect = draw_rect);
             }
         }
-
     }
+}
+
+get_compositing_screen_bounds :: () -> Bounds
+{
+    w, h: = get_viewport_size();
+    ratio: float = GAME_WIDTH.(float) / GAME_HEIGHT.(float);
+    viewport_size: = Vector2.{xx w, xx h};
+    viewport_ratio: = viewport_size.x / viewport_size.y;
+    size: Vector2;
+    if viewport_ratio < ratio
+    {
+        size = .{viewport_size.x, viewport_size.x / ratio};
+    }
+    else
+    {
+        size = .{viewport_size.y * ratio, viewport_size.y};
+    }
+    origin: = (viewport_size - size) * 0.5;
+    return .{origin, origin + size};
 }
 
 screen_to_world :: (position: Vector2) -> Vector2
 {
-    w, h: = get_viewport_size();
-    half_size: = (Vector2.{xx w, xx h} / 2);
-    return Vector2.{position.x - half_size.x, half_size.y - position.y} / DRAW_SCALE;
+    bounds: = get_compositing_screen_bounds();
+    // Normalized position in screen space
+    normalized_position: = (position - bounds.min) / size(bounds);
+
+    // Normalized position in camera space
+    normalized_position = .{
+        normalized_position.x - 0.5,
+        (normalized_position.y - 0.5) * -1,
+    };
+
+    return normalized_position * .{GAME_WIDTH, GAME_HEIGHT} / DRAW_SCALE;
 }
 
 set_controlled_actor :: (actor: *Actor)
