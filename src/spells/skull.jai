@@ -16,6 +16,7 @@ skull_spell_definition : = SpellDefinition.{
 // Actor
 skull_definition : = ActorDefinition.{
     init = skull_init,
+    shutdown = skull_shutdown,
     update = skull_update,
 
     render_layer = .OVERLAY,
@@ -43,6 +44,13 @@ skull_init :: (using actor: *Actor)
 
     actor.definition.speed = 80;
     data = skull;
+}
+
+skull_shutdown :: (using actor: *Actor)
+{
+    skull: = data.(*SkullData);
+
+    array_free(skull.hit_actors);
 }
 
 skull_update :: (using actor: *Actor, dt: float)
