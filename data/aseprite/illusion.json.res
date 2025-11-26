@@ -1,0 +1,3 @@
+{
+	"texture": "illusion_texture"
+}

@@ -1,0 +1,3 @@
+{
+	"texture": "ghost_texture"
+}

@@ -23,7 +23,8 @@ game_start :: ()
     spell_index = 0;
 
     spell_slots[0] = *sentification_spell_definition;
-    //spell_slots[1] = *mindswap_spell_definition;
+    spell_slots[1] = *spectralform_spell_definition;
+    //spell_slots[2] = *illusion_spell_definition;
     //spell_slots[2] = *mindswap_spell_definition;
     //spell_slots[1] = *bouledefeu_spell_definition;
     //spell_slots[0] = *darkbook_spell_definition;
@@ -47,6 +48,7 @@ game_start :: ()
     //Actor placement
     goblin: = create_actor(*goblin_definition, .{70, -30});
     chest: = create_actor(*chest_definition, .{-15, 40});
+    create_actor(*ghost_definition, .{-50, -50});
     create_actor(*cheese_definition, .{-70, 0});
     create_actor(*cheese_definition, .{0, -50});
 
