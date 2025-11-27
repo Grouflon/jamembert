@@ -23,19 +23,15 @@ game_start :: ()
     spell_index = 0;
 
     spell_slots[0] = *sentification_spell_definition;
-    spell_slots[1] = *spectralform_spell_definition;
+    //spell_slots[1] = *portalgraveyard_spell_definition;
+    //spell_slots[1] = *spectralform_spell_definition;
     //spell_slots[2] = *illusion_spell_definition;
     //spell_slots[2] = *mindswap_spell_definition;
     //spell_slots[1] = *bouledefeu_spell_definition;
     //spell_slots[0] = *darkbook_spell_definition;
-    //spell_slots[1] = *darkbook_spell_definition;
-    //spell_slots[2] = *darkbook_spell_definition;
     //spell_slots[1] = *cupidon_spell_definition;
-    //spell_slots[2] = *cupidon_spell_definition;
-    //spell_slots[0] = *skull_spell_definition;
-    //spell_slots[1] = *skull_spell_definition;
-    //spell_slots[2] = *skull_spell_definition;
-    //spell_slots[1] = *explosion_spell_definition;
+    spell_slots[2] = *skull_spell_definition;
+    spell_slots[1] = *explosion_spell_definition;
     //spell_slots[2] = *mitose_spell_definition;
     //spell_slots[2] = *reanimation_spell_definition;
     //spell_slots[1] = *transposition_spell_definition;
@@ -46,11 +42,13 @@ game_start :: ()
     mage: = create_actor(*mage_definition);
 
     //Actor placement
-    goblin: = create_actor(*goblin_definition, .{70, -30});
+    //goblin: = create_actor(*goblin_definition, .{70, -30});
     chest: = create_actor(*chest_definition, .{-15, 40});
     create_actor(*ghost_definition, .{-50, -50});
     create_actor(*cheese_definition, .{-70, 0});
     create_actor(*cheese_definition, .{0, -50});
+    //create_actor(*tomb1_definition, .{20, 20});
+    //create_actor(*tomb2_definition, .{20, 40});
 
     //Bookshelves
     create_actor(*bookshelf_definition, .{-75, 40});
@@ -212,6 +210,8 @@ game_update :: (dt: float)
     {
         yae_request_close();
     }
+
+
 }
 
 game_draw :: ()

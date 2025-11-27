@@ -28,6 +28,11 @@ resources : struct
     ghost_texture: TextureFile = .{ path = "data://aseprite/ghost.png" };
     ghost_aseprite: AsepriteFile = .{ path = "data://aseprite/ghost.json" };
 
+    tomb1_texture: TextureFile = .{ path = "data://aseprite/tomb1.png" };
+    tomb1_aseprite: AsepriteFile = .{ path = "data://aseprite/tomb1.json" };
+
+    tomb2_texture: TextureFile = .{ path = "data://aseprite/tomb2.png" };
+    tomb2_aseprite: AsepriteFile = .{ path = "data://aseprite/tomb2.json" };
 
 
 
@@ -68,6 +73,9 @@ resources : struct
 
     illusion_texture: TextureFile = .{ path = "data://aseprite/illusion.png" };
     illusion_aseprite: AsepriteFile = .{ path = "data://aseprite/illusion.json" };
+
+    portalgraveyard_texture: TextureFile = .{ path = "data://aseprite/portalgraveyard.png" };
+    portalgraveyard_aseprite: AsepriteFile = .{ path = "data://aseprite/portalgraveyard.json" };
 
 
     // OTHER

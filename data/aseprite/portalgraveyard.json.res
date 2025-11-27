@@ -1,0 +1,3 @@
+{
+	"texture": "portalgraveyard_texture"
+}
