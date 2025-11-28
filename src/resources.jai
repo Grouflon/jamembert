@@ -77,6 +77,18 @@ resources : struct
     portalgraveyard_texture: TextureFile = .{ path = "data://aseprite/portalgraveyard.png" };
     portalgraveyard_aseprite: AsepriteFile = .{ path = "data://aseprite/portalgraveyard.json" };
 
+    portalvolcano_texture: TextureFile = .{ path = "data://aseprite/portalvolcano.png" };
+    portalvolcano_aseprite: AsepriteFile = .{ path = "data://aseprite/portalvolcano.json" };
+
+    portallibrary_texture: TextureFile = .{ path = "data://aseprite/portallibrary.png" };
+    portallibrary_aseprite: AsepriteFile = .{ path = "data://aseprite/portallibrary.json" };
+
+    portalbrain_texture: TextureFile = .{ path = "data://aseprite/portalbrain.png" };
+    portalbrain_aseprite: AsepriteFile = .{ path = "data://aseprite/portalbrain.json" };
+    
+    portalforest_texture: TextureFile = .{ path = "data://aseprite/portalforest.png" };
+    portalforest_aseprite: AsepriteFile = .{ path = "data://aseprite/portalforest.json" };
+
 
     // OTHER
 
