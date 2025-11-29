@@ -55,6 +55,10 @@ build :: ()
         options.output_path = BUILD_OUTPUT_DIRECTORY;
         options.output_executable_name = BUILD_NAME;
 
+        import_path : [..]string;
+        array_add(*import_path, tprint("%/modules/yae/modules", #filepath));
+        array_add(*import_path, ..options.import_path);
+
         if options.os_target ==
         {
             case .WINDOWS;
@@ -85,13 +89,9 @@ build :: ()
                     walloc_object_file_path,
                 ];
 
-                import_path : [..]string;
-                array_add(*import_path, tprint("%/modules/yae/modules", #filepath));
-                array_add(*import_path, ..options.import_path);
                 array_add(*import_path, ...[
                     tprint("%/examples/wasm/modules", compiler_get_base_path()),
                 ]);
-                options.import_path = import_path;
 
                 options.llvm_options.target_system_features = "+bulk-memory"; // "This options is needed so that "memcpy" and "memset" are mapped to "memory.copy" and "memory.fill" instructions in WASM.
 
@@ -99,6 +99,8 @@ build :: ()
                 remap_import(w, "*", "Default_Allocator", "Walloc");
             }
         }
+
+        options.import_path = import_path;
 
         set_optimization(*options, ifx optimize then .OPTIMIZED else .DEBUG);
 

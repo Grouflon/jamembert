@@ -1,6 +1,6 @@
 {
 	"parameters": {
-		"mag_filter": "NEAREST",
+		"mag_filter": "LINEAR",
 		"min_filter": "LINEAR",
 		"wrap_s": "REPEAT",
 		"wrap_t": "REPEAT"

@@ -19,14 +19,16 @@ Actor :: struct
     idle_animation: AsepriteAnimationHandle;
     move_animation: AsepriteAnimationHandle;
     dead_animation: AsepriteAnimationHandle;
+    cast_animation: AsepriteAnimationHandle;
 
     colliders: [..]*Collider;
     data: *void;
 
-    user_controlled: bool;
+    controlling_player: *Player;
     last_hit_time: float = -100;
     current_health: s32;
     attack_cooldown: float;
+    is_casting: bool;
 }
 actors: Pool(Actor);
 to_delete_actors: [..]*Actor;
@@ -54,6 +56,7 @@ ActorDefinition :: struct
     idle_animation: AsepriteAnimation;
     move_animation: AsepriteAnimation;
     dead_animation: AsepriteAnimation;
+    cast_animation: AsepriteAnimation;
 
     render_layer: RenderLayer = .OBJECTS;
 
@@ -155,6 +158,14 @@ actor_init :: (using actor: *Actor)
             log_error("Could not find animation handle for %", definition.idle_hollow_animation);
         }
     }
+    if definition.cast_animation.animation_name.count != 0
+    {
+        success=, cast_animation = get_animation_handle(definition.cast_animation);
+        if !success
+        {
+            log_error("Could not find animation handle for %", definition.cast_animation);
+        }
+    }
 
     // Init stuff
     current_health = definition.max_health;
@@ -224,6 +235,10 @@ actor_update :: (using actor: *Actor, dt: float)
     if current_health == 0 && dead_animation.aseprite != null
     {
         animation_player_play(*animation, dead_animation);
+    }
+    else if is_casting && cast_animation.aseprite != null
+    {
+        animation_player_play(*animation, cast_animation);
     }
     else if actor_is_sentient(actor) && length_squared(movement.velocity) > 0.1 && move_animation.aseprite != null
     {
@@ -342,7 +357,7 @@ actor_hit :: (using actor: *Actor, damage: s32, source: *Actor = null)
         definition.on_hit(actor, source);
     }
 
-    if source != null && actor_is_sentient(actor) && !actor.user_controlled
+    if source != null && actor_is_sentient(actor) && actor.controlling_player == null
     {
         ai.target = source;
     }
@@ -361,24 +376,22 @@ actor_modify_health :: (using actor: *Actor, value: s32)
         movement_component_stop(*movement);
         // die
 
-        //auto cast reanimation for player if possible
-        if actor.user_controlled
+        // auto cast reanimation for player if possible
+        // note: This should end up in the reanimation implementation itself
+        if actor.controlling_player != null
         {
-            for i : 0..spell_slots.count-1 
+            for i : 0..actor.controlling_player.spell_slots.count-1 
             {
-                if spell_slots[i] == *reanimation_spell_definition
+                if actor.controlling_player.spell_slots[i] == *reanimation_spell_definition
                 {
                     //cast
-                    
-                    log("cast reanimation");
-                    spellcaster.current_cast.position.origin = actor.position.xy;
-                    if spell_cast(*reanimation_spell_definition, spellcaster.current_cast)
+                    if player_cast_spell(actor.controlling_player, i)
                     {
-                        spell_slots[i] = null;
-                        select_closest_spell();
+                        log("cast reanimation");
+                        break;
                     }
 
-                    continue;
+                    break;
                 }
             }
         }
@@ -422,16 +435,51 @@ actor_remove_all_colliders :: (using actor: *Actor)
 
 actor_attack :: (using actor: *Actor, target: Vector2) -> bool
 {
-    if attack_cooldown > 0 return false;
-
-    attack_cooldown = definition.attack_cooldown;
-
     params: SpellCastParams;
     params.source = actor;
     params.projectile.origin = actor.position.xy + actor.definition.cast_position;
     params.projectile.direction = normalize(target - params.projectile.origin);
+    return actor_attack(params);
+}
+
+actor_attack :: (using actor: *Actor, aim_angle: float) -> bool
+{
+    params: SpellCastParams;
+    params.source = actor;
+    params.projectile.origin = actor.position.xy + actor.definition.cast_position;
+    params.projectile.direction = rotate(.{1,0}, aim_angle);
+    return actor_attack(params);
+}
+
+actor_attack :: (params: SpellCastParams) -> bool
+{
+    if params.source == null return false;
+    if params.source.attack_cooldown > 0 return false;
+
+    params.source.attack_cooldown = params.source.definition.attack_cooldown;
     attack_spell_definition.cast_func(params);
     return true;
+}
+
+actor_set_casting :: (using actor: *Actor, value: bool)
+{
+    if is_casting == value return;
+
+    SPEED_MODIFIER_NAME :: "cast";
+    if is_casting
+    {
+        movement_component_remove_speed_modifer(*movement, SPEED_MODIFIER_NAME);
+    }
+    is_casting = value;
+    if is_casting
+    {
+        movement_component_set_speed_modifer(*movement, SPEED_MODIFIER_NAME, CAST_SPEED_MODIFIER); // Move that value to a settings resource sometime
+    }
+}
+
+actor_is_casting :: (using actor: *Actor) -> bool
+{
+    return is_casting;
 }
 
 #scope_file
