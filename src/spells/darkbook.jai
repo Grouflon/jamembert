@@ -59,6 +59,7 @@ darkbook_update :: (using actor: *Actor, dt: float)
     {
         target_actor: = target.parent.(*Actor);
         if target_actor.id == darkbook.caster continue;
+        if actor_is_dead(target_actor) continue;
 
 
         if actor_is_sentient(target_actor)

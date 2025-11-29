@@ -6,7 +6,7 @@ reanimation_spell_definition : = SpellDefinition.{
     cast_func = (params: SpellCastParams) -> bool
     {
         circ: = create_actor(*reanimation_definition, params.position.origin);
-        circ.data.(*ExplosionData).caster = params.source.id;
+        circ.data.(*ReanimationData).caster = params.source.id;
         return true;
     },
 };

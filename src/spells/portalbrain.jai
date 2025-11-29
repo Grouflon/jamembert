@@ -18,11 +18,13 @@ portalbrain_spell_definition : = SpellDefinition.{
 #scope_file
 portalbrain_spawn_actors :: (using actor: *Actor)
 {
-    origin:= actor.position.xy;
-    /*//left
-    create_actor(*tree_definition, origin + .{-19, 4});
-    //top right
-    create_actor(*tree_definition, origin + .{10, 18});
-    //bottom right
-    create_actor(*tree_definition, origin + .{15, -8});*/
+    portalpos:= actor.position.xy;
+    braincount: = cast(u32) random_get_within_range(4,8);
+    for brain : 0..braincount
+    {
+        pos: Vector2 = .{random_get_within_range(-28,28), random_get_within_range(-28,28)};
+        create_actor(*brain_definition, portalpos + pos);
+    }
+    create_actor(*brain_definition, portalpos);
+
 }

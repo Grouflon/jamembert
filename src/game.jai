@@ -48,15 +48,20 @@ game_start :: ()
     }
 
     players[0].spell_slots[0] = *sentification_spell_definition;
-    //players[0].spell_slots[1] = *portalgraveyard_spell_definition;
+    players[0].spell_slots[1] = *lobotomie_spell_definition;
+    //players[0].spell_slots[0] = *portalgraveyard_spell_definition;
+    //players[0].spell_slots[1] = *portalbrain_spell_definition;
+    //players[0].spell_slots[2] = *portalforest_spell_definition;
+    //players[0].spell_slots[1] = *portallibrary_spell_definition;
+    //players[0].spell_slots[2] = *portalvolcano_spell_definition;
     //players[0].spell_slots[1] = *spectralform_spell_definition;
     //players[0].spell_slots[2] = *illusion_spell_definition;
     //players[0].spell_slots[2] = *mindswap_spell_definition;
     //players[0].spell_slots[1] = *bouledefeu_spell_definition;
     //players[0].spell_slots[0] = *darkbook_spell_definition;
     //players[0].spell_slots[1] = *cupidon_spell_definition;
-    players[0].spell_slots[2] = *skull_spell_definition;
-    players[0].spell_slots[1] = *explosion_spell_definition;
+    //players[0].spell_slots[2] = *skull_spell_definition;
+    //players[0].spell_slots[1] = *explosion_spell_definition;
     //players[0].spell_slots[2] = *mitose_spell_definition;
     //players[0].spell_slots[2] = *reanimation_spell_definition;
     //players[0].spell_slots[1] = *transposition_spell_definition;
@@ -68,11 +73,26 @@ game_start :: ()
     //Actor placement
     //goblin: = create_actor(*goblin_definition, .{70, -30});
     chest: = create_actor(*chest_definition, .{-15, 40});
-    create_actor(*ghost_definition, .{-50, -50});
     create_actor(*cheese_definition, .{-70, 0});
-    create_actor(*cheese_definition, .{0, -50});
+    create_actor(*cheese_definition, .{0, -65});
+
+    //portal books
+    book:=create_actor(*book_definition, .{0, 120});
+    book.data.(*BookData).spell = *portalbrain_spell_definition;
+    book=create_actor(*book_definition, .{-15, 120});
+    book.data.(*BookData).spell = *portalvolcano_spell_definition;
+    book=create_actor(*book_definition, .{-30, 120});
+    book.data.(*BookData).spell = *portallibrary_spell_definition;
+    book=create_actor(*book_definition, .{-45, 120});
+    book.data.(*BookData).spell = *portalgraveyard_spell_definition;
+    book=create_actor(*book_definition, .{-60, 120});
+    book.data.(*BookData).spell = *portalforest_spell_definition;
+
     //create_actor(*tomb1_definition, .{20, 20});
     //create_actor(*tomb2_definition, .{20, 40});
+    //create_actor(*ghost_definition, .{-50, -50});
+
+    //create_actor(*brain_definition, .{0, -15});
 
     //Bookshelves
     create_actor(*bookshelf_definition, .{-75, 40});

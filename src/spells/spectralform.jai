@@ -71,7 +71,7 @@ spectralform_update :: (using actor: *Actor, dt: float)
     //force caster to move
     mouse_world_pos: = screen_to_world(get_mouse_position());
     dir: = normalize(mouse_world_pos - caster.position.xy);
-    // movement_component_add_input(*controlled_actor.movement, dir); // player special case? why is that
+    // movement_component_add_input(*controlled_actor.movement, dir); // player special case? why is that //this was a test
 
     //snap ghost to caster
     actor.position = caster.position;

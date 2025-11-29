@@ -20,12 +20,6 @@ portalvolcano_spell_definition : = SpellDefinition.{
 portalvolcano_spawn_actors :: (using actor: *Actor)
 {
     origin:= actor.position.xy;
-    //left
-    /*create_actor(*tomb1_definition, origin + .{-19, 4});
-    //top right
-    create_actor(*tomb2_definition, origin + .{10, 18});
-    //bottom right
-    create_actor(*tomb1_definition, origin + .{15, -8});*/
 }
 
 portal_burn_actors :: (using actor: *Actor)
@@ -36,14 +30,10 @@ portal_burn_actors :: (using actor: *Actor)
     for target: targets
     {
         actor_target: = target.parent.(*Actor);
-        //delete actors        
-        //avoid deleting actors that collide but are not in the circle
+            
+        //avoid burning actors that collide but are not in the circle
         dist:=length(actor_target.position.xy - actor.position.xy);
         if dist > portal.radius continue;
-        //delete only non-sentient actors
-        //if actor_is_sentient(actor_target) continue;
-
-        //request_delete_actor(actor_target);
 
         actor_set_burning(actor_target, true);
     }

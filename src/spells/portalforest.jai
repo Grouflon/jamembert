@@ -22,13 +22,13 @@ portalforest_spawn_actors :: (using actor: *Actor)
     treecount: = cast(u32) random_get_within_range(3,5);
     for tree : 0..treecount
     {
-        pos: Vector2 = .{random_get_within_range(-16,16), random_get_within_range(-16,16)};
+        pos: Vector2 = .{random_get_within_range(-16,16), random_get_within_range(-22,16)};
         create_actor(*tree_definition, portalpos + pos);
     }
     //left
-    create_actor(*tree_definition, portalpos + .{-19, 4});
+    //create_actor(*tree_definition, portalpos + .{-19, 4});
     //top right
-    create_actor(*tree_definition, portalpos + .{10, 18});
+    //create_actor(*tree_definition, portalpos + .{10, 18});
     //bottom right
-    create_actor(*tree_definition, portalpos + .{15, -8});
+    //create_actor(*tree_definition, portalpos + .{15, -8});
 }

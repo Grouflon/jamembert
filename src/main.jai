@@ -69,6 +69,7 @@ spellbook: []*SpellDefinition = .[
 #load "actors/tomb1.jai";
 #load "actors/tomb2.jai";
 #load "actors/portal.jai";
+#load "actors/brain.jai";
 
 // Other
 #load "resources.jai";

@@ -57,6 +57,7 @@ bouledefeu_update :: (using actor: *Actor, dt: float)
     {
         target: = collider.parent.(*Actor);
         if target.id == bouledefeu.caster continue;
+        if actor_is_dead(target) continue;
 
         actor_set_burning(target, true);
 

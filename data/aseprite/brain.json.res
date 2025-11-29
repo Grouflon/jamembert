@@ -1,0 +1,3 @@
+{
+	"texture": "brain_texture"
+}

@@ -34,6 +34,8 @@ resources : struct
     tomb2_texture: TextureFile = .{ path = "data://aseprite/tomb2.png" };
     tomb2_aseprite: AsepriteFile = .{ path = "data://aseprite/tomb2.json" };
 
+    brain_texture: TextureFile = .{ path = "data://aseprite/brain.png" };
+    brain_aseprite: AsepriteFile = .{ path = "data://aseprite/brain.json" };
 
 
     // SPELL EFFECTS

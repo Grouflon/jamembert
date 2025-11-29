@@ -34,6 +34,7 @@ SkullData :: struct
     bounce: = 5;
     dammage: s32 = 1;
     hit_actors: [..]*Actor;
+    ghost_spawned: [..]*Actor;
 }
 
 skull_init :: (using actor: *Actor)
@@ -71,9 +72,24 @@ skull_update :: (using actor: *Actor, dt: float)
 
         if target.id == skull.caster continue;
         if array_find(skull.hit_actors, target) continue;
-        if actor_is_dead(target) continue;
+        if actor_is_dead(target)
+        {
+            ghost:= create_actor(*ghost_definition, target.position.xy);
+            //add the ghost to the hit target to avoid instantly killing it with the skull
+            array_add_if_unique(*skull.hit_actors, ghost);
 
-        actor_hit(target, skull.dammage, get(skull.caster));
+        }
+        else
+        {
+            actor_hit(target, skull.dammage, get(skull.caster)); 
+            //if the target is killed by the skull = ghost again
+            if actor_is_dead(target)
+            {
+                ghost:= create_actor(*ghost_definition, target.position.xy);
+                array_add_if_unique(*skull.hit_actors, ghost);
+            }
+        }
+
         movement_component_go_to(*actor.movement, rotate(.{200, 0}, random_get_within_range(0, 360)));
 
         array_add_if_unique(*skull.hit_actors, target);

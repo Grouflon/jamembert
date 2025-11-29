@@ -15,9 +15,9 @@ PortalData :: struct
     animation: AsepriteFile;
 
     actors_to_spawn: #type (actor: *Actor);
-    on_finish_growing: #type (actor: *Actor) = portal_delete_actors;
 
-    burn_actors:=false;
+    //default behavior: delate actors ovelapping
+    on_finish_growing: #type (actor: *Actor) = portal_delete_actors;
 
     is_growing:= false;
 }
@@ -41,35 +41,13 @@ portal_update :: (using actor: *Actor, dt: float)
         //finish growing
         if !animation.is_playing
         {
-            //log("finish grow");
-            //detect actors to delete
-            /*targets: = physics_cast(actor.position.xy, .{ type = .CIRCLE, circle = .{ .{}, 64 } }, .[PHYSIC_LAYER_BODY]);
-            for target: targets
-            {
-                actor_target: = target.parent.(*Actor);
 
-                if portal.burn_actors
-                {
-
-                }
-                else
-                {        
-                    //delete actors        
-                    //avoid deleting actors that collide but are not in the circle
-                    dist:=length(actor_target.position.xy - actor.position.xy);
-                    if dist > portal.radius continue;
-                    //delete only non-sentient actors
-                    if actor_is_sentient(actor_target) continue;
-
-                    request_delete_actor(actor_target);
-                }
-
-            }*/
             portal.on_finish_growing(actor);
 
             animation_player_play(*animation, *portal.animation, "idle", true);
+
             portal.actors_to_spawn(actor);
-            //portalgraveyard_spawn_actors(actor);
+
             portal.is_growing = false;
         }
     }
@@ -77,6 +55,7 @@ portal_update :: (using actor: *Actor, dt: float)
     {        
         if animation.animation != string_hash("idle")
         {
+            //switch anim from grow to idle
             animation_player_play(*animation, *portal.animation, "grow", false);
             portal.is_growing = true;
         }
@@ -92,10 +71,12 @@ portal_delete_actors :: (using actor: *Actor)
     for target: targets
     {
         actor_target: = target.parent.(*Actor);
+
         //delete actors        
         //avoid deleting actors that collide but are not in the circle
         dist:=length(actor_target.position.xy - actor.position.xy);
         if dist > portal.radius continue;
+
         //delete only non-sentient actors
         if actor_is_sentient(actor_target) continue;
 

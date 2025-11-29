@@ -57,6 +57,7 @@ cupidon_update :: (using actor: *Actor, dt: float)
     {
         target: = collider.parent.(*Actor);
         if target.id == cupidon.caster continue;
+        if actor_is_dead(target) continue;
         if !actor_is_sentient(target) continue;
 
         if target.ai.is_agressive
