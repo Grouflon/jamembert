@@ -1,6 +1,6 @@
 { "frames": [
    {
-    "filename": "portal_graveyard 0.aseprite",
+    "filename": "portals 0.aseprite",
     "frame": { "x": 0, "y": 0, "w": 64, "h": 64 },
     "rotated": false,
     "trimmed": false,
@@ -9,7 +9,7 @@
     "duration": 50
    },
    {
-    "filename": "portal_graveyard 1.aseprite",
+    "filename": "portals 1.aseprite",
     "frame": { "x": 65, "y": 0, "w": 64, "h": 64 },
     "rotated": false,
     "trimmed": false,
@@ -18,7 +18,7 @@
     "duration": 50
    },
    {
-    "filename": "portal_graveyard 2.aseprite",
+    "filename": "portals 2.aseprite",
     "frame": { "x": 130, "y": 0, "w": 64, "h": 64 },
     "rotated": false,
     "trimmed": false,
@@ -27,7 +27,7 @@
     "duration": 50
    },
    {
-    "filename": "portal_graveyard 3.aseprite",
+    "filename": "portals 3.aseprite",
     "frame": { "x": 195, "y": 0, "w": 64, "h": 64 },
     "rotated": false,
     "trimmed": false,
@@ -36,7 +36,7 @@
     "duration": 50
    },
    {
-    "filename": "portal_graveyard 4.aseprite",
+    "filename": "portals 4.aseprite",
     "frame": { "x": 260, "y": 0, "w": 64, "h": 64 },
     "rotated": false,
     "trimmed": false,
@@ -45,7 +45,7 @@
     "duration": 50
    },
    {
-    "filename": "portal_graveyard 5.aseprite",
+    "filename": "portals 5.aseprite",
     "frame": { "x": 325, "y": 0, "w": 64, "h": 64 },
     "rotated": false,
     "trimmed": false,
@@ -54,7 +54,7 @@
     "duration": 50
    },
    {
-    "filename": "portal_graveyard 6.aseprite",
+    "filename": "portals 6.aseprite",
     "frame": { "x": 390, "y": 0, "w": 64, "h": 64 },
     "rotated": false,
     "trimmed": false,
@@ -63,7 +63,7 @@
     "duration": 50
    },
    {
-    "filename": "portal_graveyard 7.aseprite",
+    "filename": "portals 7.aseprite",
     "frame": { "x": 455, "y": 0, "w": 64, "h": 64 },
     "rotated": false,
     "trimmed": false,
@@ -72,8 +72,179 @@
     "duration": 50
    },
    {
-    "filename": "portal_graveyard 8.aseprite",
-    "frame": { "x": 455, "y": 0, "w": 64, "h": 64 },
+    "filename": "portals 8.aseprite",
+    "frame": { "x": 520, "y": 0, "w": 64, "h": 64 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 64, "h": 64 },
+    "sourceSize": { "w": 64, "h": 64 },
+    "duration": 100
+   },
+   {
+    "filename": "portals 9.aseprite",
+    "frame": { "x": 585, "y": 0, "w": 64, "h": 64 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 64, "h": 64 },
+    "sourceSize": { "w": 64, "h": 64 },
+    "duration": 100
+   },
+   {
+    "filename": "portals 10.aseprite",
+    "frame": { "x": 650, "y": 0, "w": 64, "h": 64 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 64, "h": 64 },
+    "sourceSize": { "w": 64, "h": 64 },
+    "duration": 100
+   },
+   {
+    "filename": "portals 11.aseprite",
+    "frame": { "x": 715, "y": 0, "w": 64, "h": 64 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 64, "h": 64 },
+    "sourceSize": { "w": 64, "h": 64 },
+    "duration": 100
+   },
+   {
+    "filename": "portals 12.aseprite",
+    "frame": { "x": 780, "y": 0, "w": 64, "h": 64 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 64, "h": 64 },
+    "sourceSize": { "w": 64, "h": 64 },
+    "duration": 100
+   },
+   {
+    "filename": "portals 13.aseprite",
+    "frame": { "x": 845, "y": 0, "w": 64, "h": 64 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 64, "h": 64 },
+    "sourceSize": { "w": 64, "h": 64 },
+    "duration": 100
+   },
+   {
+    "filename": "portals 14.aseprite",
+    "frame": { "x": 910, "y": 0, "w": 64, "h": 64 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 64, "h": 64 },
+    "sourceSize": { "w": 64, "h": 64 },
+    "duration": 100
+   },
+   {
+    "filename": "portals 15.aseprite",
+    "frame": { "x": 975, "y": 0, "w": 64, "h": 64 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 64, "h": 64 },
+    "sourceSize": { "w": 64, "h": 64 },
+    "duration": 100
+   },
+   {
+    "filename": "portals 16.aseprite",
+    "frame": { "x": 1040, "y": 0, "w": 64, "h": 64 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 64, "h": 64 },
+    "sourceSize": { "w": 64, "h": 64 },
+    "duration": 100
+   },
+   {
+    "filename": "portals 17.aseprite",
+    "frame": { "x": 1105, "y": 0, "w": 64, "h": 64 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 64, "h": 64 },
+    "sourceSize": { "w": 64, "h": 64 },
+    "duration": 100
+   },
+   {
+    "filename": "portals 18.aseprite",
+    "frame": { "x": 520, "y": 0, "w": 64, "h": 64 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 64, "h": 64 },
+    "sourceSize": { "w": 64, "h": 64 },
+    "duration": 100
+   },
+   {
+    "filename": "portals 19.aseprite",
+    "frame": { "x": 585, "y": 0, "w": 64, "h": 64 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 64, "h": 64 },
+    "sourceSize": { "w": 64, "h": 64 },
+    "duration": 100
+   },
+   {
+    "filename": "portals 20.aseprite",
+    "frame": { "x": 650, "y": 0, "w": 64, "h": 64 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 64, "h": 64 },
+    "sourceSize": { "w": 64, "h": 64 },
+    "duration": 100
+   },
+   {
+    "filename": "portals 21.aseprite",
+    "frame": { "x": 715, "y": 0, "w": 64, "h": 64 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 64, "h": 64 },
+    "sourceSize": { "w": 64, "h": 64 },
+    "duration": 100
+   },
+   {
+    "filename": "portals 22.aseprite",
+    "frame": { "x": 780, "y": 0, "w": 64, "h": 64 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 64, "h": 64 },
+    "sourceSize": { "w": 64, "h": 64 },
+    "duration": 100
+   },
+   {
+    "filename": "portals 23.aseprite",
+    "frame": { "x": 845, "y": 0, "w": 64, "h": 64 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 64, "h": 64 },
+    "sourceSize": { "w": 64, "h": 64 },
+    "duration": 100
+   },
+   {
+    "filename": "portals 24.aseprite",
+    "frame": { "x": 910, "y": 0, "w": 64, "h": 64 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 64, "h": 64 },
+    "sourceSize": { "w": 64, "h": 64 },
+    "duration": 100
+   },
+   {
+    "filename": "portals 25.aseprite",
+    "frame": { "x": 975, "y": 0, "w": 64, "h": 64 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 64, "h": 64 },
+    "sourceSize": { "w": 64, "h": 64 },
+    "duration": 100
+   },
+   {
+    "filename": "portals 26.aseprite",
+    "frame": { "x": 1040, "y": 0, "w": 64, "h": 64 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 64, "h": 64 },
+    "sourceSize": { "w": 64, "h": 64 },
+    "duration": 100
+   },
+   {
+    "filename": "portals 27.aseprite",
+    "frame": { "x": 1105, "y": 0, "w": 64, "h": 64 },
     "rotated": false,
     "trimmed": false,
     "spriteSourceSize": { "x": 0, "y": 0, "w": 64, "h": 64 },
@@ -86,11 +257,11 @@
   "version": "1.3.15.5-x64",
   "image": "portalgraveyard.png",
   "format": "RGBA8888",
-  "size": { "w": 519, "h": 64 },
+  "size": { "w": 1169, "h": 64 },
   "scale": "1",
   "frameTags": [
    { "name": "grow", "from": 0, "to": 7, "direction": "forward", "color": "#000000ff" },
-   { "name": "idle", "from": 8, "to": 8, "direction": "forward", "color": "#000000ff" }
+   { "name": "idle", "from": 8, "to": 27, "direction": "forward", "color": "#000000ff" }
   ]
  }
 }

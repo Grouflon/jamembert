@@ -22,16 +22,21 @@ game_start :: ()
     //Spell init
     spell_index = 0;
 
-    spell_slots[0] = *sentification_spell_definition;
-    //spell_slots[1] = *portalgraveyard_spell_definition;
+    //spell_slots[0] = *sentification_spell_definition;
+    spell_slots[0] = *portalbrain_spell_definition;
+    //spell_slots[1] = *portalforest_spell_definition;
+    //spell_slots[2] = *portalgraveyard_spell_definition;
+    spell_slots[1] = *portallibrary_spell_definition;
+    spell_slots[2] = *portalvolcano_spell_definition;
     //spell_slots[1] = *spectralform_spell_definition;
     //spell_slots[2] = *illusion_spell_definition;
     //spell_slots[2] = *mindswap_spell_definition;
     //spell_slots[1] = *bouledefeu_spell_definition;
     //spell_slots[0] = *darkbook_spell_definition;
     //spell_slots[1] = *cupidon_spell_definition;
-    spell_slots[2] = *skull_spell_definition;
-    spell_slots[1] = *explosion_spell_definition;
+    //spell_slots[1] = *skull_spell_definition;
+    //spell_slots[2] = *skull_spell_definition;
+    //spell_slots[1] = *explosion_spell_definition;
     //spell_slots[2] = *mitose_spell_definition;
     //spell_slots[2] = *reanimation_spell_definition;
     //spell_slots[1] = *transposition_spell_definition;

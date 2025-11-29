@@ -1,0 +1,3 @@
+{
+	"texture": "portalbrain_texture"
+}

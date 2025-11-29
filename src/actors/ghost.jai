@@ -5,12 +5,12 @@ ghost_definition : = ActorDefinition.{
     draw = ghost_draw,
     on_hit = ghost_on_hit,
 
-    face_position = .{0,7},
+    face_position = .{0,11},
 
-    face_idle_animation = "noface",
+    face_idle_animation = "ghost_idle",
     face_dead_animation = "noface",
-    face_panic_animation = "noface",
-    face_mad_animation = "noface",
+    face_panic_animation = "ghost_idle",
+    face_mad_animation = "ghost_mad",
 
     idle_hollow_animation = .{ "ghost_aseprite", "idle_hollow" },
     idle_animation = .{ "ghost_aseprite", "idle" },

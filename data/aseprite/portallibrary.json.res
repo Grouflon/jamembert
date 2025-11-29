@@ -1,0 +1,3 @@
+{
+	"texture": "portallibrary_texture"
+}

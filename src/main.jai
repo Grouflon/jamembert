@@ -14,7 +14,12 @@
 #load "spells/reanimation.jai";
 #load "spells/skull.jai";
 #load "spells/spectralform.jai";
+//Portals
+#load "spells/portalbrain.jai";
+#load "spells/portalforest.jai";
 #load "spells/portalgraveyard.jai";
+#load "spells/portallibrary.jai";
+#load "spells/portalvolcano.jai";
 //Misc              (color : skyblue / idx-19 / 5fcde4)
 #load "spells/attack.jai";
 #load "spells/transposition.jai";
@@ -38,7 +43,12 @@ spellbook: []*SpellDefinition = .[
     *skull_spell_definition,
     *reanimation_spell_definition,
     *spectralform_spell_definition,
+    //portals
+    *portalbrain_spell_definition,
+    *portalforest_spell_definition,
     *portalgraveyard_spell_definition,
+    *portallibrary_spell_definition,
+    *portalvolcano_spell_definition,
     //Misc
     *transposition_spell_definition,
     *spawngobelin_spell_definition,
@@ -58,6 +68,7 @@ spellbook: []*SpellDefinition = .[
 #load "actors/ghost.jai";
 #load "actors/tomb1.jai";
 #load "actors/tomb2.jai";
+#load "actors/portal.jai";
 
 // Other
 #load "resources.jai";
