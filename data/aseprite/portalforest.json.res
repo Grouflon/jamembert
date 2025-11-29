@@ -1,0 +1,3 @@
+{
+	"texture": "portalforest_texture"
+}

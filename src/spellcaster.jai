@@ -47,16 +47,7 @@ spellcaster_update :: (using spellcaster: *SpellCaster, dt: float, target: Vecto
         case .TARGET;
         {
             targets: = physics_cast(target, .{ type = .CIRCLE, circle = .{ .{}, 10 } }, .[PHYSIC_LAYER_BODY]);
-            closest_squared_distance: float = FLOAT32_MAX;
-            for collider: targets
-            {
-                squared_distance: = distance_squared(target, collider.parent.position.xy);
-                if squared_distance < closest_squared_distance
-                {
-                    closest_squared_distance = squared_distance;
-                    current_cast.target.target = collider.parent.(*Actor);
-                }
-            }
+            current_cast.target.target = get_closest_actor(target, targets);
         }
         case .POSITION;
         {
@@ -88,12 +79,21 @@ spellcaster_draw :: (using spellcaster: *SpellCaster)
 
                 begin_render_texture(render_layers[RenderLayer.GROUND]);
                 defer end_render_texture();
-                draw_rectangle(target.position, .{.{-5,-2},.{5,2}}, .{255,255,255,150});
+
+                begin_transform();
+                transform_translate(target.position);
+                transform_scale(.{1,0.4,1});
+                draw_circle(.{}, 5, .{255,255,255,70});
+                end_transform();
             }
             case .POSITION;
             {
-                pos: = make_vector3(screen_to_world(get_mouse_position()), 0);
-                draw_rectangle(pos, .{.{-5,-5},.{5,5}}, .{255,255,255,150});
+                pos: = xyz(screen_to_world(get_mouse_position()), 0);
+                begin_transform();
+                transform_translate(pos);
+                transform_scale(.{1,0.4,1});
+                draw_circle(.{}, 5, .{255,255,255,70});
+                end_transform();
             }
         } 
     }

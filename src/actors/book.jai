@@ -52,7 +52,6 @@ book_update :: (using actor: *Actor, dt: float)
     for collider: book.pickup_trigger.frame_overlaps
     {
         picking_actor: = collider.parent.(*Actor);
-        if !picking_actor.user_controlled continue;
         if try_learn_spell(picking_actor, book.spell)
         {
             request_delete_actor(actor);

@@ -50,12 +50,11 @@ cheese_update :: (using actor: *Actor, dt: float)
     for collider: cheese.pickup_trigger.frame_overlaps
     {
         picking_actor: = collider.parent.(*Actor);
-        if !picking_actor.user_controlled continue;
 
         //heal
         if picking_actor.current_health < picking_actor.definition.max_health
         {
-            actor_hit(picking_actor, -3, actor);
+            actor_modify_health(picking_actor, 3);
             create_simple_animation_actor(picking_actor.position.xy, .{*resources.healing_aseprite, string_hash("idle")} , .OVERLAY);
 
             request_delete_actor(actor);

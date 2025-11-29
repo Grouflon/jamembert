@@ -63,8 +63,11 @@ spellbook: []*SpellDefinition = .[
 #load "resources.jai";
 #load "actor.jai";
 #load "game.jai";
+#load "game_constants.jai";
+#load "player.jai";
 #load "spell.jai";
 #load "spellcaster.jai";
+#load "tools.jai";
 
 #load "components/movement_component.jai";
 #load "components/alteration_component.jai";

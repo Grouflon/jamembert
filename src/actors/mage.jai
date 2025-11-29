@@ -11,6 +11,7 @@ mage_definition : = ActorDefinition.{
     idle_animation = .{ "mage_aseprite", "idle" },
     move_animation = .{ "mage_aseprite", "walk" },
     dead_animation = .{ "mage_aseprite", "dead" },
+    cast_animation = .{ "mage_aseprite", "cast" },
 
     max_health = 6,
     speed = 30,

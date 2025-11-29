@@ -82,7 +82,7 @@ ai_component_update :: (using ai: *AIComponent, dt: float)
         {
             set_state(ai, .PANICKING);
         }
-        else if !owner.user_controlled
+        else if owner.controlling_player == null
         {
             if target != null
             {
@@ -158,7 +158,7 @@ ai_component_update :: (using ai: *AIComponent, dt: float)
 
             if distance <= can_attack_range
             {
-                actor_attack(owner, target.position.xy);
+                actor_attack(owner, signed_angle_between(-target_to_self, .{1,0}));
             }
         }
     }

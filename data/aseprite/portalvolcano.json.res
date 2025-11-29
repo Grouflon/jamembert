@@ -1,0 +1,3 @@
+{
+	"texture": "portalvolcano_texture"
+}
