@@ -113,7 +113,10 @@
    { "name": "walk", "from": 3, "to": 10, "direction": "forward", "color": "#000000ff" }
   ],
   "slices": [
-   { "name": "face", "color": "#0000ffff", "keys": [{ "frame": 6, "bounds": {"x": 5, "y": 6, "w": 5, "h": 4 } }, { "frame": 7, "bounds": {"x": 5, "y": 7, "w": 5, "h": 4 } }, { "frame": 10, "bounds": {"x": 5, "y": 7, "w": 5, "h": 4 } }] }
+   { "name": "hitbox1", "color": "#fe5b59ff", "keys": [{ "frame": 0, "bounds": {"x": 1, "y": 0, "w": 1, "h": 1 } }, { "frame": 2, "bounds": {"x": 4, "y": 6, "w": 7, "h": 6 } }, { "frame": 7, "bounds": {"x": 4, "y": 7, "w": 7, "h": 6 } }] },
+   { "name": "hurtbox1", "color": "#6acd5bff", "keys": [{ "frame": 0, "bounds": {"x": 4, "y": 9, "w": 7, "h": 6 } }, { "frame": 1, "bounds": {"x": 4, "y": 12, "w": 7, "h": 3 } }, { "frame": 2, "bounds": {"x": 4, "y": 6, "w": 7, "h": 6 } }, { "frame": 7, "bounds": {"x": 4, "y": 7, "w": 7, "h": 6 } }] },
+   { "name": "body", "color": "#0000ffff", "keys": [{ "frame": 0, "bounds": {"x": 0, "y": 0, "w": 1, "h": 1 } }, { "frame": 2, "bounds": {"x": 5, "y": 7, "w": 5, "h": 8 } }] },
+   { "name": "face", "color": "#d186dfff", "keys": [{ "frame": 0, "bounds": {"x": 5, "y": 8, "w": 5, "h": 4 } }, { "frame": 1, "bounds": {"x": 5, "y": 11, "w": 5, "h": 4 } }, { "frame": 2, "bounds": {"x": 5, "y": 5, "w": 5, "h": 4 } }, { "frame": 3, "bounds": {"x": 5, "y": 5, "w": 5, "h": 4 } }, { "frame": 4, "bounds": {"x": 5, "y": 5, "w": 5, "h": 4 } }, { "frame": 6, "bounds": {"x": 5, "y": 6, "w": 5, "h": 4 } }, { "frame": 7, "bounds": {"x": 5, "y": 6, "w": 5, "h": 4 } }, { "frame": 10, "bounds": {"x": 5, "y": 5, "w": 5, "h": 4 } }] }
   ]
  }
 }

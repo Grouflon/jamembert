@@ -210,6 +210,10 @@
    { "name": "dead", "from": 1, "to": 1, "direction": "forward", "color": "#000000ff" },
    { "name": "walk", "from": 2, "to": 9, "direction": "forward", "color": "#000000ff" },
    { "name": "idle", "from": 10, "to": 21, "direction": "forward", "color": "#000000ff" }
+  ],
+  "slices": [
+   { "name": "hurtbox1", "color": "#6acd5bff", "keys": [{ "frame": 0, "bounds": {"x": 2, "y": 3, "w": 12, "h": 12 } }, { "frame": 1, "bounds": {"x": 2, "y": 6, "w": 12, "h": 9 } }, { "frame": 2, "bounds": {"x": 2, "y": 0, "w": 12, "h": 15 } }] },
+   { "name": "body", "color": "#0000ffff", "keys": [{ "frame": 0, "bounds": {"x": 2, "y": 6, "w": 12, "h": 9 } }, { "frame": 1, "bounds": {"x": 2, "y": 9, "w": 12, "h": 6 } }, { "frame": 2, "bounds": {"x": 2, "y": 3, "w": 12, "h": 12 } }] }
   ]
  }
 }

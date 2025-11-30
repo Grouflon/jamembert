@@ -1,6 +1,6 @@
 { "frames": [
    {
-    "filename": "tomb_1 0.aseprite",
+    "filename": "tomb1 0.aseprite",
     "frame": { "x": 0, "y": 0, "w": 16, "h": 16 },
     "rotated": false,
     "trimmed": false,
@@ -9,7 +9,7 @@
     "duration": 100
    },
    {
-    "filename": "tomb_1 1.aseprite",
+    "filename": "tomb1 1.aseprite",
     "frame": { "x": 17, "y": 0, "w": 16, "h": 16 },
     "rotated": false,
     "trimmed": false,
@@ -18,7 +18,7 @@
     "duration": 100
    },
    {
-    "filename": "tomb_1 2.aseprite",
+    "filename": "tomb1 2.aseprite",
     "frame": { "x": 34, "y": 0, "w": 16, "h": 16 },
     "rotated": false,
     "trimmed": false,
@@ -27,7 +27,7 @@
     "duration": 100
    },
    {
-    "filename": "tomb_1 3.aseprite",
+    "filename": "tomb1 3.aseprite",
     "frame": { "x": 51, "y": 0, "w": 16, "h": 16 },
     "rotated": false,
     "trimmed": false,
@@ -36,7 +36,7 @@
     "duration": 100
    },
    {
-    "filename": "tomb_1 4.aseprite",
+    "filename": "tomb1 4.aseprite",
     "frame": { "x": 51, "y": 0, "w": 16, "h": 16 },
     "rotated": false,
     "trimmed": false,
@@ -45,7 +45,7 @@
     "duration": 100
    },
    {
-    "filename": "tomb_1 5.aseprite",
+    "filename": "tomb1 5.aseprite",
     "frame": { "x": 51, "y": 0, "w": 16, "h": 16 },
     "rotated": false,
     "trimmed": false,
@@ -54,7 +54,7 @@
     "duration": 100
    },
    {
-    "filename": "tomb_1 6.aseprite",
+    "filename": "tomb1 6.aseprite",
     "frame": { "x": 34, "y": 0, "w": 16, "h": 16 },
     "rotated": false,
     "trimmed": false,
@@ -63,7 +63,7 @@
     "duration": 100
    },
    {
-    "filename": "tomb_1 7.aseprite",
+    "filename": "tomb1 7.aseprite",
     "frame": { "x": 68, "y": 0, "w": 16, "h": 16 },
     "rotated": false,
     "trimmed": false,
@@ -72,7 +72,7 @@
     "duration": 100
    },
    {
-    "filename": "tomb_1 8.aseprite",
+    "filename": "tomb1 8.aseprite",
     "frame": { "x": 68, "y": 0, "w": 16, "h": 16 },
     "rotated": false,
     "trimmed": false,
@@ -81,7 +81,7 @@
     "duration": 100
    },
    {
-    "filename": "tomb_1 9.aseprite",
+    "filename": "tomb1 9.aseprite",
     "frame": { "x": 68, "y": 0, "w": 16, "h": 16 },
     "rotated": false,
     "trimmed": false,
@@ -90,7 +90,7 @@
     "duration": 100
    },
    {
-    "filename": "tomb_1 10.aseprite",
+    "filename": "tomb1 10.aseprite",
     "frame": { "x": 34, "y": 0, "w": 16, "h": 16 },
     "rotated": false,
     "trimmed": false,
@@ -111,6 +111,11 @@
    { "name": "dead", "from": 1, "to": 1, "direction": "forward", "color": "#000000ff" },
    { "name": "idle", "from": 2, "to": 2, "direction": "forward", "color": "#000000ff" },
    { "name": "walk", "from": 3, "to": 10, "direction": "forward", "color": "#000000ff" }
+  ],
+  "slices": [
+   { "name": "face", "color": "#d186dfff", "keys": [{ "frame": 1, "bounds": {"x": 5, "y": 10, "w": 5, "h": 4 } }, { "frame": 2, "bounds": {"x": 5, "y": 7, "w": 5, "h": 4 } }] },
+   { "name": "body", "color": "#0000ffff", "keys": [{ "frame": 0, "bounds": {"x": 4, "y": 10, "w": 7, "h": 5 } }, { "frame": 1, "bounds": {"x": 4, "y": 11, "w": 7, "h": 4 } }, { "frame": 2, "bounds": {"x": 4, "y": 9, "w": 7, "h": 6 } }] },
+   { "name": "hurtbox1", "color": "#6acd5bff", "keys": [{ "frame": 0, "bounds": {"x": 4, "y": 8, "w": 7, "h": 7 } }, { "frame": 1, "bounds": {"x": 4, "y": 11, "w": 7, "h": 4 } }, { "frame": 2, "bounds": {"x": 4, "y": 7, "w": 7, "h": 8 } }] }
   ]
  }
 }

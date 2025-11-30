@@ -159,6 +159,9 @@
    { "name": "cast", "from": 10, "to": 15, "direction": "forward", "color": "#000000ff" }
   ],
   "slices": [
+   { "name": "hurtbox1", "color": "#6acd5bff", "keys": [{ "frame": 0, "bounds": {"x": 4, "y": 20, "w": 7, "h": 11 } }, { "frame": 1, "bounds": {"x": 4, "y": 27, "w": 7, "h": 4 } }, { "frame": 2, "bounds": {"x": 4, "y": 20, "w": 7, "h": 11 } }] },
+   { "name": "body", "color": "#0000ffff", "keys": [{ "frame": 0, "bounds": {"x": 5, "y": 23, "w": 5, "h": 8 } }, { "frame": 1, "bounds": {"x": 5, "y": 27, "w": 5, "h": 4 } }, { "frame": 2, "bounds": {"x": 5, "y": 23, "w": 5, "h": 8 } }] },
+   { "name": "face", "color": "#d186dfff", "keys": [{ "frame": 0, "bounds": {"x": 5, "y": 22, "w": 5, "h": 4 } }, { "frame": 1, "bounds": {"x": 5, "y": 27, "w": 5, "h": 4 } }, { "frame": 2, "bounds": {"x": 5, "y": 22, "w": 5, "h": 4 } }] }
   ]
  }
 }

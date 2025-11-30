@@ -213,6 +213,9 @@
    { "name": "cast", "from": 16, "to": 21, "direction": "forward", "color": "#000000ff" }
   ],
   "slices": [
+   { "name": "hurtbox1", "color": "#6acd5bff", "keys": [{ "frame": 0, "bounds": {"x": 4, "y": 19, "w": 7, "h": 12 } }, { "frame": 1, "bounds": {"x": 2, "y": 26, "w": 9, "h": 5 } }, { "frame": 2, "bounds": {"x": 4, "y": 19, "w": 7, "h": 12 } }] },
+   { "name": "body", "color": "#0000ffff", "keys": [{ "frame": 0, "bounds": {"x": 5, "y": 25, "w": 5, "h": 6 } }, { "frame": 1, "bounds": {"x": 4, "y": 28, "w": 6, "h": 3 } }, { "frame": 2, "bounds": {"x": 5, "y": 25, "w": 5, "h": 6 } }] },
+   { "name": "face", "color": "#d186dfff", "keys": [{ "frame": 1, "bounds": {"x": 4, "y": 27, "w": 5, "h": 4 } }, { "frame": 2, "bounds": {"x": 5, "y": 22, "w": 5, "h": 4 } }] }
   ]
  }
 }
