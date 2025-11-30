@@ -68,7 +68,8 @@ game_start :: ()
     //players[0].spell_slots[0] = *spawngobelin_spell_definition;
 
     //Player mage is spawn at origin
-    mage: = create_actor(*mage_definition);
+    mage1: = create_actor(*mage_definition, .{-50, -50});
+    mage2: = create_actor(*mage_definition, .{50, 50});
 
     //Actor placement
     //goblin: = create_actor(*goblin_definition, .{70, -30});
@@ -135,7 +136,8 @@ game_start :: ()
 
 
     //Set player controlled actor
-    set_controlled_actor(*players[0], mage);
+    set_controlled_actor(*players[0], mage1);
+    set_controlled_actor(*players[1], mage2);
     // set_controlled_actor(goblin);
     // mage.ai.is_agressive = true;
     //actor_set_sentient(chest, true);
@@ -266,18 +268,8 @@ game_draw :: ()
             begin_camera(ui_camera);
             defer end_camera();
 
-            spell_swatches_origin: = Vector2.{3, 3};
-            spell_swatches_step: = Vector2.{17, 0};
-            selector_offset: = Vector2.{8,17};
-            player: = *players[0];
-            for i: 0..player.spell_slots.count-1
-            {
-                animation_player_draw(*player.spell_swatches[i], xyz(spell_swatches_origin + spell_swatches_step * i.(float), 0));
-            }
-            if player.spell_slots[player.spell_index] != null
-            {
-                draw_rectangle(xyz(spell_swatches_origin + player.spell_index.(float) * spell_swatches_step + selector_offset, 0), .{.{-1,-1}, .{1,1}}, WHITE);
-            }
+            player_draw_ui(*players[0], .{3,3});
+            player_draw_ui(*players[1], .{GAME_WIDTH / DRAW_SCALE - 52,3});
         }
 
         // Compositing
