@@ -76,6 +76,7 @@ spellbook: []*SpellDefinition = .[
 #load "actor.jai";
 #load "game.jai";
 #load "game_constants.jai";
+#load "mind_state.jai";
 #load "player.jai";
 #load "spell.jai";
 #load "spellcaster.jai";

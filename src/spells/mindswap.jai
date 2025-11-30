@@ -38,39 +38,6 @@ MindswapData :: struct
     swap_back: bool;
 }
 
-MindState :: struct
-{
-    is_sentient: bool;
-    is_agressive: bool;
-    controlling_player: *Player;
-}
-
-get_mind_state :: (actor: *Actor) -> MindState
-{
-    if actor == null return .{};
-    return .{
-        is_sentient = actor.alterations.sentient,
-        is_agressive = actor.ai.is_agressive,
-        controlling_player = actor.controlling_player,
-    };
-}
-
-set_mind_state :: (actor: *Actor, state: MindState)
-{
-    if actor == null return;
-
-    actor_set_sentient(actor, state.is_sentient);
-    actor.ai.is_agressive = state.is_agressive;
-    if state.controlling_player != null
-    {
-        set_controlled_actor(state.controlling_player, actor);
-    }
-    else if actor.controlling_player != null
-    {
-        set_controlled_actor(actor.controlling_player, null);
-    }
-}
-
 mindswap_init :: (using actor: *Actor)
 {
     position.z = 1;
