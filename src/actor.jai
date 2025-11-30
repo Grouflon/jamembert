@@ -1,3 +1,6 @@
+ACTOR_HURTBOX_COUNT :: 3;
+ACTOR_HITBOX_COUNT :: 3;
+
 Actor :: struct
 {
     #as using e:Entity;
@@ -14,9 +17,9 @@ Actor :: struct
     ai: AIComponent;
 
     body: *Collider;
-    hurtboxes: [3]*Collider;
-    hitboxes: [3]*Collider;
-    burnboxes: [3]*Collider;
+    hurtboxes: [ACTOR_HURTBOX_COUNT]*Collider;
+    hitboxes: [ACTOR_HITBOX_COUNT]*Collider;
+    burnboxes: [ACTOR_HITBOX_COUNT]*Collider;
 
     active: bool = true;
 
