@@ -120,21 +120,13 @@ ai_component_update :: (using ai: *AIComponent, dt: float)
             assert(target == null);
 
             potential_targets: = physics_cast(owner.position.xy, .{ type = .CIRCLE, circle = .{.{}, detection_zone_radius}}, .[PHYSIC_LAYER_HURTBOX]);
-            closest_target: *Actor;
-            closest_target_squared_distance: float = FLOAT32_MAX;
-            for collider: potential_targets
+            closest_target: = get_closest_actor(owner.position.xy, potential_targets, ai, (actor: *Actor, user_data: *void) -> bool
             {
-                potential_target: = collider.parent.(*Actor);
-                if potential_target == owner continue;
-                if !actor_is_chasable(ai, potential_target) continue;
-
-                d: = distance_squared(owner.position, collider.parent.position);
-                if d < closest_target_squared_distance
-                {
-                    closest_target_squared_distance = d;
-                    closest_target = collider.parent.(*Actor);
-                }
-            }
+                ai: = user_data.(*AIComponent);
+                if actor == ai.owner return false;
+                if !actor_is_chasable(ai, actor) return false;
+                return true;
+            });
 
             if closest_target != null
             {
@@ -150,12 +142,28 @@ ai_component_update :: (using ai: *AIComponent, dt: float)
         case .CHASING;
         {
             assert(target != null);
-            target_attack_range: = owner.definition.attack_range + 5;
-            can_attack_range: = owner.definition.attack_range + 6;
+            target_attack_range: = owner.definition.attack_range - 2;
+            can_attack_range: = owner.definition.attack_range + 2;
 
-            target_to_self: = (owner.position - target.position).xy;
+            attack_position: Vector2 = target.position.xy;
+            closest_distance_squared: = distance_squared(attack_position, owner.position.xy);
+
+            for hurtbox: target.hurtboxes
+            {
+                if !hurtbox.enabled continue;
+
+                p: = closest_point_on_bounds(owner.position.xy, collider_get_bounds(hurtbox));
+                d: = distance_squared(owner.position.xy, p);
+                if d < closest_distance_squared
+                {
+                    attack_position = p;
+                    closest_distance_squared = d;
+                }
+            }
+
+            target_to_self: = owner.position.xy - attack_position;
             distance: = length(target_to_self);
-            movement_component_go_to(*owner.movement, target.position.xy + normalize(target_to_self) * target_attack_range);
+            movement_component_go_to(*owner.movement, attack_position + normalize(target_to_self) * target_attack_range);
 
             if distance <= can_attack_range
             {
