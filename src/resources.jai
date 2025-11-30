@@ -7,6 +7,15 @@ resources : struct
     mage_texture: TextureFile = .{ path = "data://aseprite/mage.png" };
     mage_aseprite: AsepriteFile = .{ path = "data://aseprite/mage.json" };
 
+    mage2_texture: TextureFile = .{ path = "data://aseprite/mage2.png" };
+    mage2_aseprite: AsepriteFile = .{ path = "data://aseprite/mage2.json" };
+
+    mage3_texture: TextureFile = .{ path = "data://aseprite/mage3.png" };
+    mage3_aseprite: AsepriteFile = .{ path = "data://aseprite/mage3.json" };
+
+    mage4_texture: TextureFile = .{ path = "data://aseprite/mage4.png" };
+    mage4_aseprite: AsepriteFile = .{ path = "data://aseprite/mage4.json" };
+
     tree_texture: TextureFile = .{ path = "data://aseprite/tree.png" };
     tree_aseprite: AsepriteFile = .{ path = "data://aseprite/tree.json" };
 
