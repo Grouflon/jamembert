@@ -8,6 +8,7 @@ AIComponent :: struct
     is_panicking: bool;
 
     detection_zone_radius: float = 50;
+    target_lost_hysteresis: float = 10;
     wandering_zone_radius: float;
     zone_center: Vector2;
     wait_time: float;
@@ -163,6 +164,13 @@ ai_component_update :: (using ai: *AIComponent, dt: float)
 
             target_to_self: = owner.position.xy - attack_position;
             distance: = length(target_to_self);
+
+            if distance > detection_zone_radius + target_lost_hysteresis
+            {
+                target = null;
+                return;
+            }
+
             movement_component_go_to(*owner.movement, attack_position + normalize(target_to_self) * target_attack_range);
 
             if distance <= can_attack_range
@@ -250,8 +258,6 @@ update_wandering :: (using ai: *AIComponent, dt: float, params: WanderingParams)
             target_position: = zone_center + rotate(.{distance, 0}, angle);
             movement_component_go_to(*owner.movement, target_position);
             movement_component_set_speed_modifer(*owner.movement, SPEED_MODIFIER_NAME, params.speed_modifier);
-
-
         }
         else
         {
