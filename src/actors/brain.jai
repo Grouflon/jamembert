@@ -1,5 +1,6 @@
 brain_definition : = ActorDefinition.{
     init = brain_init,
+    shutdown = brain_shutdown,
     update = brain_update,
     //draw = brain_draw,
 
@@ -21,8 +22,8 @@ BrainData :: struct
 {
     body: *Collider;
     possess_col: *Collider;
-    previously_possessed_actor: *Actor;
-    current_target: *Actor;
+    previously_possessed_actor: ID(Actor);
+    current_target: ID(Actor);
 }
 
 
@@ -34,8 +35,15 @@ brain_init :: (using actor: *Actor)
     brain.body = actor_add_collider(actor, .{ type = .BOX, box = .{.{-2, 1}, .{2,4}} }, PHYSIC_LAYER_BODY);
     brain.possess_col = actor_add_collider(actor, .{ type = .BOX, box = .{.{-4, -1}, .{4,6}} }, PHYSIC_LAYER_SPELL);
     actor.alterations.burning_collider.shape = .{ type = .BOX, box = dilate(brain.body.shape.box, .{2,1}) };
+    actor.ai.disabled = true; // brain has custom ai
 
     actor_set_sentient(actor, true);
+}
+
+brain_shutdown :: (using actor: *Actor)
+{
+    brain: = data.(*BrainData);
+    yae_array_unordered_remove_by_value(*brains_targets, brain.current_target);
 }
 
 //used for debug
@@ -48,32 +56,27 @@ brain_init :: (using actor: *Actor)
 brain_update :: (using actor: *Actor, dt: float)
 {
     brain: = data.(*BrainData);
+    can_possess: = true;
     
+    //when controlled by AI
     if !actor.controlling_player
-    {    
-        //when controlled by AI
-        if brain.current_target
+    {
+        current_target: = get(brain.current_target);
+        can_possess = false;
+
+        //reset chase for target if it becomes not valid
+        if !check_if_braintarget_is_valid(actor, current_target, false)
         {
-            //reset chase for target if it becomes not valid
-            if !check_if_braintarget_is_valid(actor, brain.current_target, false) brain.current_target = null;
+            yae_array_unordered_remove_by_value(*brains_targets, brain.current_target);
+            current_target = null;
+            brain.current_target = .{};
+        }
 
+        if current_target
+        {
             //chase target
-            movement_component_go_to(*actor.movement, brain.current_target.position.xy);
-
-            for col: brain.possess_col.frame_overlaps
-            {
-                actorcollide: = col.parent.(*Actor);
-
-                //trigger the "possess" even if it's not the current target because there is no pathfinding so it get stuck
-                //nor there's a way to sort an array by closest + it wouldn't work for the player
-                if check_if_braintarget_is_valid(actor, actorcollide, false)
-                {
-                    actor_set_sentient(actorcollide, true);
-                    array_unordered_remove_by_value(*brains_targets, brain.current_target);
-                    request_delete_actor(actor);
-                    return;
-                }
-            }
+            movement_component_go_to(*actor.movement, current_target.position.xy);
+            can_possess = true;
         }
         else 
         {    
@@ -87,14 +90,14 @@ brain_update :: (using actor: *Actor, dt: float)
                 if !check_if_braintarget_is_valid(actor, target) continue;
 
                 //add the target
-                brain.current_target = target;
-                array_add_if_unique(*brains_targets, target);
+                brain.current_target = target.id;
+                yae_array_add_if_unique(*brains_targets, target.id);
             }
         }
     }
-    else
+
+    if can_possess
     {
-        //When controlled by the player
         for col: brain.possess_col.frame_overlaps
         {
             actorcollide: = col.parent.(*Actor);
@@ -103,11 +106,7 @@ brain_update :: (using actor: *Actor, dt: float)
             //for the player maybe it should be triggered on the attack ?
             if check_if_braintarget_is_valid(actor, actorcollide, false)
             {
-                actor_set_sentient(actorcollide, true);
-
-                //I don't know how the mindstate work so maybe we should change that
-                set_controlled_actor(actor.controlling_player,actorcollide);
-
+                swap_mind_states(actor, actorcollide);
                 request_delete_actor(actor);
                 return;
             }
@@ -118,20 +117,19 @@ brain_update :: (using actor: *Actor, dt: float)
 check_if_braintarget_is_valid :: (using actor: *Actor, target:*Actor, check_in_array:bool=true) -> bool 
 {
     brain: = data.(*BrainData);
-    valid: = true;
 
-    if target==null valid = false;
-    if target.definition == *brain_definition valid = false;
-    if actor_is_sentient(target) valid = false;
-    if actor_is_dead(target) valid = false;
-    if target==brain.previously_possessed_actor valid = false;
+    if target==null return false;
+    if target.definition == *brain_definition return false;
+    if actor_is_sentient(target) return false;
+    if actor_is_dead(target) return false;
+    if target.id==brain.previously_possessed_actor.id return false;
     if check_in_array 
     {
-        if array_find(brains_targets, target) valid = false;
+        if yae_array_find(brains_targets, target.id) return false;
     }
 
-    return valid;
+    return true;
 }
 
 //global array to avoid the brains targeting the same actor
-brains_targets: [..] *Actor;
+brains_targets: [..] ID(Actor);

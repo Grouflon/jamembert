@@ -70,7 +70,7 @@ skull_update :: (using actor: *Actor, dt: float)
     {
         target: = collider.parent.(*Actor);
 
-        if target.id == skull.caster continue;
+        if target.id == skull.caster.id continue;
         if array_find(skull.hit_actors, target) continue;
         if actor_is_dead(target)
         {

@@ -150,6 +150,7 @@ game_stop :: ()
     {
         player_shutdown(player);
     }
+    array_clear(*brains_targets);
     delete_all_actors();
 }
 

@@ -12,6 +12,7 @@ AIComponent :: struct
     zone_center: Vector2;
     wait_time: float;
     target: *Actor;
+    disabled: bool;
 }
 
 AIState :: enum
@@ -72,7 +73,7 @@ ai_component_update :: (using ai: *AIComponent, dt: float)
     }
 
     // Transitions
-    if actor_is_dead(owner) || !actor_is_sentient(owner)
+    if disabled || actor_is_dead(owner) || !actor_is_sentient(owner)
     {
         set_state(ai, .NONE);
     }

@@ -56,7 +56,7 @@ cupidon_update :: (using actor: *Actor, dt: float)
     for collider: cupidon.body.frame_overlaps
     {
         target: = collider.parent.(*Actor);
-        if target.id == cupidon.caster continue;
+        if target.id == cupidon.caster.id continue;
         if actor_is_dead(target) continue;
         if !actor_is_sentient(target) continue;
 
