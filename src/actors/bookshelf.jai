@@ -1,5 +1,6 @@
 bookshelf_definition : = ActorDefinition.{
     init = bookshelf_init,
+    update = bookshelf_update,
     on_hit = bookshelf_on_hit,
 
     idle_hollow_animation = .{ "bookshelf_aseprite", "idle_hollow" },
@@ -13,12 +14,21 @@ bookshelf_definition : = ActorDefinition.{
     speed = 3,
 
     attack_cooldown = 5,
-    attack_range = 12,
+    attack_range = 20,
     attack_push = 100,
 };
 
+BookshelfData :: struct
+{
+    spell_gen_timer:= false;
+    spell_gen_counter:= -1.0;
+    spell_gen_cooldown:= 5.0;
+}
+
 bookshelf_init :: (using actor: *Actor)
 {
+    data = New(BookshelfData);
+
     body: = actor_add_collider(actor, .{ type = .BOX, box = .{.{-11, 0}, .{11,26}} }, PHYSIC_LAYER_BODY, true);
     actor.alterations.burning_collider.shape = .{ type = .BOX, box = dilate(body.shape.box, .{2,1}) };
 }
@@ -33,4 +43,49 @@ bookshelf_on_hit :: (using actor: *Actor, source: *Actor)
     book: = create_actor(*book_definition, actor.position.xy);
 
     movement_component_push(*book.movement, rotate(.{projection_strength, 0}, projection_angle));
+}
+
+bookshelf_update :: (using actor: *Actor, dt: float)
+{
+    bookshelf: = data.(*BookshelfData);
+    
+    //log("%",actor.controlling_player);
+    //when controlled by player
+    if actor.controlling_player
+    {
+        //log("%",actor.controlling_player);
+        spells:[SPELL_SLOTS_COUNT]*SpellDefinition=actor.controlling_player.spell_slots;
+
+        if spells[0]==null && spells[1]==null && spells[2]==null && !bookshelf.spell_gen_timer
+        {
+            //start timer
+            log("Start timer spell");
+            bookshelf.spell_gen_timer = true;
+            bookshelf.spell_gen_counter = bookshelf.spell_gen_cooldown;
+        }
+
+        if bookshelf.spell_gen_timer
+        {
+            //decrease timer
+            bookshelf.spell_gen_counter -= dt;
+            log("%",bookshelf.spell_gen_counter);
+
+            if spells[0]!=null || spells[1]!=null || spells[2]!=null
+            {
+                //stop timer
+                bookshelf.spell_gen_timer = false;
+            }
+
+            if bookshelf.spell_gen_counter <= 0
+            {
+                log("Generate spell");
+                //generate spell
+                _, spell: = random_get_array_item(spellbook);
+                actor.controlling_player.spell_slots[0]=spell;
+
+                //stop timer
+                bookshelf.spell_gen_timer = false;
+            }
+        }
+    }
 }
