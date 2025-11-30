@@ -5,12 +5,7 @@ portalgraveyard_spell_definition : = SpellDefinition.{
     range = 200,
     cast_func = (params: SpellCastParams) -> bool
     {
-        portalactor: = create_actor(*portal_definition, params.position.origin);
-        portaldata: = portalactor.data.(*PortalData);
-
-        portaldata.caster = params.source.id;
-        portaldata.animation = resources.portalgraveyard_aseprite;
-        portaldata.actors_to_spawn = portalgraveyard_spawn_actors;
+        create_portal(params.position.origin, *resources.portalgraveyard_aseprite, portalgraveyard_spawn_actors);
         return true;
     },
 };

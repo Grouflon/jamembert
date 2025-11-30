@@ -5,12 +5,7 @@ portallibrary_spell_definition : = SpellDefinition.{
     range = 200,
     cast_func = (params: SpellCastParams) -> bool
     {
-        portalactor: = create_actor(*portal_definition, params.position.origin);
-        portaldata: = portalactor.data.(*PortalData);
-
-        portaldata.caster = params.source.id;
-        portaldata.animation = resources.portallibrary_aseprite;
-        portaldata.actors_to_spawn = portallibrary_spawn_actors;
+        create_portal(params.position.origin, *resources.portallibrary_aseprite, portallibrary_spawn_actors);
         return true;
     },
 };

@@ -5,12 +5,7 @@ portalforest_spell_definition : = SpellDefinition.{
     range = 200,
     cast_func = (params: SpellCastParams) -> bool
     {
-        portalactor: = create_actor(*portal_definition, params.position.origin);
-        portaldata: = portalactor.data.(*PortalData);
-
-        portaldata.caster = params.source.id;
-        portaldata.animation = resources.portalforest_aseprite;
-        portaldata.actors_to_spawn = portalforest_spawn_actors;
+        create_portal(params.position.origin, *resources.portalforest_aseprite, portalforest_spawn_actors);
         return true;
     },
 };

@@ -5,13 +5,8 @@ portalvolcano_spell_definition : = SpellDefinition.{
     range = 200,
     cast_func = (params: SpellCastParams) -> bool
     {
-        portalactor: = create_actor(*portal_definition, params.position.origin);
-        portaldata: = portalactor.data.(*PortalData);
-
-        portaldata.caster = params.source.id;
-        portaldata.animation = resources.portalvolcano_aseprite;
-        portaldata.actors_to_spawn = portalvolcano_spawn_actors;
-        portaldata.on_finish_growing = portal_burn_actors;
+        portal: = create_portal(params.position.origin, *resources.portalvolcano_aseprite, portalvolcano_spawn_actors, portal_burn_actors);
+        portal.data.(*PortalData).delete_actors_on_spawn = false;
         return true;
     },
 };

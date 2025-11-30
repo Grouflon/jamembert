@@ -10,26 +10,34 @@ portal_definition : = ActorDefinition.{
 
 PortalData :: struct
 {
-    caster: ID(Actor);
     radius:= 32.0;
-    animation: AsepriteFile;
+    aseprite_file: *AsepriteFile;
 
     actors_to_spawn: #type (actor: *Actor);
-
-    //default behavior: delate actors ovelapping
-    on_finish_growing: #type (actor: *Actor) = portal_delete_actors;
+    on_finish_growing: #type (actor: *Actor);
 
     is_growing:= false;
+    delete_actors_on_spawn: = true;
+}
+
+create_portal :: (position: Vector2, aseprite_file: *AsepriteFile, actors_to_spawn: #type (actor: *Actor) = null, on_finish_growing: #type (actor: *Actor) = null) -> *Actor
+{
+    portalactor: = create_actor(*portal_definition, position);
+    portaldata: = portalactor.data.(*PortalData);
+
+    portaldata.aseprite_file = aseprite_file;
+    portaldata.actors_to_spawn = actors_to_spawn;
+    portaldata.on_finish_growing = on_finish_growing;
+
+    animation_player_play(*portalactor.animation, portaldata.aseprite_file, "grow", false);
+    portaldata.is_growing = true;
+    return portalactor;
 }
 
 portal_init :: (using actor: *Actor)
 {
     portal: = New(PortalData);
     data = portal;
-
-    //I realized it's not possible to set data to use in init because the init is called when the actor is created
-    //This means this doesn't work so i made a hack in the update
-    //animation_player_play(*animation, *portal.animation, "grow", false);
 }
 
 portal_update :: (using actor: *Actor, dt: float)
@@ -41,23 +49,14 @@ portal_update :: (using actor: *Actor, dt: float)
         //finish growing
         if !animation.is_playing
         {
+            if portal.on_finish_growing != null portal.on_finish_growing(actor);
+            if portal.delete_actors_on_spawn portal_delete_actors(actor);
 
-            portal.on_finish_growing(actor);
+            animation_player_play(*animation, portal.aseprite_file, "idle", true);
 
-            animation_player_play(*animation, *portal.animation, "idle", true);
-
-            portal.actors_to_spawn(actor);
+            if portal.actors_to_spawn != null portal.actors_to_spawn(actor);
 
             portal.is_growing = false;
-        }
-    }
-    else
-    {        
-        if animation.animation != string_hash("idle")
-        {
-            //switch anim from grow to idle
-            animation_player_play(*animation, *portal.animation, "grow", false);
-            portal.is_growing = true;
         }
     }
 }

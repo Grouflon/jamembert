@@ -67,10 +67,6 @@ game_start :: ()
     //players[0].spell_slots[1] = *transposition_spell_definition;
     //players[0].spell_slots[0] = *spawngobelin_spell_definition;
 
-    //Player mage is spawn at origin
-    mage1: = create_actor(*mage_definition, .{-50, -50});
-    mage2: = create_actor(*mage_definition, .{50, 50});
-
     //Actor placement
     //goblin: = create_actor(*goblin_definition, .{70, -30});
     chest: = create_actor(*chest_definition, .{-15, 40});
@@ -136,12 +132,11 @@ game_start :: ()
 
 
     //Set player controlled actor
+    mage1: = create_actor(*mage_definition, .{-50, -50});
     set_controlled_actor(*players[0], mage1);
+
+    mage2: = create_actor(*mage_definition, .{50, 50});
     set_controlled_actor(*players[1], mage2);
-    // set_controlled_actor(goblin);
-    // mage.ai.is_agressive = true;
-    //actor_set_sentient(chest, true);
-    //set_controlled_actor(chest);
 }
 
 game_stop :: ()
