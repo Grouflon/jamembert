@@ -131,6 +131,7 @@ game_start :: ()
     //Set player controlled actor
     //generate a random different mage for each player
     mages: [..]*ActorDefinition;
+    mages.allocator = temporary_allocator;
     yae_array_add_if_unique(*mages, *mage_definition);
     yae_array_add_if_unique(*mages, *mage2_definition);
     yae_array_add_if_unique(*mages, *mage3_definition);
