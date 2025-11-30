@@ -10,6 +10,7 @@ book_definition : = ActorDefinition.{
     sprite_origin = .{8,1},
 
     max_health = 1,
+    attack_damage = 0,
     speed = 40,
 };
 
