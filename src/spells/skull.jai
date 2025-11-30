@@ -69,14 +69,13 @@ skull_update :: (using actor: *Actor, dt: float)
         for collider: hitbox.frame_overlaps
         {
             target: = collider.parent.(*Actor);
+            try_spawn_ghost: bool;
 
             if target.id == skull.caster.id continue;
             if yae_array_find(skull.hit_actors, target.id) continue;
             if actor_is_dead(target)
             {
-                ghost:= create_actor(*ghost_definition, target.position.xy);
-                //add the ghost to the hit target to avoid instantly killing it with the skull
-                yae_array_add_if_unique(*skull.hit_actors, ghost.id);
+                try_spawn_ghost = true;
 
             }
             else
@@ -85,9 +84,18 @@ skull_update :: (using actor: *Actor, dt: float)
                 //if the target is killed by the skull = ghost again
                 if actor_is_dead(target)
                 {
-                    ghost:= create_actor(*ghost_definition, target.position.xy);
-                    yae_array_add_if_unique(*skull.hit_actors, ghost.id);
+                    try_spawn_ghost = true;
                 }
+            }
+
+            if try_spawn_ghost && actor_is_sentient(target)
+            {
+                ghost:= create_actor(*ghost_definition, target.position.xy);
+                swap_mind_states(target, ghost);
+                actor_set_sentient(target, false);
+                
+                //add the ghost to the hit target to avoid instantly killing it with the skull
+                yae_array_add_if_unique(*skull.hit_actors, ghost.id);
             }
 
             movement_component_go_to(*actor.movement, rotate(.{200, 0}, random_get_within_range(0, 360)));
