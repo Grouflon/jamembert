@@ -14,7 +14,8 @@ Player :: struct
     controlled_actor: *Actor;
     cast_target: *Actor;
     cast_position: Vector2;
-    // last_cast_direction: Vector2;
+    attack_target: *Actor;
+    last_attack_direction: Vector2;
 
     spell_slots: [SPELL_SLOTS_COUNT]*SpellDefinition;
     spell_swatches: [SPELL_SLOTS_COUNT]AsepriteAnimationPlayer;
@@ -29,7 +30,7 @@ player_init :: (using player: *Player)
     gamepad = null;
     spell_index = 0;
     spellcaster = .{};
-    // last_cast_direction = .{1, 0};
+    last_attack_direction = .{1, 0};
 }
 
 player_shutdown :: (using player: *Player)
@@ -141,6 +142,7 @@ player_update_actor :: (using player: *Player, dt: float)
     end_cast_spell: bool;
     cancel_cast_spell: bool;
     cast_target = null;
+    attack_target = null;
 
     cast_origin: = controlled_actor.position.xy + controlled_actor.definition.cast_position;
 
@@ -149,98 +151,73 @@ player_update_actor :: (using player: *Player, dt: float)
         case .GAMEPAD;
         {
             move_input = player.gamepad.left_stick;
-            begin_cast_spell = is_gamepad_pressed(player.gamepad, .RIGHT_TRIGGER);
-            end_cast_spell = is_gamepad_released(player.gamepad, .RIGHT_TRIGGER);
-            cancel_cast_spell = is_gamepad_pressed(player.gamepad, .B);
 
-            if actor_is_casting(controlled_actor)
+            #if GAMEPAD_TWIN_STICK
             {
-                cast_position += player.gamepad.right_stick * CAST_TARGETTING_SPEED * dt;
+                begin_cast_spell = is_gamepad_pressed(player.gamepad, .RIGHT_TRIGGER);
+                end_cast_spell = is_gamepad_released(player.gamepad, .RIGHT_TRIGGER);
+                cancel_cast_spell = is_gamepad_pressed(player.gamepad, .B);
+
+                if actor_is_casting(controlled_actor)
+                {
+                    cast_position += player.gamepad.right_stick * CAST_TARGETTING_SPEED * dt;
+                }
+                else
+                {
+                    if length_squared(player.gamepad.right_stick) > 0
+                    {
+                        do_attack = true;
+                        cast_position = cast_origin + normalize(player.gamepad.right_stick) * 10;
+                        attack_position = cast_position;
+                    }
+                    else
+                    {
+                        cast_position = cast_origin;
+                    }
+                }
             }
             else
             {
-                if length_squared(player.gamepad.right_stick) > 0
+                do_attack = is_gamepad_down(player.gamepad, .X);
+                begin_cast_spell = is_gamepad_pressed(player.gamepad, .RIGHT_TRIGGER);
+                end_cast_spell = is_gamepad_pressed(player.gamepad, .X);
+                cancel_cast_spell = is_gamepad_released(player.gamepad, .RIGHT_TRIGGER);
+
+                if actor_is_casting(controlled_actor)
                 {
-                    do_attack = true;
-                    cast_position = cast_origin + normalize(player.gamepad.right_stick) * 10;
-                    attack_position = cast_position;
+                    cast_position += player.gamepad.left_stick * CAST_TARGETTING_SPEED * dt;
                 }
                 else
                 {
                     cast_position = cast_origin;
+
+                    // Attack
+                    proximity_target_range: = controlled_actor.definition.attack_range + 10;
+                    proximity_targets: = physics_cast_circle(controlled_actor.position.xy, proximity_target_range, .[PHYSIC_LAYER_BODY]);
+                    proximity_target: = get_closest_actor(controlled_actor.position.xy, proximity_targets, player, (actor: *Actor, user_data: *void) -> bool
+                    {
+                        player: = user_data.(*Player);
+                        if player.controlled_actor == actor return false;
+                        return true;
+                    });
+
+                    if proximity_target != null
+                    {
+                        attack_position = proximity_target.position.xy;
+                        attack_target = proximity_target;
+                    }
+                    else
+                    {
+                        attack_direction: = last_attack_direction;
+                        if length_squared(move_input) > 0
+                        {
+                            attack_direction = normalize(move_input);
+                        }
+                        attack_position = cast_origin + attack_direction * controlled_actor.definition.attack_range;
+                        last_attack_direction = attack_direction;
+                    }
                 }
             }
-
-            // if length_squared(move_input) > 0
-            // {
-            //     last_cast_direction = normalize(move_input);
-            // }
-
-            // is_aiming = length_squared(player.gamepad.right_stick) > 0;
-            // if is_aiming
-            // {
-            //     aim_angle = signed_angle_between(player.gamepad.right_stick, .{1,0});
-            // }
-
-            // proximity_target_range: = controlled_actor.definition.attack_range + 10;
-            // proximity_targets: = physics_cast_circle(controlled_actor.position.xy, proximity_target_range, .[PHYSIC_LAYER_BODY]);
-            // proximity_target: = get_closest_actor(controlled_actor.position.xy, proximity_targets, player, (actor: *Actor, user_data: *void) -> bool
-            // {
-            //     player: = user_data.(*Player);
-            //     if player.controlled_actor == actor return false;
-            //     return true;
-            // });
-
-            // if proximity_target != null
-            // {
-            //     cast_target = proximity_target;
-            //     cast_position = proximity_target.position.xy;
-            // }
-            // else
-            // {
-            //     cast_position = cast_origin + last_cast_direction;
-            // }
-
-            // spell: = get_current_spell(player);
-            // if is_aiming && spell != null
-            // {
-            //     SELECT_ANGLE :: 15;
-            //     FilterData :: struct
-            //     {
-            //         player: *Player;
-            //         origin: Vector2;
-            //         aim_direction: Vector2;
-            //     }
-            //     cast_origin: = controlled_actor.position.xy + controlled_actor.definition.cast_position;
-            //     filter_data: = FilterData.{ player, cast_origin, rotate(.{1,0}, aim_angle) };
-
-            //     targets: = physics_cast_circle(cast_origin, spell.range, .[PHYSIC_LAYER_BODY]);
-            //     cast_target = get_closest_actor(cast_origin, targets, *filter_data, (actor: *Actor, user_data: *void) -> bool
-            //     {
-            //         data: = user_data.(*FilterData);
-            //         if data.player.controlled_actor == actor return false;
-
-            //         origin_to_actor: = actor.position.xy - data.origin;
-            //         a: = angle_between(data.aim_direction, origin_to_actor);
-            //         if a > SELECT_ANGLE * D2R return false;
-                    
-            //         return true;
-            //     });
-            // }
-
-            // if length_squared(move_input) > 0
-            // {
-            //     last_cast_direction = normalize(move_input);
-            // }
-
-            // if proximity_target != null
-            // {
-            //     cast_target = proximity_target.position.xy;
-            // }
-            // else
-            // {
-            //     cast_target = controlled_actor.position.xy + last_cast_direction * 10;
-            // }
         }
 
         case .KEYBOARD_MOUSE;
@@ -327,12 +304,11 @@ player_draw :: (using player: *Player)
     // }
         
     begin_render_texture(render_layers[RenderLayer.GROUND]);
-    // if spell_slots[spell_index] != null
-    // {
-    //     draw_circle(origin + .{0,0,-9}, spell_slots[spell_index].range, .{255,255,255,10});
-    // }
+    if attack_target != null
+    {
+        draw_scaled_circle_outline(xyz(attack_target.position.xy, 2), 10, .{255,255,255,100});
+    }
 
-    // if cast_target != null
     if actor_is_casting(controlled_actor) || player.input_type == .KEYBOARD_MOUSE
     {
         draw_scaled_circle_outline(xyz(cast_position, 1), 10, .{255,255,255,40});
