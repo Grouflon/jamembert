@@ -112,4 +112,19 @@ resources : struct
     attack_smear_texture: TextureFile = .{ path = "data://aseprite/attack_smear.png" };
     attack_smear_aseprite: AsepriteFile = .{ path = "data://aseprite/attack_smear.json" };
 
+    tile1_texture: TextureFile = .{ path = "data://aseprite/tile1.png" };
+    tile1_aseprite: AsepriteFile = .{ path = "data://aseprite/tile1.json" };
+
+    tile2_texture: TextureFile = .{ path = "data://aseprite/tile2.png" };
+    tile2_aseprite: AsepriteFile = .{ path = "data://aseprite/tile2.json" };
+
+    tile3_texture: TextureFile = .{ path = "data://aseprite/tile3.png" };
+    tile3_aseprite: AsepriteFile = .{ path = "data://aseprite/tile3.json" };
+
+    tile4_texture: TextureFile = .{ path = "data://aseprite/tile4.png" };
+    tile4_aseprite: AsepriteFile = .{ path = "data://aseprite/tile4.json" };
+
+    tile5_texture: TextureFile = .{ path = "data://aseprite/tile5.png" };
+    tile5_aseprite: AsepriteFile = .{ path = "data://aseprite/tile5.json" };
+
 };

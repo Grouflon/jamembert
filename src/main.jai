@@ -84,6 +84,8 @@ spellbook: []*SpellDefinition = .[
 #load "spell.jai";
 #load "spellcaster.jai";
 #load "tools.jai";
+#load "level_design.jai";
+
 
 #load "components/movement_component.jai";
 #load "components/alteration_component.jai";

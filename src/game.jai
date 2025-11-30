@@ -4,6 +4,12 @@ GAME_WIDTH :: 1920;
 GAME_HEIGHT :: 1080;
 
 players: [4]Player;
+player1_start_position: Vector2 = .{-50,-50};
+player2_start_position: Vector2 = .{50,-50};
+player3_start_position: Vector2 = .{-50,50};
+player4_start_position: Vector2 = .{50,50};
+
+background_color: Color = .{0,30,61,255};
 
 game_start :: ()
 {
@@ -16,6 +22,7 @@ game_start :: ()
         player_init(player);
     }
 
+    //Assign input controllers (gamepad/keyboard)
     gamepads_assigned: = 0;
     for *gamepad: gamepads
     {
@@ -44,8 +51,9 @@ game_start :: ()
         }
     }
 
-    // players[0].spell_slots[0] = *sentification_spell_definition;
-    // players[0].spell_slots[1] = *lobotomie_spell_definition;
+    //Spell on start
+    //players[0].spell_slots[0] = *sentification_spell_definition;
+    //players[0].spell_slots[1] = *lobotomie_spell_definition;
     //players[0].spell_slots[0] = *portalgraveyard_spell_definition;
     //players[0].spell_slots[1] = *portalbrain_spell_definition;
     //players[0].spell_slots[2] = *portalforest_spell_definition;
@@ -64,68 +72,11 @@ game_start :: ()
     //players[0].spell_slots[1] = *transposition_spell_definition;
     //players[0].spell_slots[0] = *spawngobelin_spell_definition;
 
-    //Actor placement
-    //goblin: = create_actor(*goblin_definition, .{70, -30});
-    chest: = create_actor(*chest_definition, .{-15, 40});
-    create_actor(*cheese_definition, .{-70, 0});
-    create_actor(*cheese_definition, .{0, -65});
-
-    //portal books
-    book:=create_actor(*book_definition, .{0, 120});
-    book.data.(*BookData).spell = *portalbrain_spell_definition;
-    book=create_actor(*book_definition, .{-15, 120});
-    book.data.(*BookData).spell = *portalvolcano_spell_definition;
-    book=create_actor(*book_definition, .{-30, 120});
-    book.data.(*BookData).spell = *portallibrary_spell_definition;
-    book=create_actor(*book_definition, .{-45, 120});
-    book.data.(*BookData).spell = *portalgraveyard_spell_definition;
-    book=create_actor(*book_definition, .{-60, 120});
-    book.data.(*BookData).spell = *portalforest_spell_definition;
-
-    //create_actor(*tomb1_definition, .{20, 20});
-    //create_actor(*tomb2_definition, .{20, 40});
-    //create_actor(*ghost_definition, .{-50, -50});
-
-    //create_actor(*brain_definition, .{0, -15});
-
-    //Bookshelves
-    create_actor(*bookshelf_definition, .{-75, 40});
-    create_actor(*bookshelf_definition, .{75, 40});
-    create_actor(*bookshelf_definition, .{-75, -40});
-    create_actor(*bookshelf_definition, .{75, -40});
-
-    //Trees
-    for i : 0..17 
-    {
-        //top
-        rand_y:= random_get_within_range(60,75);
-        rand_x:= random_get_within_range(0,20);
-        create_actor(*tree_definition, .{-150+(i*16)+rand_x, rand_y});
-    }
-    for i : 0..17
-    {
-        //bottom
-        rand_y:= random_get_within_range(-110,-90);
-        rand_x:= random_get_within_range(0,20);
-        create_actor(*tree_definition, .{-150+(i*16)+rand_x, rand_y});
-    }
-    for i : 0..17
-    {
-        //left
-        rand_y:= random_get_within_range(0,20);
-        rand_x:= random_get_within_range(-160,-130);
-        create_actor(*tree_definition, .{rand_x, -75+(i*16)+rand_y});
-    }
-    for i : 0..17
-    {
-        //left
-        rand_y:= random_get_within_range(0,20);
-        rand_x:= random_get_within_range(130,160);
-        create_actor(*tree_definition, .{rand_x, -75+(i*16)+rand_y});
-    }
-    create_actor(*tree_definition, .{30, 45});
-    create_actor(*tree_definition, .{-100, -20});
-    create_actor(*tree_definition, .{40, 5});
+    //Level Design
+    init_ground_tiles();
+    //level_test();
+    level_1();
+    
 
 
     //Set player controlled actor
@@ -141,26 +92,26 @@ game_start :: ()
     //player 1
     _,mage_gen= random_get_array_item(mages);
     yae_array_unordered_remove_by_value(*mages, mage_gen);
-    mage1: = create_actor(mage_gen, .{-50, -50});
+    mage1: = create_actor(mage_gen, player1_start_position);
     set_controlled_actor(*players[0], mage1);
 
     //player 2
     _,mage_gen= random_get_array_item(mages);
     yae_array_unordered_remove_by_value(*mages, mage_gen);
-    mage2: = create_actor(mage_gen, .{50, 50});
+    mage2: = create_actor(mage_gen, player2_start_position);
     set_controlled_actor(*players[1], mage2);
 
     //player 3
-    /*_,mage_gen= random_get_array_item(mages);
+    _,mage_gen= random_get_array_item(mages);
     yae_array_unordered_remove_by_value(*mages, mage_gen);
-    mage3: = create_actor(mage_gen, .{-50, 50});
-    set_controlled_actor(*players[2], mage2);
+    mage3: = create_actor(mage_gen, player3_start_position);
+    set_controlled_actor(*players[2], mage3);
 
     //player 4
     _,mage_gen= random_get_array_item(mages);
     yae_array_unordered_remove_by_value(*mages, mage_gen);
-    mage4: = create_actor(mage_gen, .{50, -50});
-    set_controlled_actor(*players[3], mage2);*/
+    mage4: = create_actor(mage_gen, player4_start_position);
+    set_controlled_actor(*players[3], mage4);
 }
 
 game_stop :: ()
@@ -170,6 +121,7 @@ game_stop :: ()
         player_shutdown(player);
     }
     array_clear(*brains_targets);
+    array_clear(*ground_tiles);
     delete_all_actors();
 }
 
@@ -239,7 +191,8 @@ game_draw :: ()
             defer end_camera();
 
             begin_render_texture(render_layers[RenderLayer.GROUND]);
-            clear_background(.{0,30,61,255});
+            clear_background(background_color);
+            draw_ground();
             end_render_texture();
 
             begin_render_texture(render_layers[RenderLayer.OBJECTS]);
@@ -248,8 +201,8 @@ game_draw :: ()
 
             begin_render_texture(render_layers[RenderLayer.OVERLAY]);
 
-            // draw_circle(.{10,10,0}, 50, WHITE);
-            // draw_circle_outline(.{10,10,0}, 50, 2, RED);
+            //draw_circle(.{10,10,0}, 50, WHITE);
+            //draw_circle_outline(.{10,10,0}, 50, 2, RED);
 
             for *player: players
             {
@@ -290,6 +243,8 @@ game_draw :: ()
 
             player_draw_ui(*players[0], .{3,3});
             player_draw_ui(*players[1], .{GAME_WIDTH / DRAW_SCALE - 52,3});
+            player_draw_ui(*players[2], .{3, GAME_HEIGHT / DRAW_SCALE - 23});
+            player_draw_ui(*players[3], .{GAME_WIDTH / DRAW_SCALE - 52 , GAME_HEIGHT / DRAW_SCALE - 23});
         }
 
         // Compositing

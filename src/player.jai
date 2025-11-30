@@ -329,14 +329,22 @@ player_draw_ui :: (using player: *Player, origin: Vector2)
 {
     spell_swatches_step: = Vector2.{17, 0};
     selector_offset: = Vector2.{8,17};
+
+    //background contrast
+    draw_rectangle(.{origin.x,origin.y,-1}, .{.{-2,-2}, .{52, 18}}, .{0,0,0,200});
+
+    //spell slots
     for i: 0..player.spell_slots.count-1
     {
         animation_player_draw(*player.spell_swatches[i], xyz(origin + spell_swatches_step * i.(float), 0));
     }
+
+    //selected feedback
     if player.spell_slots[player.spell_index] != null
     {
         draw_rectangle(xyz(origin + player.spell_index.(float) * spell_swatches_step + selector_offset, 0), .{.{-1,-1}, .{1,1}}, WHITE);
     }
+
 }
 
 player_cast_spell :: (using player: *Player, slot_index: s64) -> bool
