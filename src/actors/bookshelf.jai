@@ -23,7 +23,7 @@ BookshelfData :: struct
 {
     spell_gen_timer:= false;
     spell_gen_counter:= -1.0;
-    spell_gen_cooldown:= 5.0;
+    spell_gen_cooldown:= 4.0;
 }
 
 bookshelf_init :: (using actor: *Actor)
@@ -47,17 +47,14 @@ bookshelf_update :: (using actor: *Actor, dt: float)
 {
     bookshelf: = data.(*BookshelfData);
     
-    //log("%",actor.controlling_player);
     //when controlled by player
     if actor.controlling_player
     {
-        //log("%",actor.controlling_player);
         spells:[SPELL_SLOTS_COUNT]*SpellDefinition=actor.controlling_player.spell_slots;
 
         if spells[0]==null && spells[1]==null && spells[2]==null && !bookshelf.spell_gen_timer
         {
             //start timer
-            log("Start timer spell");
             bookshelf.spell_gen_timer = true;
             bookshelf.spell_gen_counter = bookshelf.spell_gen_cooldown;
         }
@@ -66,17 +63,13 @@ bookshelf_update :: (using actor: *Actor, dt: float)
         {
             //decrease timer
             bookshelf.spell_gen_counter -= dt;
-            log("%",bookshelf.spell_gen_counter);
 
-            if spells[0]!=null || spells[1]!=null || spells[2]!=null
-            {
-                //stop timer
-                bookshelf.spell_gen_timer = false;
-            }
+            //cancel timer
+            if spells[0]!=null || spells[1]!=null || spells[2]!=null bookshelf.spell_gen_timer = false;
+
 
             if bookshelf.spell_gen_counter <= 0
             {
-                log("Generate spell");
                 //generate spell
                 _, spell: = random_get_array_item(spellbook);
                 actor.controlling_player.spell_slots[0]=spell;

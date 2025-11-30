@@ -42,6 +42,16 @@ book_update :: (using actor: *Actor, dt: float)
     }
     if !book.enabled_collisions return;
 
+    //Player specific behavior
+    if actor.controlling_player
+    {
+        if(actor.controlling_player.spell_slots[0] != book.spell)
+        {
+            actor.controlling_player.spell_slots[0] = book.spell;
+        }
+    }
+
+    //Pickup
     for hitbox: hitboxes
     {
         for collider: hitbox.frame_overlaps
@@ -54,6 +64,8 @@ book_update :: (using actor: *Actor, dt: float)
             }
         }
     }
+
+
 }
 
 #scope_file
