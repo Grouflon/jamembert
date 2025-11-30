@@ -132,11 +132,37 @@ game_start :: ()
 
 
     //Set player controlled actor
-    mage1: = create_actor(*mage_definition, .{-50, -50});
+    //generate a random different mage for each player
+    mages: [..]*ActorDefinition;
+    yae_array_add_if_unique(*mages, *mage_definition);
+    yae_array_add_if_unique(*mages, *mage2_definition);
+    yae_array_add_if_unique(*mages, *mage3_definition);
+    yae_array_add_if_unique(*mages, *mage4_definition);
+    mage_gen:*ActorDefinition;
+
+    //player 1
+    _,mage_gen= random_get_array_item(mages);
+    yae_array_unordered_remove_by_value(*mages, mage_gen);
+    mage1: = create_actor(mage_gen, .{-50, -50});
     set_controlled_actor(*players[0], mage1);
 
-    mage2: = create_actor(*mage_definition, .{50, 50});
+    //player 2
+    _,mage_gen= random_get_array_item(mages);
+    yae_array_unordered_remove_by_value(*mages, mage_gen);
+    mage2: = create_actor(mage_gen, .{50, 50});
     set_controlled_actor(*players[1], mage2);
+
+    //player 3
+    /*_,mage_gen= random_get_array_item(mages);
+    yae_array_unordered_remove_by_value(*mages, mage_gen);
+    mage3: = create_actor(mage_gen, .{-50, 50});
+    set_controlled_actor(*players[2], mage2);
+
+    //player 4
+    _,mage_gen= random_get_array_item(mages);
+    yae_array_unordered_remove_by_value(*mages, mage_gen);
+    mage4: = create_actor(mage_gen, .{50, -50});
+    set_controlled_actor(*players[3], mage2);*/
 }
 
 game_stop :: ()
