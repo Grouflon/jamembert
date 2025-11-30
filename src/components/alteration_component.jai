@@ -14,8 +14,6 @@ AlterationComponent :: struct
 
     sentient: bool;
 
-    burning_collider: *Collider;
-
     rng: Random_State;
 
     particle_seeds: [..]u64;
@@ -31,9 +29,6 @@ alteration_component_init :: (using component: *AlterationComponent, actor: *Act
 {
     owner = actor;
 
-    burning_collider = actor_add_collider(owner, .{}, PHYSIC_LAYER_SPELL);
-    burning_collider.enabled = false;
-
     array_resize(*particle_seeds, PARTICLE_SEEDS);
     for i: 0..PARTICLE_SEEDS-1
     {
@@ -43,9 +38,7 @@ alteration_component_init :: (using component: *AlterationComponent, actor: *Act
 
 alteration_component_shutdown :: (using component: *AlterationComponent)
 {
-    actor_remove_collider(owner, burning_collider);
     array_reset(*particle_seeds);
-    burning_collider = null;
 }
 
 alteration_component_update :: (using component: *AlterationComponent, dt: float)
@@ -71,9 +64,12 @@ alteration_component_update :: (using component: *AlterationComponent, dt: float
         }
     }
 
-    for collider: burning_collider.frame_overlaps
+    for burnbox: owner.burnboxes
     {
-        actor_set_burning(collider.parent.(*Actor), true);
+        for collider: burnbox.frame_overlaps
+        {
+            actor_set_burning(collider.parent.(*Actor), true);
+        }
     }
 }
 
@@ -88,28 +84,33 @@ alteration_component_draw :: (using component: *AlterationComponent)
         TRAVEL_LENGTH :: 6;
         TRAVEL_TIME :: 0.7;
 
-        collider_size: = size(collider_get_bounds(burning_collider));
-        particle_count: = ceil_to_s32(collider_size.x * collider_size.y * PARTICLE_PER_SQUARE_UNIT_COUNT);
-
-        for i: 0..particle_count-1
+        for burnbox, j: owner.burnboxes
         {
-            p_time: = time + (i.(float) * TRAVEL_TIME / particle_count);
-            t: = positive_mod(p_time, TRAVEL_TIME) / TRAVEL_TIME;
-            cycle_count: u64 = xx (p_time / TRAVEL_TIME);
-            seed: = particle_seeds[i%PARTICLE_SEEDS] + cycle_count*9472;
-            random_seed(*rng, seed);
-            r1: = random_get_zero_to_one(*rng);
-            // random_seed(*rng, seed + 124414);
-            r2: = random_get_zero_to_one(*rng);
+            if !burnbox.enabled continue;
+            collider_size: = size(collider_get_bounds(burnbox));
+            particle_count: = ceil_to_s32(collider_size.x * collider_size.y * PARTICLE_PER_SQUARE_UNIT_COUNT);
 
-            origin: = Vector3.{
-                burning_collider.shape.box.min.x + r1 * width(burning_collider.shape.box),
-                burning_collider.shape.box.min.y + r2 * height(burning_collider.shape.box),
-                0.1,
-            };
+            for i: 0..particle_count-1
+            {
+                p_time: = time + ((j*particle_count + i).(float) * TRAVEL_TIME / particle_count);
+                t: = positive_mod(p_time, TRAVEL_TIME) / TRAVEL_TIME;
+                cycle_count: u64 = xx (p_time / TRAVEL_TIME);
+                seed: = particle_seeds[i%PARTICLE_SEEDS] + cycle_count*9472;
+                random_seed(*rng, seed);
+                r1: = random_get_zero_to_one(*rng);
+                // random_seed(*rng, seed + 124414);
+                r2: = random_get_zero_to_one(*rng);
 
-            draw_sprite(origin + .{0, TRAVEL_LENGTH, 0} * t + .{-8,-8, 0}, resources.flame_texture.texture);
+                origin: = Vector3.{
+                    burnbox.shape.box.min.x + r1 * width(burnbox.shape.box),
+                    burnbox.shape.box.min.y + r2 * height(burnbox.shape.box),
+                    0.1,
+                };
+
+                draw_sprite(origin + .{0, TRAVEL_LENGTH, 0} * t + .{-8,-8, 0}, resources.flame_texture.texture);
+            }
         }
+
     }
 }
 
@@ -119,7 +120,6 @@ actor_set_burning :: (actor: *Actor, value: bool)
     if actor.alterations.burning == value return;
 
     actor.alterations.burning = value;
-    actor.alterations.burning_collider.enabled = value;
     actor.ai.is_panicking = value;
 
     if value

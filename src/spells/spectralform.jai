@@ -56,10 +56,11 @@ spectralform_update :: (using actor: *Actor, dt: float)
         movement_component_set_speed_modifer(*caster.movement, "spectralform", 2.5);
 
         //disable caster collision
-        for collider: caster.colliders
-        {
-            collider.enabled = false;
-        }
+        // @NOTE(remi): We should support this as a feature of Actor. disabling colliders like that won't work
+        // for collider: caster.colliders
+        // {
+        //     collider.enabled = false;
+        // }
 
         //hide caster sprite
         // ...
@@ -88,10 +89,9 @@ spectralform_shutdown :: (using actor: *Actor)
 
     //reset all
     movement_component_remove_speed_modifer(*caster.movement, "spectralform");
-    for collider: caster.colliders
-    {
-        if collider == caster.alterations.burning_collider continue;
-        collider.enabled = true;
-    }
+    // for collider: caster.colliders
+    // {
+    //     collider.enabled = true;
+    // }
     // ...
 }

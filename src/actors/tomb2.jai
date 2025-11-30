@@ -4,14 +4,13 @@ tomb2_definition : = ActorDefinition.{
     update = tomb2_update,
     shutdown = tomb2_shutdown,
 
-    sprite_origin = .{8,1},
-    face_position = .{0,3},
     idle_hollow_animation = .{ "tomb2_aseprite", "idle_hollow" },
     idle_animation = .{ "tomb2_aseprite", "idle" },
     move_animation = .{ "tomb2_aseprite", "walk" },
     dead_animation = .{ "tomb2_aseprite", "dead" },
     max_health = 3,
     speed = 20,
+    is_static = true,
 };
 
 Tomb2Data :: struct
@@ -26,9 +25,6 @@ tomb2_init :: (using actor: *Actor)
 {    
     tomb2: = New(Tomb1Data);
     data = tomb2;
-
-    body: = actor_add_collider(actor, .{ type = .BOX, box = .{.{-3,0}, .{3,5}} }, PHYSIC_LAYER_BODY, true);
-    actor.alterations.burning_collider.shape = .{ type = .BOX, box = .{.{-4,0}, .{4,6}} };
 
     tomb2.spawn_cd = random_get_within_range(tomb2.spawn_delay_min,tomb2.spawn_delay_max);
 }

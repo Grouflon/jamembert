@@ -1,8 +1,5 @@
 DRAW_SCALE :: 4;
 
-PHYSIC_LAYER_BODY :: 0;
-PHYSIC_LAYER_SPELL :: 1;
-
 GAME_WIDTH :: 1920;
 GAME_HEIGHT :: 1080;
 
@@ -134,6 +131,7 @@ game_start :: ()
     //Set player controlled actor
     //generate a random different mage for each player
     mages: [..]*ActorDefinition;
+    mages.allocator = temporary_allocator;
     yae_array_add_if_unique(*mages, *mage_definition);
     yae_array_add_if_unique(*mages, *mage2_definition);
     yae_array_add_if_unique(*mages, *mage3_definition);

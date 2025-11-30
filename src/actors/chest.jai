@@ -4,9 +4,6 @@ chest_definition : = ActorDefinition.{
     update = chest_update,
     draw = chest_draw,
 
-    face_position = .{0,7},
-    face_dead_position = .{0,2},
-
     face_idle_animation = "noface",
     face_dead_animation = "noface",
     face_panic_animation = "noface",
@@ -25,8 +22,6 @@ chest_definition : = ActorDefinition.{
 
 chest_init :: (using actor: *Actor)
 {
-    body: = actor_add_collider(actor, .{ type = .BOX, box = .{.{-6, 0}, .{6,8}} }, PHYSIC_LAYER_BODY);
-    actor.alterations.burning_collider.shape = .{ type = .BOX, box = dilate(body.shape.box, .{2,1}) };
     //actor_set_sentient(actor, true);
 
     actor.ai.is_agressive = true;

@@ -46,7 +46,7 @@ spellcaster_update :: (using spellcaster: *SpellCaster, dt: float, target: Vecto
 
         case .TARGET;
         {
-            targets: = physics_cast(target, .{ type = .CIRCLE, circle = .{ .{}, 10 } }, .[PHYSIC_LAYER_BODY]);
+            targets: = physics_cast(target, .{ type = .CIRCLE, circle = .{ .{}, 10 } }, .[PHYSIC_LAYER_HURTBOX]);
             current_cast.target.target = get_closest_actor(target, targets);
         }
         case .POSITION;

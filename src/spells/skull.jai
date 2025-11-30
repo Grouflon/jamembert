@@ -28,20 +28,18 @@ skull_definition : = ActorDefinition.{
 SkullData :: struct
 {
     caster: ID(Actor);
-    body: *Collider;
     trail_cd: = 0.0;
     trail_cd_max: = 0.2;
     bounce: = 5;
     dammage: s32 = 1;
-    hit_actors: [..]*Actor;
-    ghost_spawned: [..]*Actor;
+    hit_actors: [..]ID(Actor);
+    ghost_spawned: [..]ID(Actor);
 }
 
 skull_init :: (using actor: *Actor)
 {
     position.z = 1;
     skull: = New(SkullData);
-    skull.body = actor_add_collider(actor, .{ type = .BOX, box = .{.{-5,-5}, .{5,5}} }, PHYSIC_LAYER_SPELL);
 
     actor.definition.speed = 80;
     data = skull;
@@ -66,43 +64,53 @@ skull_update :: (using actor: *Actor, dt: float)
 
     angle = signed_angle_between(movement.target - position.xy, .{1,0});
 
-    for collider: skull.body.frame_overlaps
+    for hitbox: hitboxes
     {
-        target: = collider.parent.(*Actor);
-
-        if target.id == skull.caster.id continue;
-        if array_find(skull.hit_actors, target) continue;
-        if actor_is_dead(target)
+        for collider: hitbox.frame_overlaps
         {
-            ghost:= create_actor(*ghost_definition, target.position.xy);
-            //add the ghost to the hit target to avoid instantly killing it with the skull
-            array_add_if_unique(*skull.hit_actors, ghost);
+            target: = collider.parent.(*Actor);
+            try_spawn_ghost: bool;
 
-        }
-        else
-        {
-            actor_hit(target, skull.dammage, get(skull.caster)); 
-            //if the target is killed by the skull = ghost again
+            if target.id == skull.caster.id continue;
+            if yae_array_find(skull.hit_actors, target.id) continue;
             if actor_is_dead(target)
             {
-                ghost:= create_actor(*ghost_definition, target.position.xy);
-                array_add_if_unique(*skull.hit_actors, ghost);
+                try_spawn_ghost = true;
+
             }
+            else
+            {
+                actor_hit(target, skull.dammage, get(skull.caster)); 
+                //if the target is killed by the skull = ghost again
+                if actor_is_dead(target)
+                {
+                    try_spawn_ghost = true;
+                }
+            }
+
+            if try_spawn_ghost && actor_is_sentient(target)
+            {
+                ghost:= create_actor(*ghost_definition, target.position.xy);
+                swap_mind_states(target, ghost);
+                actor_set_sentient(target, false);
+                
+                //add the ghost to the hit target to avoid instantly killing it with the skull
+                yae_array_add_if_unique(*skull.hit_actors, ghost.id);
+            }
+
+            movement_component_go_to(*actor.movement, rotate(.{200, 0}, random_get_within_range(0, 360)));
+
+            yae_array_add_if_unique(*skull.hit_actors, target.id);
+
+            if skull.bounce <= 0 request_delete_actor(actor);
+
+            actor.definition.speed += 20;
+            skull.dammage += 1;
+            skull.bounce -= 1;
+
+            return;
         }
-
-        movement_component_go_to(*actor.movement, rotate(.{200, 0}, random_get_within_range(0, 360)));
-
-        array_add_if_unique(*skull.hit_actors, target);
-
-        if skull.bounce <= 0 request_delete_actor(actor);
-
-        actor.definition.speed += 20;
-        skull.dammage += 1;
-        skull.bounce -= 1;
-
-        return;
     }
-
 
     if skull.trail_cd <= 0
     {

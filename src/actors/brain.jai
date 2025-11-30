@@ -9,9 +9,6 @@ brain_definition : = ActorDefinition.{
     move_animation = .{ "brain_aseprite", "walk" },
     dead_animation = .{ "brain_aseprite", "dead" },
 
-    sprite_origin = .{8,1},
-    face_dead_position = .{0,7},
-
     max_health = 1,
     speed = 40,
 
@@ -20,8 +17,6 @@ brain_definition : = ActorDefinition.{
 
 BrainData :: struct
 {
-    body: *Collider;
-    possess_col: *Collider;
     previously_possessed_actor: ID(Actor);
     current_target: ID(Actor);
 }
@@ -32,9 +27,6 @@ brain_init :: (using actor: *Actor)
     brain: = New(BrainData);
     data = brain;
 
-    brain.body = actor_add_collider(actor, .{ type = .BOX, box = .{.{-2, 1}, .{2,4}} }, PHYSIC_LAYER_BODY);
-    brain.possess_col = actor_add_collider(actor, .{ type = .BOX, box = .{.{-4, -1}, .{4,6}} }, PHYSIC_LAYER_SPELL);
-    actor.alterations.burning_collider.shape = .{ type = .BOX, box = dilate(brain.body.shape.box, .{2,1}) };
     actor.ai.disabled = true; // brain has custom ai
 
     actor_set_sentient(actor, true);
@@ -81,7 +73,7 @@ brain_update :: (using actor: *Actor, dt: float)
         else 
         {    
             //sweep for targets
-            triggers: = physics_cast(actor.position.xy, .{ type = .CIRCLE, circle = .{ .{}, 128 } }, .[PHYSIC_LAYER_BODY]);
+            triggers: = physics_cast(actor.position.xy, .{ type = .CIRCLE, circle = .{ .{}, 128 } }, .[PHYSIC_LAYER_HURTBOX]);
             for trigger: triggers
             {
                 target: = trigger.parent.(*Actor);
@@ -98,17 +90,20 @@ brain_update :: (using actor: *Actor, dt: float)
 
     if can_possess
     {
-        for col: brain.possess_col.frame_overlaps
+        for hitbox: hitboxes
         {
-            actorcollide: = col.parent.(*Actor);
-
-            //trigger the "possess" when any actor valid is collided
-            //for the player maybe it should be triggered on the attack ?
-            if check_if_braintarget_is_valid(actor, actorcollide, false)
+            for col: hitbox.frame_overlaps
             {
-                swap_mind_states(actor, actorcollide);
-                request_delete_actor(actor);
-                return;
+                actorcollide: = col.parent.(*Actor);
+
+                //trigger the "possess" when any actor valid is collided
+                //for the player maybe it should be triggered on the attack ?
+                if check_if_braintarget_is_valid(actor, actorcollide, false)
+                {
+                    swap_mind_states(actor, actorcollide);
+                    request_delete_actor(actor);
+                    return;
+                }
             }
         }
     }

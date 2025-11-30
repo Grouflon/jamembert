@@ -4,9 +4,6 @@ mage4_definition : = ActorDefinition.{
     update = mage4_update,
     draw = mage4_draw,
 
-    face_position = .{0,6},
-    face_dead_position = .{0,0},
-
     face_idle_animation = "mage4_idle",
     face_mad_animation = "mage4_mad",
 
@@ -24,8 +21,6 @@ mage4_definition : = ActorDefinition.{
 
 mage4_init :: (using actor: *Actor)
 {
-    body: = actor_add_collider(actor, .{ type = .BOX, box = .{.{-3, 0}, .{2,9}} }, PHYSIC_LAYER_BODY);
-    actor.alterations.burning_collider.shape = .{ type = .BOX, box = dilate(body.shape.box, .{2,1}) };
     actor_set_sentient(actor, true);
 }
 

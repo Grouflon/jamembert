@@ -194,7 +194,7 @@ player_update_actor :: (using player: *Player, dt: float)
 
                     // Attack
                     proximity_target_range: = cached_controlled_actor.definition.attack_range + 10;
-                    proximity_targets: = physics_cast_circle(cached_controlled_actor.position.xy, proximity_target_range, .[PHYSIC_LAYER_BODY]);
+                    proximity_targets: = physics_cast_circle(cached_controlled_actor.position.xy, proximity_target_range, .[PHYSIC_LAYER_HURTBOX]);
                     proximity_target: = get_closest_actor(cached_controlled_actor.position.xy, proximity_targets, player, (actor: *Actor, user_data: *void) -> bool
                     {
                         player: = user_data.(*Player);

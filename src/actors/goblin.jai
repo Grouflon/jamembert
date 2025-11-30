@@ -4,9 +4,6 @@ goblin_definition : = ActorDefinition.{
     update = goblin_update,
     draw = goblin_draw,
 
-    face_position = .{0,7},
-    face_dead_position = .{0,2},
-
     face_idle_animation = "goblin_idle",
     face_mad_animation = "goblin_mad",
 
@@ -23,8 +20,6 @@ goblin_definition : = ActorDefinition.{
 
 goblin_init :: (using actor: *Actor)
 {
-    body: = actor_add_collider(actor, .{ type = .BOX, box = .{.{-3, 0}, .{2,9}} }, PHYSIC_LAYER_BODY);
-    actor.alterations.burning_collider.shape = .{ type = .BOX, box = dilate(body.shape.box, .{2,1}) };
     actor_set_sentient(actor, true);
 
     actor.ai.is_agressive = true;

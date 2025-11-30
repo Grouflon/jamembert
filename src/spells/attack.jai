@@ -25,14 +25,12 @@ attack_definition : = ActorDefinition.{
 AttackData :: struct
 {
     caster: ID(Actor);
-    body: *Collider;
-    hit_actors: [..]*Actor;
+    hit_actors: [..]ID(Actor);
 }
 
 attack_init :: (using actor: *Actor)
 {
     attack: = New(AttackData);
-    attack.body = actor_add_collider(actor, .{ type = .BOX, box = .{.{-5,-5}, .{5,5}} }, PHYSIC_LAYER_SPELL);
     data = attack;
     
     animation_player_play(*animation, *resources.attack_smear_aseprite, "attack", false);
@@ -54,16 +52,19 @@ attack_update :: (using actor: *Actor, dt: float)
         return;
     }
 
-    for collider: attack.body.frame_overlaps
+    for hitbox: hitboxes
     {
-        target: = collider.parent.(*Actor);
-        caster: = get(attack.caster);
-        if target.id == attack.caster continue;
-        if array_find(attack.hit_actors, target) continue;
+        for collider: hitbox.frame_overlaps
+        {
+            target: = collider.parent.(*Actor);
+            caster: = get(attack.caster);
+            if target.id == attack.caster continue;
+            if yae_array_find(attack.hit_actors, target.id) continue;
 
-        ATTACK_PUSH_FORCE :: 50;
-        actor_hit(target, caster.definition.attack_damage, caster);
-        movement_component_push(*target.movement, normalize(target.position - caster.position).xy * caster.definition.attack_push);
-        array_add_if_unique(*attack.hit_actors, target);
+            ATTACK_PUSH_FORCE :: 50;
+            actor_hit(target, caster.definition.attack_damage, caster);
+            movement_component_push(*target.movement, normalize(target.position - caster.position).xy * caster.definition.attack_push);
+            yae_array_add_if_unique(*attack.hit_actors, target.id);
+        }
     }
 }

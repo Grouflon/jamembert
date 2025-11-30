@@ -119,7 +119,7 @@ ai_component_update :: (using ai: *AIComponent, dt: float)
 
             assert(target == null);
 
-            potential_targets: = physics_cast(owner.position.xy, .{ type = .CIRCLE, circle = .{.{}, detection_zone_radius}}, .[PHYSIC_LAYER_BODY]);
+            potential_targets: = physics_cast(owner.position.xy, .{ type = .CIRCLE, circle = .{.{}, detection_zone_radius}}, .[PHYSIC_LAYER_HURTBOX]);
             closest_target: *Actor;
             closest_target_squared_distance: float = FLOAT32_MAX;
             for collider: potential_targets
@@ -226,14 +226,9 @@ set_state :: (using ai: *AIComponent, _state: AIState)
 update_wandering :: (using ai: *AIComponent, dt: float, params: WanderingParams)
 {
     has_collision: = false;
-    for c: owner.colliders
+    if owner.body.frame_collisions.count > 0
     {
-        if c._layer != PHYSIC_LAYER_BODY continue;
-        if c.frame_collisions.count > 0
-        {
-            has_collision = true;
-            break;
-        }
+        has_collision = true;
     }
 
     if !owner.movement.is_moving_to || has_collision

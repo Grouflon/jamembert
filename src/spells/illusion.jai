@@ -60,7 +60,7 @@ illusion_update :: (using actor: *Actor, dt: float)
 {
     illusion: = data.(*IllusionData);
 
-    targets: = physics_cast(actor.position.xy, .{ type = .CIRCLE, circle = .{ .{}, 128 } }, .[PHYSIC_LAYER_BODY]);
+    targets: = physics_cast(actor.position.xy, .{ type = .CIRCLE, circle = .{ .{}, 128 } }, .[PHYSIC_LAYER_HURTBOX]);
 
     for target: targets
     {

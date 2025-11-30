@@ -4,8 +4,7 @@ cheese_definition : = ActorDefinition.{
     update = cheese_update,
 
     sprite_origin = .{8,1},
-    face_position = .{0,5},
-    face_dead_position = .{0,2},
+    
     idle_hollow_animation = .{ "cheese_aseprite", "idle_hollow" },
     idle_animation = .{ "cheese_aseprite", "idle" },
     move_animation = .{ "cheese_aseprite", "walk" },
@@ -17,8 +16,6 @@ cheese_definition : = ActorDefinition.{
 
 CheeseData :: struct
 {
-    body: *Collider;
-    pickup_trigger: *Collider;
     enabled_collisions: bool;
 }
 
@@ -26,13 +23,6 @@ cheese_init :: (using actor: *Actor)
 {
     cheese: = New(CheeseData);
     data = cheese;
-
-    cheese.body = actor_add_collider(actor, .{ type = .BOX, box = .{.{-8,0}, .{4,8}} }, PHYSIC_LAYER_BODY, true);
-    cheese.pickup_trigger = actor_add_collider(actor, .{ type = .BOX, box = dilate(cheese.body.shape.box, .{1,1}) }, PHYSIC_LAYER_SPELL);
-    cheese.body.enabled = false;
-    cheese.pickup_trigger.enabled = false;
-
-    actor.alterations.burning_collider.shape = .{ type = .BOX, box = .{.{-9,-1}, .{5,9}} };
 }
 
 cheese_update :: (using actor: *Actor, dt: float)
@@ -46,22 +36,23 @@ cheese_update :: (using actor: *Actor, dt: float)
             cheese.enabled_collisions = true;
         }
     }
+    if !cheese.enabled_collisions return;
 
-    for collider: cheese.pickup_trigger.frame_overlaps
+    for hitbox: hitboxes
     {
-        picking_actor: = collider.parent.(*Actor);
-
-        //heal
-        if picking_actor.current_health < picking_actor.definition.max_health
+        for collider: hitbox.frame_overlaps
         {
-            actor_modify_health(picking_actor, 3);
-            create_simple_animation_actor(picking_actor.position.xy, .{*resources.healing_aseprite, string_hash("idle")} , .OVERLAY);
+            picking_actor: = collider.parent.(*Actor);
 
-            request_delete_actor(actor);
+            //heal
+            if picking_actor.current_health < picking_actor.definition.max_health
+            {
+                actor_modify_health(picking_actor, 3);
+                create_simple_animation_actor(picking_actor.position.xy, .{*resources.healing_aseprite, string_hash("idle")} , .OVERLAY);
+
+                request_delete_actor(actor);
+            }
         }
-
     }
-
-    cheese.body.enabled = cheese.enabled_collisions;
-    cheese.pickup_trigger.enabled = cheese.enabled_collisions && !actor_is_sentient(actor) && !actor_is_dead(actor);
+    
 }
