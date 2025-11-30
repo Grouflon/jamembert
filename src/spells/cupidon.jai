@@ -27,16 +27,14 @@ cupidon_definition : = ActorDefinition.{
 CupidonData :: struct
 {
     caster: ID(Actor);
-    body: *Collider;
     trail_cd: = 0.0;
-    trail_cd_max: = 0.2;
+    trail_cd_max: = 0.2; // does not need to be a variable
 }
 
 cupidon_init :: (using actor: *Actor)
 {
     position.z = 1;
     cupidon: = New(CupidonData);
-    cupidon.body = actor_add_collider(actor, .{ type = .BOX, box = .{.{-3,-3}, .{3,3}} }, PHYSIC_LAYER_SPELL);
 
     data = cupidon;
 }
@@ -53,21 +51,24 @@ cupidon_update :: (using actor: *Actor, dt: float)
 
     angle = signed_angle_between(movement.target - position.xy, .{1,0});
 
-    for collider: cupidon.body.frame_overlaps
+    for hitbox: hitboxes
     {
-        target: = collider.parent.(*Actor);
-        if target.id == cupidon.caster.id continue;
-        if actor_is_dead(target) continue;
-        if !actor_is_sentient(target) continue;
-
-        if target.ai.is_agressive
+        for collider: hitbox.frame_overlaps
         {
-            target.ai.target = null;
-            target.ai.is_agressive = false;
+            target: = collider.parent.(*Actor);
+            if target.id == cupidon.caster.id continue;
+            if actor_is_dead(target) continue;
+            if !actor_is_sentient(target) continue;
+
+            if target.ai.is_agressive
+            {
+                target.ai.target = null;
+                target.ai.is_agressive = false;
+            }
+            
+            request_delete_actor(actor);
+            return;
         }
-        
-        request_delete_actor(actor);
-        return;
     }
 
 

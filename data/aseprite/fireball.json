@@ -136,6 +136,9 @@
   "frameTags": [
    { "name": "idle", "from": 0, "to": 4, "direction": "forward", "color": "#000000ff" },
    { "name": "trail", "from": 5, "to": 13, "direction": "forward", "color": "#000000ff" }
+  ],
+  "slices": [
+   { "name": "hitbox1", "color": "#fe5b59ff", "keys": [{ "frame": 0, "bounds": {"x": 9, "y": 10, "w": 13, "h": 12 } }, { "frame": 5, "bounds": {"x": 9, "y": 10, "w": 1, "h": 1 } }] }
   ]
  }
 }

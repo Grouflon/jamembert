@@ -97,6 +97,10 @@ RenderLayer :: enum
 }
 render_layers: [#run enum_highest_value(RenderLayer) + 1]RenderTexture;
 
+PHYSIC_LAYER_BODY :: 0;
+PHYSIC_LAYER_HURTBOX :: 1;
+PHYSIC_LAYER_HITBOX :: 2;
+
 init :: ()
 {
     load_all_resources();
@@ -104,7 +108,7 @@ init :: ()
     pool_init(*actors);
 
     physics_set_layer_response(PHYSIC_LAYER_BODY, PHYSIC_LAYER_BODY, .COLLIDE);
-    physics_set_layer_response(PHYSIC_LAYER_BODY, PHYSIC_LAYER_SPELL, .OVERLAP);
+    physics_set_layer_response(PHYSIC_LAYER_HURTBOX, PHYSIC_LAYER_HITBOX, .OVERLAP);
 
     w, h: = get_viewport_size();
     for i: 0..render_layers.count-1

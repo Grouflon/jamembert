@@ -13,6 +13,11 @@ Actor :: struct
     alterations: AlterationComponent;
     ai: AIComponent;
 
+    body: *Collider;
+    hurtboxes: [3]*Collider;
+    hitboxes: [3]*Collider;
+    burnboxes: [3]*Collider;
+
     active: bool = true;
 
     idle_hollow_animation: AsepriteAnimationHandle;
@@ -29,6 +34,9 @@ Actor :: struct
     current_health: s32;
     attack_cooldown: float;
     is_casting: bool;
+
+    has_face: bool;
+    face_position: Vector2;
 }
 actors: Pool(Actor);
 to_delete_actors: [..]*Actor;
@@ -42,9 +50,6 @@ ActorDefinition :: struct
     on_hit: #type (actor: *Actor, source: *Actor);
 
     sprite_origin: Vector2 = .{8, 1};
-
-    face_position: Vector2 = .{0,3};
-    face_dead_position: Vector2 = .{0,3};   
 
     face_idle_animation: = "idle";
     face_dead_animation: = "dead";
@@ -62,6 +67,7 @@ ActorDefinition :: struct
 
     max_health: s32 = -1;
     speed: float = 20.0;
+    is_static: bool;
 
     cast_position: Vector2 = .{0,4};
 
@@ -119,6 +125,25 @@ actor_init :: (using actor: *Actor)
 {
     assert(actor != null);
     assert(definition != null);
+
+    // Create default colliders
+    actor.body = actor_add_collider(actor, .{ type = .BOX }, PHYSIC_LAYER_BODY);
+    actor.body.enabled = false;
+    for i: 0..actor.hurtboxes.count-1
+    {
+        actor.hurtboxes[i] = actor_add_collider(actor, .{ type = .BOX }, PHYSIC_LAYER_HURTBOX);
+        actor.hurtboxes[i].enabled = false;
+    }
+    for i: 0..actor.hitboxes.count-1
+    {
+        actor.hitboxes[i] = actor_add_collider(actor, .{ type = .BOX }, PHYSIC_LAYER_HITBOX);
+        actor.hitboxes[i].enabled = false;
+    }
+    for i: 0..actor.burnboxes.count-1
+    {
+        actor.burnboxes[i] = actor_add_collider(actor, .{ type = .BOX }, PHYSIC_LAYER_HITBOX);
+        actor.burnboxes[i].enabled = false;
+    }
 
     movement_component_init(*actor.movement, actor);
     alteration_component_init(*actor.alterations, actor);
@@ -191,6 +216,12 @@ actor_shutdown :: (using actor: *Actor)
     movement_component_shutdown(*actor.movement);
 
     actor_remove_all_colliders(actor);
+
+    body = null;
+    for i: 0..hurtboxes.count-1 { hurtboxes[i] = null; }
+    for i: 0..hitboxes.count-1 { hitboxes[i] = null; }
+    for i: 0..burnboxes.count-1 { hitboxes[i] = null; }
+
     free(data);
     data = null;
 }
@@ -256,11 +287,17 @@ actor_update :: (using actor: *Actor, dt: float)
         }
     }
 
-    actor_update_face(actor);
-
     movement_component_update(*movement, dt);
     animation_player_update(*animation, dt);
     animation_player_update(*face_animation, dt);
+
+    actor_update_face(actor);
+    actor_update_boxes(actor);
+
+    if definition.is_static
+    {
+        body.static = !actor_is_sentient(actor) || actor_is_dead(actor);
+    }
 
     if definition.update
     {
@@ -296,23 +333,10 @@ actor_draw :: (using actor: *Actor)
         animation_player_draw(*animation, -xyz(definition.sprite_origin, 0));
 
         // Draw face
-        face_position: = definition.face_position;
-        if actor_is_dead(actor)
+        if has_face
         {
-            face_position = definition.face_dead_position;
+            animation_player_draw(*face_animation, xyz(face_position, 0.01));
         }
-        if animation.aseprite != null
-        {
-            has_face_override, face_bounds: = aseprite_get_slice(*animation.aseprite.data, "face", animation.current_aseprite_frame, true);
-            if has_face_override
-            {
-                face_position = face_bounds.min - definition.sprite_origin + .{3,1};
-                
-                //this is a hack to be able to get the face position from an actor
-                definition.face_position = face_position;
-            }
-        }
-        animation_player_draw(*face_animation, xyz(face_position - .{8,8}, 0.01));
     }
 
     // Custom draw
@@ -342,6 +366,8 @@ actor_draw :: (using actor: *Actor)
     {
         end_render_texture();
     }
+
+    // draw_circle(.{0,0,10}, 1, RED);
 }
 
 actor_hit :: (using actor: *Actor, damage: s32, source: *Actor = null)
@@ -479,13 +505,31 @@ actor_set_casting :: (using actor: *Actor, value: bool)
 
 actor_is_casting :: (using actor: *Actor) -> bool
 {
+    assert(actor != null);
     return is_casting;
+}
+
+actor_get_icon_position :: (using actor: *Actor) -> Vector2
+{
+    assert(actor != null);
+    return actor.position.xy;
 }
 
 #scope_file
 
 actor_update_face :: (using actor: *Actor)
 {
+    if animation.aseprite != null
+    {
+        has_face=, face_bounds: = animation_get_current_slice(*animation, "face");
+        if has_face
+        {
+            FACE_SPRITE_OFFSET :: Vector2.{5,7};
+            face_position = face_bounds.min - definition.sprite_origin - FACE_SPRITE_OFFSET;
+        }
+    }
+    if !has_face return;
+
     if actor_is_sentient(actor)
     {
         face_animation_name: = actor.definition.face_idle_animation;
@@ -506,7 +550,57 @@ actor_update_face :: (using actor: *Actor)
     else
     {
         animation_player_stop(*face_animation);
+    }
+}
 
+actor_update_boxes :: (using actor: *Actor)
+{
+    body.enabled = false;
+    for c: hurtboxes c.enabled = false;
+    for c: hitboxes c.enabled = false;
+
+    compute_box :: (using actor: *Actor, name: string) -> bool, Bounds
+    {
+        enabled, box: = animation_get_current_slice(*animation, name);
+        if size(box) == .{1,1} enabled = false;
+        box -= definition.sprite_origin;
+
+        if enabled && angle != 0.0
+        {
+            points: [4]Vector2 = .[
+                box.min,
+                box.max,
+                .{box.min.x, box.max.y},
+                .{box.max.x, box.min.y}
+            ];
+
+            for *p: points
+            {
+                <<p = rotate(<<p, angle);
+            }
+            box = make_bounds(..points);
+        }
+        return enabled, box;
+    }
+
+    if animation.aseprite != null
+    {
+        // HACK: we cant disable boxes in aseprite, so we consider boxes of 1x1 disabled
+        body.enabled, body.shape.box = compute_box(actor, "body");
+
+        for hurtbox, i: hurtboxes
+        {
+            hurtbox.enabled, hurtbox.shape.box = compute_box(actor, tprint("hurtbox%", i+1));
+
+            // burnboxes match hurtboxes
+            burnboxes[i].enabled = hurtbox.enabled && actor_is_burning(actor);
+            burnboxes[i].shape.box = hurtbox.shape.box;
+        }
+
+        for hitbox, i: hitboxes
+        {
+            hitbox.enabled, hitbox.shape.box = compute_box(actor, tprint("hitbox%", i+1));
+        }
     }
 }
 

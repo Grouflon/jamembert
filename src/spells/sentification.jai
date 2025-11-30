@@ -9,8 +9,7 @@ sentification_spell_definition : = SpellDefinition.{
         if target == null return false;
         if actor_is_sentient(target) return false;
 
-        //pos: = params.target.target.position.xy + .{0,10};
-        pos: = params.target.target.position.xy + params.target.target.definition.face_position + .{0,5};
+        pos: = actor_get_icon_position(params.target.target);
         effect: = create_simple_animation_actor(pos, .{*resources.sentification_aseprite, string_hash("idle")} , .OVERLAY);
 
         actor_set_sentient(target, true);

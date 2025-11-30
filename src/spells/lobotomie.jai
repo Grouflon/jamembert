@@ -10,7 +10,7 @@ lobotomie_spell_definition : = SpellDefinition.{
         if !actor_is_sentient(target) return false;
 
         //spawn effect
-        pos: = params.target.target.position.xy + params.target.target.definition.face_position + .{0,5};
+        pos: = actor_get_icon_position(params.target.target);
         effect: = create_simple_animation_actor(pos, .{*resources.lobotomie_aseprite, string_hash("idle")} , .OVERLAY);
 
         //spawn brain

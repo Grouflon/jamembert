@@ -11,6 +11,7 @@ bookshelf_definition : = ActorDefinition.{
 
     max_health = 10,
     speed = 3,
+    is_static = true,
 
     attack_cooldown = 5,
     attack_range = 12,
@@ -19,8 +20,6 @@ bookshelf_definition : = ActorDefinition.{
 
 bookshelf_init :: (using actor: *Actor)
 {
-    body: = actor_add_collider(actor, .{ type = .BOX, box = .{.{-11, 0}, .{11,26}} }, PHYSIC_LAYER_BODY, true);
-    actor.alterations.burning_collider.shape = .{ type = .BOX, box = dilate(body.shape.box, .{2,1}) };
 }
 
 bookshelf_on_hit :: (using actor: *Actor, source: *Actor)

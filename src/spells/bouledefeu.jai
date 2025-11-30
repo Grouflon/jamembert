@@ -29,15 +29,13 @@ BouledefeuData :: struct
     caster: ID(Actor);
     body: *Collider;
     trail_cooldown: = 0.0;
-    trail_duration: = 0.2;
+    trail_duration: = 0.2; // Does not need to be a variable
 }
 
 bouledefeu_init :: (using actor: *Actor)
 {
     position.z = 1;
     bouledefeu: = New(BouledefeuData);
-    bouledefeu.body = actor_add_collider(actor, .{ type = .BOX, box = .{.{-5,-5}, .{5,5}} }, PHYSIC_LAYER_SPELL);
-
     data = bouledefeu;
 }
 
@@ -53,21 +51,23 @@ bouledefeu_update :: (using actor: *Actor, dt: float)
 
     angle = signed_angle_between(movement.target - position.xy, .{1,0});
 
-    for collider: bouledefeu.body.frame_overlaps
+    for hitbox: hitboxes
     {
-        target: = collider.parent.(*Actor);
-        if target.id == bouledefeu.caster continue;
-        if actor_is_dead(target) continue;
+        for collider: hitbox.frame_overlaps
+        {
+            target: = collider.parent.(*Actor);
+            if target.id == bouledefeu.caster continue;
+            if actor_is_dead(target) continue;
 
-        actor_set_burning(target, true);
+            actor_set_burning(target, true);
 
-        request_delete_actor(actor);
-        return;
+            request_delete_actor(actor);
+            return;
+        }
     }
 
     if bouledefeu.trail_cooldown <= 0
     {
-
         create_simple_animation_actor(actor.position.xy - .{10, 16}, .{*resources.fireball_aseprite, string_hash("trail")} , .OBJECTS);
         bouledefeu.trail_cooldown = bouledefeu.trail_duration;
     }

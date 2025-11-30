@@ -25,8 +25,7 @@ explosion_definition : = ActorDefinition.{
 ExplosionData :: struct
 {
     caster: ID(Actor);
-    body: *Collider;
-    hit_actors: [..]*Actor;
+    hit_actors: [..]ID(Actor);
     explosion_timing: float = 0.05;
 }
 
@@ -35,8 +34,6 @@ ExplosionData :: struct
 explosion_init :: (using actor: *Actor)
 {
     explosion: = New(ExplosionData);
-    explosion.body = actor_add_collider(actor, .{ type = .BOX, box = .{.{-15,-15}, .{15,15}} }, PHYSIC_LAYER_SPELL);
-
     data = explosion;
 
     animation_player_play(*animation, *resources.explosion_aseprite, "idle", false);
@@ -55,32 +52,33 @@ explosion_update :: (using actor: *Actor, dt: float)
 
     if explosion.explosion_timing <=0
     {
-        //dammages
-        for collider: explosion.body.frame_overlaps
+        //damages
+        for hitbox: hitboxes
         {
-            target: = collider.parent.(*Actor);
-
-            if array_find(explosion.hit_actors, target) continue;
-
-            if target.id == explosion.caster 
+            for collider: hitbox.frame_overlaps
             {
-                actor_hit(target, 1, get(explosion.caster));
+                target: = collider.parent.(*Actor);
+
+                if yae_array_find(explosion.hit_actors, target.id) continue;
+
+                if target.id == explosion.caster 
+                {
+                    actor_hit(target, 1, get(explosion.caster));
+                }
+                else
+                {
+                    actor_hit(target, 3, get(explosion.caster));
+                }
+
+                projection_strength: = random_get_within_range(80, 110);
+                direction: = unit_vector(target.position - actor.position);
+                movement_component_push(*target.movement, direction.xy * projection_strength);
+
+                yae_array_add_if_unique(*explosion.hit_actors, target.id);
+
+                return;
             }
-            else
-            {
-                actor_hit(target, 3, get(explosion.caster));
-            }
-
-            projection_strength: = random_get_within_range(80, 110);
-            direction: = unit_vector(target.position - actor.position);
-            movement_component_push(*target.movement, direction.xy * projection_strength);
-
-            array_add_if_unique(*explosion.hit_actors, target);
-
-            return;
         }
-
-        explosion.body.enabled = false;
     }
 
     explosion.explosion_timing -= dt;
