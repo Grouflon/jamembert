@@ -73,7 +73,7 @@ brain_update :: (using actor: *Actor, dt: float)
         else 
         {    
             //sweep for targets
-            triggers: = physics_cast(actor.position.xy, .{ type = .CIRCLE, circle = .{ .{}, 128 } }, .[PHYSIC_LAYER_BODY]);
+            triggers: = physics_cast(actor.position.xy, .{ type = .CIRCLE, circle = .{ .{}, 128 } }, .[PHYSIC_LAYER_HURTBOX]);
             for trigger: triggers
             {
                 target: = trigger.parent.(*Actor);

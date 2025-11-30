@@ -50,7 +50,7 @@ reanimation_update :: (using actor: *Actor, dt: float)
         request_delete_actor(actor);
     }
 
-    targets: =physics_cast(actor.position.xy, .{ type = .CIRCLE, circle = .{ .{}, 64 } }, .[PHYSIC_LAYER_BODY]);
+    targets: =physics_cast(actor.position.xy, .{ type = .CIRCLE, circle = .{ .{}, 64 } }, .[PHYSIC_LAYER_HURTBOX]);
 
     for target: targets
     {

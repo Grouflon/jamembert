@@ -54,7 +54,7 @@ darkbook_update :: (using actor: *Actor, dt: float)
 
     angle = signed_angle_between(movement.target - position.xy, .{1,0});
 
-    targets: =physics_cast(actor.position.xy, .{ type = .CIRCLE, circle = .{ .{}, 4 } }, .[PHYSIC_LAYER_BODY]);
+    targets: =physics_cast(actor.position.xy, .{ type = .CIRCLE, circle = .{ .{}, 4 } }, .[PHYSIC_LAYER_HURTBOX]);
     for target: targets
     {
         target_actor: = target.parent.(*Actor);
