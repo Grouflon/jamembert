@@ -511,8 +511,15 @@ actor_is_casting :: (using actor: *Actor) -> bool
 
 actor_get_icon_position :: (using actor: *Actor) -> Vector2
 {
-    assert(actor != null);
-    return actor.position.xy;
+    bounds: = make_bounds(actor.position.xy);
+    for hurtbox: hurtboxes
+    {
+        if !hurtbox.enabled continue;
+
+        bounds = combine(bounds, hurtbox.shape.box + actor.position.xy);
+    }
+
+    return .{center(bounds).x, bounds.max.y + 3};
 }
 
 #scope_file
