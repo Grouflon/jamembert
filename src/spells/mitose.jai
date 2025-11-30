@@ -10,7 +10,9 @@ mitose_spell_definition : = SpellDefinition.{
         //if !actor_is_sentient(target) return false;
 
         newactor: =create_actor(params.target.target.definition, params.target.target.position.xy);
-        newactor.alterations = params.target.target.alterations;
+        mind_state: = get_mind_state(params.target.target);
+        mind_state.controlling_player = null; // player can't control several entities (for now);
+        set_mind_state(newactor, mind_state);
         return true;
     },
 };

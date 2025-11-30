@@ -6,7 +6,7 @@ PHYSIC_LAYER_SPELL :: 1;
 GAME_WIDTH :: 1920;
 GAME_HEIGHT :: 1080;
 
-players: [2]Player;
+players: [4]Player;
 
 game_start :: ()
 {
@@ -47,8 +47,8 @@ game_start :: ()
         }
     }
 
-    players[0].spell_slots[0] = *sentification_spell_definition;
-    players[0].spell_slots[1] = *lobotomie_spell_definition;
+    // players[0].spell_slots[0] = *sentification_spell_definition;
+    // players[0].spell_slots[1] = *lobotomie_spell_definition;
     //players[0].spell_slots[0] = *portalgraveyard_spell_definition;
     //players[0].spell_slots[1] = *portalbrain_spell_definition;
     //players[0].spell_slots[2] = *portalforest_spell_definition;

@@ -80,8 +80,8 @@ player_update_spells :: (using player: *Player, dt: float)
     {
         case .GAMEPAD;
         {
-            if is_gamepad_pressed(.LEFT_SHOULDER) spell_scroll -= 1;
-            if is_gamepad_pressed(.RIGHT_SHOULDER) spell_scroll += 1;
+            if is_gamepad_pressed(player.gamepad, .LEFT_SHOULDER) spell_scroll -= 1;
+            if is_gamepad_pressed(player.gamepad, .RIGHT_SHOULDER) spell_scroll += 1;
         }
 
         case .KEYBOARD_MOUSE;
@@ -131,7 +131,8 @@ player_update_spells :: (using player: *Player, dt: float)
 
 player_update_actor :: (using player: *Player, dt: float)
 {
-    if !can_control_actor(controlled_actor) return;
+    cached_controlled_actor: = controlled_actor;
+    if !can_control_actor(cached_controlled_actor) return;
 
     move_input: Vector2;
 
@@ -144,7 +145,7 @@ player_update_actor :: (using player: *Player, dt: float)
     cast_target = null;
     attack_target = null;
 
-    cast_origin: = controlled_actor.position.xy + controlled_actor.definition.cast_position;
+    cast_origin: = cached_controlled_actor.position.xy + cached_controlled_actor.definition.cast_position;
 
     if input_type ==
     {
@@ -158,7 +159,7 @@ player_update_actor :: (using player: *Player, dt: float)
                 end_cast_spell = is_gamepad_released(player.gamepad, .RIGHT_TRIGGER);
                 cancel_cast_spell = is_gamepad_pressed(player.gamepad, .B);
 
-                if actor_is_casting(controlled_actor)
+                if actor_is_casting(cached_controlled_actor)
                 {
                     cast_position += player.gamepad.right_stick * CAST_TARGETTING_SPEED * dt;
                 }
@@ -183,7 +184,7 @@ player_update_actor :: (using player: *Player, dt: float)
                 end_cast_spell = is_gamepad_pressed(player.gamepad, .X);
                 cancel_cast_spell = is_gamepad_released(player.gamepad, .RIGHT_TRIGGER);
 
-                if actor_is_casting(controlled_actor)
+                if actor_is_casting(cached_controlled_actor)
                 {
                     cast_position += player.gamepad.left_stick * CAST_TARGETTING_SPEED * dt;
                 }
@@ -192,9 +193,9 @@ player_update_actor :: (using player: *Player, dt: float)
                     cast_position = cast_origin;
 
                     // Attack
-                    proximity_target_range: = controlled_actor.definition.attack_range + 10;
-                    proximity_targets: = physics_cast_circle(controlled_actor.position.xy, proximity_target_range, .[PHYSIC_LAYER_BODY]);
-                    proximity_target: = get_closest_actor(controlled_actor.position.xy, proximity_targets, player, (actor: *Actor, user_data: *void) -> bool
+                    proximity_target_range: = cached_controlled_actor.definition.attack_range + 10;
+                    proximity_targets: = physics_cast_circle(cached_controlled_actor.position.xy, proximity_target_range, .[PHYSIC_LAYER_BODY]);
+                    proximity_target: = get_closest_actor(cached_controlled_actor.position.xy, proximity_targets, player, (actor: *Actor, user_data: *void) -> bool
                     {
                         player: = user_data.(*Player);
                         if player.controlled_actor == actor return false;
@@ -213,7 +214,7 @@ player_update_actor :: (using player: *Player, dt: float)
                         {
                             attack_direction = normalize(move_input);
                         }
-                        attack_position = cast_origin + attack_direction * controlled_actor.definition.attack_range;
+                        attack_position = cast_origin + attack_direction * cached_controlled_actor.definition.attack_range;
                         last_attack_direction = attack_direction;
                     }
                 }
@@ -259,18 +260,18 @@ player_update_actor :: (using player: *Player, dt: float)
     }
     
     // Movement
-    movement_component_add_input(*controlled_actor.movement, move_input);
+    movement_component_add_input(*cached_controlled_actor.movement, move_input);
 
     // Spell
-    if begin_cast_spell && !actor_is_casting(controlled_actor) && get_current_spell(player) != null
+    if begin_cast_spell && !actor_is_casting(cached_controlled_actor) && get_current_spell(player) != null
     {
-        actor_set_casting(controlled_actor, true);
+        actor_set_casting(cached_controlled_actor, true);
     }
 
-    if (end_cast_spell || cancel_cast_spell) && actor_is_casting(controlled_actor)
+    if (end_cast_spell || cancel_cast_spell) && actor_is_casting(cached_controlled_actor)
     {
-        actor_set_casting(controlled_actor, false);
-        controlled_actor.attack_cooldown = 1.0;
+        actor_set_casting(cached_controlled_actor, false);
+        cached_controlled_actor.attack_cooldown = 1.0;
 
         if end_cast_spell
         {
@@ -282,7 +283,7 @@ player_update_actor :: (using player: *Player, dt: float)
     // Attack
     if do_attack
     {
-        actor_attack(controlled_actor, attack_position);
+        actor_attack(cached_controlled_actor, attack_position);
     }
 }
 
