@@ -121,7 +121,6 @@ game_stop :: ()
         player_shutdown(player);
     }
     array_clear(*brains_targets);
-    array_clear(*ground_tiles);
     portal_count = 0;
     delete_all_actors();
 }

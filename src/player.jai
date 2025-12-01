@@ -337,14 +337,23 @@ player_draw_ui :: (using player: *Player, origin: Vector2)
     //spell slots
     for i: 0..player.spell_slots.count-1
     {
-        animation_player_draw(*player.spell_swatches[i], xyz(origin + spell_swatches_step * i.(float), 0));
+        animation_player_draw(*player.spell_swatches[i], xyz(origin + spell_swatches_step * i.(float), 0)); 
     }
 
     //selected feedback
-    if player.spell_slots[player.spell_index] != null
+
+    if actor_is_dead(player.controlled_actor)
     {
-        draw_rectangle(xyz(origin + player.spell_index.(float) * spell_swatches_step + selector_offset, 0), .{.{-1,-1}, .{1,1}}, WHITE);
+        draw_rectangle(.{origin.x,origin.y,1}, .{.{0,8}, .{50, 10}}, .{200,0,0,240});
     }
+    else 
+    {
+        if player.spell_slots[player.spell_index] != null
+        {
+            draw_rectangle(xyz(origin + player.spell_index.(float) * spell_swatches_step + selector_offset, 0), .{.{-1,-1}, .{1,1}}, WHITE);
+        } 
+    }
+
 
 }
 

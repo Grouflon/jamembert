@@ -3,22 +3,42 @@
 level_1 :: ()
 {
     player_x:float = 150;
-    player_y_top:float = 75;
+    player_y_top:float = 80;
     player_y_bottom:float = 100;
     player1_start_position = .{-player_x,-player_y_bottom};
     player2_start_position = .{player_x,-player_y_bottom};
     player3_start_position = .{-player_x,player_y_top};
     player4_start_position = .{player_x,player_y_top};
 
-    background_color = .{79,59,44,255};
+    //dark
+    //background_color = .{79,59,44,255};
+    //light
+    //background_color = .{163,150,130,255};
+    //
+    background_color = .{21,20,22,255};
 
     create_outside_colliders();
 
 
 
-    leftmost_point:= -230.0;
+    right:= 230.0;
+    top:= 135.0;
 
+    //trees
+    create_actor(*tree_definition, .{right-144+10,35});
+    create_actor(*tree_definition, .{-right+144-8,35});
 
+    //chest
+    create_actor(*chest_definition, .{right-10,-10});
+    create_actor(*chest_definition, .{-right+12,-10});
+
+    //cheese
+    create_actor(*cheese_definition, .{150,-20});
+    create_actor(*cheese_definition, .{-50,0});
+    create_actor(*cheese_definition, .{200,75});
+    create_actor(*cheese_definition, .{-230,-90});
+    create_actor(*cheese_definition, .{180,-100});
+    create_actor(*cheese_definition, .{-220,80});
 
 
     //Bookshelves
@@ -26,28 +46,28 @@ level_1 :: ()
     //top
     for i : 0..21 
     {
-        create_actor(*bookshelf_definition, .{leftmost_point+(i*bookshelf_w)+2, 100.0});
+        create_actor(*bookshelf_definition, .{-right+(i*bookshelf_w)+1, 100.0});
     }
     //middle left
     for i : 0..5 
     {
-        create_actor(*bookshelf_definition, .{leftmost_point+(i*bookshelf_w)+2, 30});
+        create_actor(*bookshelf_definition, .{-right+(i*bookshelf_w)+1, 30});
     }
     //middle right
     for i : 0..5 
     {
-        create_actor(*bookshelf_definition, .{-leftmost_point-(i*bookshelf_w)-2, 30});
+        create_actor(*bookshelf_definition, .{right-(i*bookshelf_w)-1, 30});
     }
 
     //bottom left
     for i : 0..8 
     {
-        create_actor(*bookshelf_definition, .{leftmost_point+(i*bookshelf_w)+2, -80});
+        create_actor(*bookshelf_definition, .{-right+(i*bookshelf_w)+1, -80});
     }
     //bottom right
     for i : 0..8 
     {
-        create_actor(*bookshelf_definition, .{-leftmost_point-(i*bookshelf_w)-2, -80});
+        create_actor(*bookshelf_definition, .{right-(i*bookshelf_w)-1, -80});
     }
 
 
@@ -55,30 +75,33 @@ level_1 :: ()
 
 }
 
-ground_tiles: [..]Texture;
+ground_tiles: [30][16]Texture;
 init_ground_tiles :: ()
 {
     all_tiles: [11]Texture = .[
+    //repeat those tile so they are more common
     resources.tile1_texture.texture,
     resources.tile1_texture.texture,
     resources.tile1_texture.texture,
     resources.tile1_texture.texture,
+    //
     resources.tile2_texture.texture,
+    resources.tile2_texture.texture,
+    resources.tile2_texture.texture,
+    resources.tile2_texture.texture,
+    //other tiles 
     resources.tile3_texture.texture,
     resources.tile4_texture.texture,
-    resources.tile5_texture.texture,
-    resources.tile5_texture.texture,
-    resources.tile5_texture.texture,
     resources.tile5_texture.texture,
     ];
     tile: Texture;
 
-    for y : 0..16 
+    for x : 0..29 
     {
-        for x : 0..30
+        for y : 0..15
         {
-            _,tile= random_get_array_item(ground_tiles);
-            array_add(*ground_tiles,tile);
+            _,tile= random_get_array_item(all_tiles);
+            ground_tiles[x][y] = tile;
         }
     }
 }
@@ -86,41 +109,56 @@ init_ground_tiles :: ()
 draw_ground ::()
 {
     //Tiles
-    left_min:= 240.0;
-    bottom_min:= 135.0;
+    left:= 240.0;
+    bottom:= 135.0;
 
     tilesize:float=16;
 
-    /*height:=0;
-    width:=0;
-
-    for tile_index: 0..480
-    {
-        if tile_index%16 == 0
-        { 
-            height+=1;
-            width=0;
-        }
-        width = tile_index
-
-        draw_sprite(.{width*tilesize - left_min, height*tilesize - bottom_min,0}, ground_tiles[tile_index]);
-    }*/
-
     depth_write: = is_depth_write_enabled();
     set_depth_write_enabled(false);
-    for y : 0..16 
+
+    for x : 0..29
     {
-        for x : 0..30
+        for y : 0..15
         {
-            draw_sprite(.{x*tilesize - left_min, y*tilesize - bottom_min,-10}, resources.tile1_texture.texture);
+            draw_sprite(.{x*tilesize - left, y*tilesize - bottom,0}, ground_tiles[x][y]);
         }
     }
+
+    //rug center
+    draw_sprite(.{0-32,0-32,0}, resources.rug3_texture.texture);
+
+    //rug players
+    draw_sprite(xyz(player1_start_position+.{-32,-32},0), resources.rug4_texture.texture);
+    draw_sprite(xyz(player2_start_position+.{-32,-32},0), resources.rug4_texture.texture);
+    draw_sprite(xyz(player3_start_position+.{-32,-32},0), resources.rug4_texture.texture);
+    draw_sprite(xyz(player4_start_position+.{-32,-32},0), resources.rug4_texture.texture);
+
+    //rug bottom
+    draw_sprite(.{0-32,-bottom-32+10,0}, resources.rug5_texture.texture);
+    //rug chest
+    //right
+    draw_sprite(.{230-32-10,-32-10,0}, resources.rug5_texture.texture);
+    //left
+    draw_sprite(.{-230-32+12,-32-10,0}, resources.rug5_texture.texture);
+
+
+    //treetray middle right
+    draw_sprite(.{left-144-32,35-32,0}, resources.treetray_texture.texture);
+    //treetray middle left
+    draw_sprite(.{-left+144-32+2,35-32,0}, resources.treetray_texture.texture);
+
     draw_all_commands();
     set_depth_write_enabled(depth_write);
 
     //draw circle at origin for debug purposes
-    // draw_circle(.{0,0,0}, 4, WHITE);
+    //draw_circle(.{0,0,0}, 4, WHITE);
 }
+
+
+
+
+
 
 
 //This is the level we used for our prototyping with the tree lines and stuff

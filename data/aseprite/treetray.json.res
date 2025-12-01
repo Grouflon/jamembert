@@ -1,0 +1,3 @@
+{
+	"texture": "treetray_texture"
+}

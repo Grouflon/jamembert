@@ -49,6 +49,8 @@ mage2_definition := #run () -> ActorDefinition
 mage3_definition := #run () -> ActorDefinition
 {
     def: = mage1_definition;
+    def.face_idle_animation = "mage3_idle";
+    def.face_mad_animation = "mage3_mad";
     def.idle_hollow_animation = .{ "mage3_aseprite", "idle_hollow" };
     def.idle_animation = .{ "mage3_aseprite", "idle" };
     def.move_animation = .{ "mage3_aseprite", "walk" };
@@ -60,6 +62,8 @@ mage3_definition := #run () -> ActorDefinition
 mage4_definition := #run () -> ActorDefinition
 {
     def: = mage1_definition;
+    def.face_idle_animation = "mage4_idle";
+    def.face_mad_animation = "mage4_mad";
     def.idle_hollow_animation = .{ "mage4_aseprite", "idle_hollow" };
     def.idle_animation = .{ "mage4_aseprite", "idle" };
     def.move_animation = .{ "mage4_aseprite", "walk" };

@@ -127,4 +127,22 @@ resources : struct
     tile5_texture: TextureFile = .{ path = "data://aseprite/tile5.png" };
     tile5_aseprite: AsepriteFile = .{ path = "data://aseprite/tile5.json" };
 
+    rug1_texture: TextureFile = .{ path = "data://aseprite/rug1.png" };
+    rug1_aseprite: AsepriteFile = .{ path = "data://aseprite/rug1.json" };
+
+    rug2_texture: TextureFile = .{ path = "data://aseprite/rug2.png" };
+    rug2_aseprite: AsepriteFile = .{ path = "data://aseprite/rug2.json" };
+
+    rug3_texture: TextureFile = .{ path = "data://aseprite/rug3.png" };
+    rug3_aseprite: AsepriteFile = .{ path = "data://aseprite/rug3.json" };
+
+    rug4_texture: TextureFile = .{ path = "data://aseprite/rug4.png" };
+    rug4_aseprite: AsepriteFile = .{ path = "data://aseprite/rug4.json" };
+
+    rug5_texture: TextureFile = .{ path = "data://aseprite/rug5.png" };
+    rug5_aseprite: AsepriteFile = .{ path = "data://aseprite/rug5.json" };
+
+    treetray_texture: TextureFile = .{ path = "data://aseprite/treetray.png" };
+    treetray_aseprite: AsepriteFile = .{ path = "data://aseprite/treetray.json" };
+
 };
