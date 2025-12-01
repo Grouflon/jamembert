@@ -1,4 +1,4 @@
-mage_definition : = ActorDefinition.{
+mage1_definition : = ActorDefinition.{
     init = mage_init,
     shutdown = mage_shutdown,
     update = mage_update,
@@ -33,3 +33,37 @@ mage_update :: (using actor: *Actor, dt: float)
 mage_draw :: (using actor: *Actor)
 {
 }
+
+// Variants
+mage2_definition := #run () -> ActorDefinition
+{
+    def: = mage1_definition;
+    def.idle_hollow_animation = .{ "mage2_aseprite", "idle_hollow" };
+    def.idle_animation = .{ "mage2_aseprite", "idle" };
+    def.move_animation = .{ "mage2_aseprite", "walk" };
+    def.dead_animation = .{ "mage2_aseprite", "dead" };
+    def.cast_animation = .{ "mage2_aseprite", "cast" };
+    return def;
+}();
+
+mage3_definition := #run () -> ActorDefinition
+{
+    def: = mage1_definition;
+    def.idle_hollow_animation = .{ "mage3_aseprite", "idle_hollow" };
+    def.idle_animation = .{ "mage3_aseprite", "idle" };
+    def.move_animation = .{ "mage3_aseprite", "walk" };
+    def.dead_animation = .{ "mage3_aseprite", "dead" };
+    def.cast_animation = .{ "mage3_aseprite", "cast" };
+    return def;
+}();
+
+mage4_definition := #run () -> ActorDefinition
+{
+    def: = mage1_definition;
+    def.idle_hollow_animation = .{ "mage4_aseprite", "idle_hollow" };
+    def.idle_animation = .{ "mage4_aseprite", "idle" };
+    def.move_animation = .{ "mage4_aseprite", "walk" };
+    def.dead_animation = .{ "mage4_aseprite", "dead" };
+    def.cast_animation = .{ "mage4_aseprite", "cast" };
+    return def;
+}();

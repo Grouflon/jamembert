@@ -59,9 +59,6 @@ spellbook: []*SpellDefinition = .[
 // Actors
 #load "actors/simple_animation.jai";
 #load "actors/mage.jai";
-#load "actors/mage2.jai";
-#load "actors/mage3.jai";
-#load "actors/mage4.jai";
 #load "actors/book.jai";
 #load "actors/bookshelf.jai";
 #load "actors/tree.jai";
