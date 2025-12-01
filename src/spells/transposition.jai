@@ -17,6 +17,9 @@ transposition_spell_definition : = SpellDefinition.{
 
         params.source.position = pos_target;
         params.target.target.position = pos_caster;
+
+        params.source.ai.target = null;
+        params.target.target.ai.target = null;
         return true;
     },
 };
