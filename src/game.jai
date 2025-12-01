@@ -122,6 +122,7 @@ game_stop :: ()
     }
     array_clear(*brains_targets);
     array_clear(*ground_tiles);
+    portal_count = 0;
     delete_all_actors();
 }
 
@@ -193,6 +194,9 @@ game_draw :: ()
             begin_render_texture(render_layers[RenderLayer.GROUND]);
             clear_background(background_color);
             draw_ground();
+            end_render_texture();
+
+            begin_render_texture(render_layers[RenderLayer.GROUND_OVERLAY]);
             end_render_texture();
 
             begin_render_texture(render_layers[RenderLayer.OBJECTS]);

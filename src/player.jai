@@ -293,9 +293,9 @@ player_draw :: (using player: *Player)
 
     if !can_control_actor(controlled_actor) return;
 
-    begin_render_texture(render_layers[RenderLayer.OVERLAY]);
-    defer end_render_texture();
+    
 
+    // begin_render_texture(render_layers[RenderLayer.OVERLAY]);
     // origin: = controlled_actor.position + xyz(controlled_actor.definition.cast_position, 0);
     // direction: = xyz(rotate(.{1,0}, aim_angle), 0);
 
@@ -303,23 +303,24 @@ player_draw :: (using player: *Player)
     // {
     //     draw_line(origin + direction * 7, origin + direction * 20, 3, .{255,255,255,100});
     // }
+    // end_render_texture();
         
-    begin_render_texture(render_layers[RenderLayer.GROUND]);
+    begin_render_texture(render_layers[RenderLayer.GROUND_OVERLAY]);
     if attack_target != null
     {
-        draw_scaled_circle_outline(xyz(attack_target.position.xy, 2), 10, .{255,255,255,100});
+        draw_scaled_circle_outline(xyz(attack_target.position.xy, 2), 10, .{255,255,255,200});
     }
 
     if actor_is_casting(controlled_actor) || player.input_type == .KEYBOARD_MOUSE
     {
-        draw_scaled_circle_outline(xyz(cast_position, 1), 10, .{255,255,255,40});
+        draw_scaled_circle_outline(xyz(cast_position, 1), 10, .{255,255,255,140});
 
         if
             spellcaster.definition != null &&
             spellcaster.definition.type == .TARGET &&
             spellcaster.current_cast.target.target != null
         {
-            draw_scaled_circle_outline(xyz(spellcaster.current_cast.target.target.position.xy, 2), 10, .{255,255,255,100});
+            draw_scaled_circle_outline(xyz(spellcaster.current_cast.target.target.position.xy, 2), 10, .{255,255,255,200});
         }
     }
     end_render_texture();

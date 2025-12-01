@@ -22,6 +22,7 @@ Actor :: struct
     burnboxes: [ACTOR_HITBOX_COUNT]*Collider;
 
     active: bool = true;
+    y_sort: bool = true;
 
     idle_hollow_animation: AsepriteAnimationHandle;
     idle_animation: AsepriteAnimationHandle;
@@ -320,7 +321,9 @@ actor_draw :: (using actor: *Actor)
         begin_render_texture(render_layers[definition.render_layer]);
     }
 
-    transform_translate(.{position.x, position.y, -(position.y + position.z)});
+    z: = position.z;
+    if y_sort z -= position.y;
+    transform_translate(.{position.x, position.y, z});
     r: Quaternion;
     set_from_axis_and_angle(*r, .{0,0,1}, angle);
     transform_rotate(r);

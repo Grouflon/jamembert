@@ -95,10 +95,11 @@ spellbook: []*SpellDefinition = .[
 RenderLayer :: enum
 {
     GROUND :: 0;
-    OBJECTS :: 1;
-    OVERLAY :: 2;
-    EDITOR :: 3;
-    UI :: 4;
+    GROUND_OVERLAY :: 1;
+    OBJECTS :: 2;
+    OVERLAY :: 3;
+    EDITOR :: 4;
+    UI :: 5;
 }
 render_layers: [#run enum_highest_value(RenderLayer) + 1]RenderTexture;
 

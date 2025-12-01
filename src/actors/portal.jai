@@ -23,6 +23,7 @@ PortalData :: struct
 create_portal :: (position: Vector2, aseprite_file: *AsepriteFile, actors_to_spawn: #type (actor: *Actor) = null, on_finish_growing: #type (actor: *Actor) = null) -> *Actor
 {
     portalactor: = create_actor(*portal_definition, position);
+    portalactor.position.z = portal_count.(float) * 0.01;
     portaldata: = portalactor.data.(*PortalData);
 
     portaldata.aseprite_file = aseprite_file;
@@ -38,6 +39,8 @@ portal_init :: (using actor: *Actor)
 {
     portal: = New(PortalData);
     data = portal;
+    actor.y_sort = false;
+    portal_count += 1;
 }
 
 portal_update :: (using actor: *Actor, dt: float)
@@ -82,3 +85,5 @@ portal_delete_actors :: (using actor: *Actor)
         request_delete_actor(actor_target);
     }
 }
+
+portal_count: u32;

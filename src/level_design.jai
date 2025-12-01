@@ -106,6 +106,8 @@ draw_ground ::()
         draw_sprite(.{width*tilesize - left_min, height*tilesize - bottom_min,0}, ground_tiles[tile_index]);
     }*/
 
+    depth_write: = is_depth_write_enabled();
+    set_depth_write_enabled(false);
     for y : 0..16 
     {
         for x : 0..30
@@ -113,9 +115,11 @@ draw_ground ::()
             draw_sprite(.{x*tilesize - left_min, y*tilesize - bottom_min,-10}, resources.tile1_texture.texture);
         }
     }
+    draw_all_commands();
+    set_depth_write_enabled(depth_write);
 
     //draw circle at origin for debug purposes
-    draw_circle(.{0,0,0}, 4, WHITE);
+    // draw_circle(.{0,0,0}, 4, WHITE);
 }
 
 
