@@ -50,6 +50,7 @@ skull_shutdown :: (using actor: *Actor)
     skull: = data.(*SkullData);
 
     array_free(skull.hit_actors);
+    array_free(skull.ghost_spawned);
 }
 
 skull_update :: (using actor: *Actor, dt: float)
