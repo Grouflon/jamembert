@@ -31,6 +31,10 @@
 					"shell_cmd" : "jai build.jai - compile debug",
 				},
 				{
+					"name" : "windows - export",
+					"shell_cmd" : "jai build.jai - compile export",
+				},
+				{
 					"name" : "wasm - build",
 					"shell_cmd" : "jai build.jai - compile wasm",
 				},

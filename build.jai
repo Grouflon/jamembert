@@ -155,37 +155,44 @@ build :: ()
     // Export
     if export
     {
+        log("Exporting...");
+
+        platform_name: string;
+        if os_target ==
+        {
+            case .WINDOWS; platform_name = "windows";
+            case .WASM; platform_name = "web";
+        }
+
+        export_dir: = tprint("./export/%", platform_name);
+        File.delete_directory(export_dir);
+        make_directory_if_it_does_not_exist(export_dir, true);
+
+        // data
+        File_Utilities.copy_directory("./data", tprint("%/data", export_dir));
+        make_directory_if_it_does_not_exist(tprint("%/modules/yae", export_dir), true);
+        File_Utilities.copy_directory("./modules/yae/data", tprint("%/modules/yae/data", export_dir));
+        log("Copied data.");
+
+        // bin
+        make_directory_if_it_does_not_exist(tprint("%/%", export_dir, BUILD_OUTPUT_DIRECTORY));
+        File_Utilities.copy_file(executable_path, tprint("%/%", export_dir, executable_path));
+        log("Copied binaries.");
+
         if os_target == .WASM
         {
-            log("Exporting...");
-
-            export_dir: = "./export/web";
-            File.delete_directory(export_dir);
-            make_directory_if_it_does_not_exist(export_dir, true);
-
-            // data
-            File_Utilities.copy_directory("./data", tprint("%/data", export_dir));
-            make_directory_if_it_does_not_exist(tprint("%/modules/yae", export_dir), true);
-            File_Utilities.copy_directory("./modules/yae/data", tprint("%/modules/yae/data", export_dir));
-            log("Copied data.");
-
-            // bin
-            make_directory_if_it_does_not_exist(tprint("%/%", export_dir, BUILD_OUTPUT_DIRECTORY));
-            File_Utilities.copy_file(executable_path, tprint("%/%", export_dir, executable_path));
-            log("Copied binaries.");
-
             // index
             File_Utilities.copy_file("./index.html", tprint("%/index.html", export_dir));
             log("Copied index.");
-
-            log("Archiving export...");
-            zip_target: = tprint("%_web.zip", BUILD_NAME);
-            cmd := string.[tprint("%/modules/yae/third_party/7z.exe", get_absolute_path(".")), "a", "-tzip", zip_target, "*.*", "-r"];
-            log("%", cmd);
-            run_command(..cmd, export_dir, capture_and_return_output= true, print_captured_output= true);
-
-            log("Exported to \"%\"(%/%)", export_dir, export_dir, zip_target);
         }
+
+        log("Archiving export...");
+        zip_target: = tprint("%_%.zip", BUILD_NAME, platform_name);
+        cmd := string.[tprint("%/modules/yae/third_party/7z.exe", get_absolute_path(".")), "a", "-tzip", zip_target, "*.*", "-r"];
+        log("%", cmd);
+        run_command(..cmd, export_dir, capture_and_return_output= true, print_captured_output= true);
+
+        log("Exported to \"%\"(%/%)", export_dir, export_dir, zip_target);
     }
 
     // Run
