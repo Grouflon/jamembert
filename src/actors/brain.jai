@@ -49,6 +49,12 @@ brain_update :: (using actor: *Actor, dt: float)
 {
     brain: = data.(*BrainData);
     can_possess: = true;
+
+    if actor_is_dead(actor)
+    {
+        movement_component_stop(*movement);
+        return;
+    }
     
     //when controlled by AI
     if !actor.controlling_player
