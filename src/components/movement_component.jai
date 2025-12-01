@@ -60,6 +60,12 @@ movement_component_update :: (using c: *MovementComponent, dt: float)
         -sign(push_velocity.y) * clamp(push_dampening * dt, 0, abs(push_velocity.y))
     };
     owner.position += xyz(push_velocity * dt, 0);
+
+    // Lock characters inside level
+    half_world_size: = 0.5 * .{GAME_WIDTH, GAME_HEIGHT} / DRAW_SCALE;
+    owner.position.x = clamp(owner.position.x, -half_world_size.x, half_world_size.x);
+    owner.position.y = clamp(owner.position.y, -half_world_size.y, half_world_size.y);
+
     push_velocity += dampening;
 
     velocity = (owner.position.xy - last_position) / dt;
