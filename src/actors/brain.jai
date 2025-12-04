@@ -46,6 +46,8 @@ brain_shutdown :: (using actor: *Actor)
     draw_line(actor.position, brain.current_target.position, 3);
 }*/
 
+sort_reference_position: Vector2;
+
 brain_update :: (using actor: *Actor, dt: float)
 {
     brain: = data.(*BrainData);
@@ -80,7 +82,16 @@ brain_update :: (using actor: *Actor, dt: float)
         else 
         {    
             //sweep for targets
-            triggers: = physics_cast(actor.position.xy, .{ type = .CIRCLE, circle = .{ .{}, 128 } }, .[PHYSIC_LAYER_HURTBOX]);
+            triggers: = physics_cast_circle(actor.position.xy, 512, .[PHYSIC_LAYER_HURTBOX]);
+
+            sort_reference_position = actor.position.xy;
+            bubble_sort(triggers, (a: *Collider, b: *Collider) -> s64
+            {
+                d1: = distance_squared_point_bounds(sort_reference_position, collider_get_bounds(a));
+                d2: = distance_squared_point_bounds(sort_reference_position, collider_get_bounds(b));
+                return (d1-d2).(s64);
+            });
+
             for trigger: triggers
             {
                 target: = trigger.parent.(*Actor);
@@ -91,6 +102,7 @@ brain_update :: (using actor: *Actor, dt: float)
                 //add the target
                 brain.current_target = target.id;
                 yae_array_add_if_unique(*brains_targets, target.id);
+                break;
             }
         }
     }
@@ -135,3 +147,7 @@ check_if_braintarget_is_valid :: (using actor: *Actor, target:*Actor, check_in_a
 
 //global array to avoid the brains targeting the same actor
 brains_targets: [..] ID(Actor);
+
+#scope_file
+
+#import "Sort";
