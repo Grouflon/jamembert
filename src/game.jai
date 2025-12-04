@@ -11,6 +11,8 @@ player4_start_position: Vector2 = .{50,50};
 
 background_color: Color = .{0,30,61,255};
 
+level_selected:s32=0;
+
 game_start :: ()
 {
     random_seed(Some_Big_Time_Value.{current_time_consensus().low, current_time_consensus().high}); // Will need something for wasm, but we should change our own get_time() api first to have different calls for time_since_init and absolute time
@@ -54,7 +56,7 @@ game_start :: ()
     //Spell on start
     //players[0].spell_slots[0] = *sentification_spell_definition;
     //players[0].spell_slots[1] = *lobotomie_spell_definition;
-    //players[0].spell_slots[0] = *portalgraveyard_spell_definition;
+    players[0].spell_slots[0] = *portalgraveyard_spell_definition;
     //players[0].spell_slots[1] = *portalbrain_spell_definition;
     //players[0].spell_slots[2] = *portalforest_spell_definition;
     //players[0].spell_slots[1] = *portallibrary_spell_definition;
@@ -62,6 +64,7 @@ game_start :: ()
     //players[0].spell_slots[1] = *spectralform_spell_definition;
     //players[0].spell_slots[2] = *illusion_spell_definition;
     //players[0].spell_slots[2] = *mindswap_spell_definition;
+    players[0].spell_slots[2] = *rage_spell_definition;
     //players[0].spell_slots[1] = *bouledefeu_spell_definition;
     //players[0].spell_slots[0] = *darkbook_spell_definition;
     //players[0].spell_slots[1] = *cupidon_spell_definition;
@@ -75,7 +78,21 @@ game_start :: ()
     //Level Design
     init_ground_tiles();
     //level_test();
-    level_1();
+    level_array: [] s32= .[1,2];
+    _,level_selected = random_get_array_item(level_array);
+    if level_selected==
+    {
+        case 1;
+        {
+            level_1();
+        }
+        case 2;
+        {
+            level_2();
+        }
+    }
+    //
+    
     
 
 
