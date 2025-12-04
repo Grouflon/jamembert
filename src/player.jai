@@ -342,19 +342,20 @@ player_draw_ui :: (using player: *Player, origin: Vector2)
 
     //selected feedback
 
-    if actor_is_dead(player.controlled_actor)
+    if player.controlled_actor != null
     {
-        draw_rectangle(.{origin.x,origin.y,1}, .{.{0,8}, .{50, 10}}, .{200,0,0,240});
-    }
-    else 
-    {
-        if player.spell_slots[player.spell_index] != null
+        if actor_is_dead(player.controlled_actor)
         {
-            draw_rectangle(xyz(origin + player.spell_index.(float) * spell_swatches_step + selector_offset, 0), .{.{-1,-1}, .{1,1}}, WHITE);
-        } 
+            draw_rectangle(.{origin.x,origin.y,1}, .{.{0,8}, .{50, 10}}, .{200,0,0,240});
+        }
+        else 
+        {
+            if player.spell_slots[player.spell_index] != null
+            {
+                draw_rectangle(xyz(origin + player.spell_index.(float) * spell_swatches_step + selector_offset, 0), .{.{-1,-1}, .{1,1}}, WHITE);
+            } 
+        }
     }
-
-
 }
 
 player_cast_spell :: (using player: *Player, slot_index: s64) -> bool
