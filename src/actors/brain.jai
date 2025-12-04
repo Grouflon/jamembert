@@ -13,6 +13,7 @@ brain_definition : = ActorDefinition.{
     speed = 40,
 
     attack_damage = 0,
+    can_pick_objects = false,
 };
 
 BrainData :: struct
