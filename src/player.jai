@@ -179,9 +179,18 @@ player_update_actor :: (using player: *Player, dt: float)
             }
             else
             {
-                do_attack = is_gamepad_down(player.gamepad, .X);
+                do_attack =
+                    is_gamepad_down(player.gamepad, .X) ||
+                    is_gamepad_down(player.gamepad, .Y) ||
+                    is_gamepad_down(player.gamepad, .A) ||
+                    is_gamepad_down(player.gamepad, .B);
+
                 begin_cast_spell = is_gamepad_pressed(player.gamepad, .RIGHT_TRIGGER);
-                end_cast_spell = is_gamepad_pressed(player.gamepad, .X);
+                end_cast_spell =
+                    is_gamepad_pressed(player.gamepad, .X) ||
+                    is_gamepad_pressed(player.gamepad, .Y) ||
+                    is_gamepad_pressed(player.gamepad, .A) ||
+                    is_gamepad_pressed(player.gamepad, .B);
                 cancel_cast_spell = is_gamepad_released(player.gamepad, .RIGHT_TRIGGER);
 
                 if actor_is_casting(cached_controlled_actor)
