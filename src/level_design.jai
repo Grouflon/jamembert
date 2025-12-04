@@ -6,9 +6,9 @@ level_1 :: ()
     player_y_top:float = 80;
     player_y_bottom:float = 100;
     player1_start_position = .{-player_x,-player_y_bottom};
-    player2_start_position = .{player_x,-player_y_bottom};
+    player2_start_position = .{player_x,player_y_top};
     player3_start_position = .{-player_x,player_y_top};
-    player4_start_position = .{player_x,player_y_top};
+    player4_start_position = .{player_x,-player_y_bottom};
 
     //dark
     //background_color = .{79,59,44,255};
