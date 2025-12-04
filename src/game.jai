@@ -5,8 +5,8 @@ GAME_HEIGHT :: 1080;
 
 players: [4]Player;
 player1_start_position: Vector2 = .{-50,-50};
-player2_start_position: Vector2 = .{50,-50};
-player3_start_position: Vector2 = .{-50,50};
+player2_start_position: Vector2 = .{-50,50};
+player3_start_position: Vector2 = .{50,-50};
 player4_start_position: Vector2 = .{50,50};
 
 background_color: Color = .{0,30,61,255};
@@ -54,7 +54,7 @@ game_start :: ()
     }
 
     //Spell on start
-    //players[0].spell_slots[0] = *sentification_spell_definition;
+    players[0].spell_slots[0] = *portalbrain_spell_definition;
     //players[0].spell_slots[1] = *lobotomie_spell_definition;
     players[0].spell_slots[0] = *portalgraveyard_spell_definition;
     //players[0].spell_slots[1] = *portalbrain_spell_definition;

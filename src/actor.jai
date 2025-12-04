@@ -79,6 +79,8 @@ ActorDefinition :: struct
     attack_range: float = 8.0;
     attack_damage: s32 = 1;
     attack_push: float = 50;
+    
+    can_pick_objects: = true;
 }
 
 create_actor :: (definition: *ActorDefinition = null, position: Vector2 = .{}) -> *Actor

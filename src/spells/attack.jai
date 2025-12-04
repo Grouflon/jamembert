@@ -45,8 +45,9 @@ attack_shutdown :: (using actor: *Actor)
 attack_update :: (using actor: *Actor, dt: float)
 {
     attack: = data.(*AttackData);
+    caster: = get(attack.caster);
 
-    if !animation.is_playing
+    if !animation.is_playing || caster == null
     {
         request_delete_actor(actor);
         return;
@@ -57,7 +58,6 @@ attack_update :: (using actor: *Actor, dt: float)
         for collider: hitbox.frame_overlaps
         {
             target: = collider.parent.(*Actor);
-            caster: = get(attack.caster);
             if target.id == attack.caster continue;
             if yae_array_find(attack.hit_actors, target.id) continue;
 

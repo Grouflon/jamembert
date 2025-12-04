@@ -132,7 +132,7 @@ player_update_spells :: (using player: *Player, dt: float)
 player_update_actor :: (using player: *Player, dt: float)
 {
     cached_controlled_actor: = controlled_actor;
-    if !can_control_actor(cached_controlled_actor) return;
+    if cached_controlled_actor == null return;
 
     move_input: Vector2;
 
@@ -179,9 +179,18 @@ player_update_actor :: (using player: *Player, dt: float)
             }
             else
             {
-                do_attack = is_gamepad_down(player.gamepad, .X);
+                do_attack =
+                    is_gamepad_down(player.gamepad, .X) ||
+                    is_gamepad_down(player.gamepad, .Y) ||
+                    is_gamepad_down(player.gamepad, .A) ||
+                    is_gamepad_down(player.gamepad, .B);
+
                 begin_cast_spell = is_gamepad_pressed(player.gamepad, .RIGHT_TRIGGER);
-                end_cast_spell = is_gamepad_pressed(player.gamepad, .X);
+                end_cast_spell =
+                    is_gamepad_pressed(player.gamepad, .X) ||
+                    is_gamepad_pressed(player.gamepad, .Y) ||
+                    is_gamepad_pressed(player.gamepad, .A) ||
+                    is_gamepad_pressed(player.gamepad, .B);
                 cancel_cast_spell = is_gamepad_released(player.gamepad, .RIGHT_TRIGGER);
 
                 if actor_is_casting(cached_controlled_actor)
@@ -260,10 +269,18 @@ player_update_actor :: (using player: *Player, dt: float)
     }
     
     // Movement
-    movement_component_add_input(*cached_controlled_actor.movement, move_input);
+    if can_move_actor(cached_controlled_actor)
+    {
+        movement_component_add_input(*cached_controlled_actor.movement, move_input);
+    }
 
     // Spell
-    if begin_cast_spell && !actor_is_casting(cached_controlled_actor) && get_current_spell(player) != null
+    if !can_cast_spells(cached_controlled_actor)
+    {
+        cancel_cast_spell = true;
+    }
+
+    if can_cast_spells(cached_controlled_actor) && begin_cast_spell && !actor_is_casting(cached_controlled_actor) && get_current_spell(player) != null
     {
         actor_set_casting(cached_controlled_actor, true);
     }
@@ -281,7 +298,7 @@ player_update_actor :: (using player: *Player, dt: float)
     spellcaster_update(*spellcaster, dt, cast_position);
 
     // Attack
-    if do_attack
+    if can_cast_spells(cached_controlled_actor) && do_attack
     {
         actor_attack(cached_controlled_actor, attack_position);
     }
@@ -291,9 +308,7 @@ player_draw :: (using player: *Player)
 {
     assert(player != null);
 
-    if !can_control_actor(controlled_actor) return;
-
-    
+    if !can_cast_spells(controlled_actor) return;
 
     // begin_render_texture(render_layers[RenderLayer.OVERLAY]);
     // origin: = controlled_actor.position + xyz(controlled_actor.definition.cast_position, 0);
@@ -398,12 +413,20 @@ set_controlled_actor :: (player: *Player, actor: *Actor)
     }
 }
 
-can_control_actor :: (actor: *Actor) -> bool
+can_move_actor :: (actor: *Actor) -> bool
 {
     if actor == null return false;
     if actor_is_dead(actor) return false;
     if !actor_is_sentient(actor) return false;
     if actor.ai.state == .PANICKING return false;
+    return true;
+}
+
+can_cast_spells :: (actor: *Actor) -> bool
+{
+    if actor == null return false;
+    if actor_is_dead(actor) return false;
+    if !actor_is_sentient(actor) return false;
     return true;
 }
 

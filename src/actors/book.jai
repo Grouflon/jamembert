@@ -57,6 +57,8 @@ book_update :: (using actor: *Actor, dt: float)
         for collider: hitbox.frame_overlaps
         {
             picking_actor: = collider.parent.(*Actor);
+            if !picking_actor.definition.can_pick_objects continue;
+
             if try_learn_spell(picking_actor, book.spell)
             {
                 request_delete_actor(actor);
