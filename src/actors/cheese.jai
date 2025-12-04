@@ -43,15 +43,15 @@ cheese_update :: (using actor: *Actor, dt: float)
         for collider: hitbox.frame_overlaps
         {
             picking_actor: = collider.parent.(*Actor);
+            if !picking_actor.definition.can_pick_objects continue;
+            if picking_actor.current_health >= picking_actor.definition.max_health continue;
 
             //heal
-            if picking_actor.current_health < picking_actor.definition.max_health
-            {
-                actor_modify_health(picking_actor, 3);
-                create_simple_animation_actor(picking_actor.position.xy, .{*resources.healing_aseprite, string_hash("idle")} , .OVERLAY);
+            actor_modify_health(picking_actor, 3);
+            create_simple_animation_actor(picking_actor.position.xy, .{*resources.healing_aseprite, string_hash("idle")} , .OVERLAY);
 
-                request_delete_actor(actor);
-            }
+            request_delete_actor(actor);
+            break;
         }
     }
     
