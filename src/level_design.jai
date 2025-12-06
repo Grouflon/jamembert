@@ -1,283 +1,209 @@
 
+level_selected:s64=0;
+
+player1_start_position: Vector2 = .{-50,-50};
+player2_start_position: Vector2 = .{50,50};
+player3_start_position: Vector2 = .{50,-50};
+player4_start_position: Vector2 = .{-50,50};
+
+background_color: Color = .{0,30,61,255};
+
 right_point : float = (GAME_WIDTH/DRAW_SCALE)/2; //240
 top_point : float = (GAME_HEIGHT/DRAW_SCALE)/2; //135
 
-ground_tiles: [30][16]Texture;
-init_ground_tiles :: ()
+ground_tiles: [30][17]Texture;
+
+ld_rng: Random_State;
+ld_seed: u64;
+
+ld_timer:float=0.0;
+
+select_level :: (level:s64=-1)
 {
-    all_tiles: [11]Texture = .[
+    //tiles
+    wood_tiles: [11]Texture = .[
     //repeat those tile so they are more common
-    resources.tile1_texture.texture,
-    resources.tile1_texture.texture,
-    resources.tile1_texture.texture,
-    resources.tile1_texture.texture,
+    resources.tile_wood_1_texture.texture,
+    resources.tile_wood_1_texture.texture,
+    resources.tile_wood_1_texture.texture,
+    resources.tile_wood_1_texture.texture,
     //
-    resources.tile2_texture.texture,
-    resources.tile2_texture.texture,
-    resources.tile2_texture.texture,
-    resources.tile2_texture.texture,
+    resources.tile_wood_2_texture.texture,
+    resources.tile_wood_2_texture.texture,
+    resources.tile_wood_2_texture.texture,
+    resources.tile_wood_2_texture.texture,
     //other tiles 
-    resources.tile3_texture.texture,
-    resources.tile4_texture.texture,
-    resources.tile5_texture.texture,
+    resources.tile_wood_3_texture.texture,
+    resources.tile_wood_4_texture.texture,
+    resources.tile_wood_5_texture.texture,
     ];
+
+    rock_tiles: [3]Texture = .[
+        resources.tile_rock_1_texture.texture,
+        resources.tile_rock_2_texture.texture,
+        resources.tile_rock_3_texture.texture,
+    ];
+
+    //rng
+    ld_seed = random_get();
+
+    //select level
+    if (level > 0) 
+    {
+        level_selected = level;
+    }
+    else 
+    {
+        level_selected = random_range(1,5);
+    }
+
+    if level_selected==
+    {
+        case 1;
+        {
+            tiles_init(wood_tiles);
+            library1_init();
+        }
+        case 2;
+        {
+            tiles_init(wood_tiles);
+            library2_init();
+        }
+        case 3;
+        {
+            forest_init();
+        }
+        case 4;
+        {
+            tiles_init(rock_tiles);
+            dungeon_init();
+        }
+    }
+}
+
+tiles_init :: (tile_array:[]Texture)
+{
     tile: Texture;
 
     for x : 0..29 
     {
-        for y : 0..15
+        for y : 0..16
         {
-            _,tile= random_get_array_item(all_tiles);
+            _,tile= random_get_array_item(tile_array);
             ground_tiles[x][y] = tile;
         }
     }
 }
 
-draw_ground ::()
+level_update :: (dt: float)
 {
-    //Tiles
-
-    tilesize:float=16;
-
-    depth_write: = is_depth_write_enabled();
-    set_depth_write_enabled(false);
-
-    for x : 0..29
-    {
-        for y : 0..15
-        {
-            draw_sprite(.{x*tilesize - right_point, y*tilesize - top_point,0}, ground_tiles[x][y]);
-        }
-    }
-
-    //Level specific
     if level_selected==
     {
         case 1;
         {
-            level_1_ground();
+            library1_update(dt);
         }
         case 2;
         {
-            level_2_ground();
+            library2_update(dt);
+        }
+        case 3;
+        {
+            forest_update(dt);
+        }
+        case 4;
+        {
+            dungeon_update(dt);
+        }
+    }
+}
+
+level_draw ::()
+{
+    depth_write: = is_depth_write_enabled();
+    set_depth_write_enabled(false);
+
+    if level_selected==
+    {
+        case 1;
+        {
+            tiles_draw();
+            library1_draw();
+        }
+        case 2;
+        {
+            tiles_draw();
+            library2_draw();
+        }
+        case 3;
+        {
+            //tiles_draw();
+            forest_draw();
+        }
+        case 4;
+        {
+            tiles_draw();
+            dungeon_draw();
         }
     }
 
     draw_all_commands();
     set_depth_write_enabled(depth_write);
-
-    //draw circle at origin for debug purposes
-    //draw_circle(.{0,0,0}, 4, WHITE);
 }
 
-///////LEVELS///////
+tiles_draw :: ()
+{    
+    tilesize:float=16;
+    for x : 0..29
+    {
+        for y : 0..16
+        {
+            draw_sprite(.{x*tilesize - right_point, y*tilesize - top_point,0}, ground_tiles[x][y]);
+        }
+    }
+}
 
-//LEVEL 1
-//Library 1
-level_1 :: ()
+
+
+//Other
+draw_ground_sprite :: (tex:Texture, position:Vector2, offset:float= 32)
 {
-    player_x:float = 150;
-    player_y_top:float = 80;
-    player_y_bottom:float = 100;
-    player1_start_position = .{-player_x,-player_y_bottom};
-    player2_start_position = .{player_x,player_y_top};
-    player3_start_position = .{-player_x,player_y_top};
-    player4_start_position = .{player_x,-player_y_bottom};
-
-    //dark
-    //background_color = .{79,59,44,255};
-    //light
-    //background_color = .{163,150,130,255};
-    //
-    background_color = .{21,20,22,255};
-
-    right:= 230.0;
-    top:= 135.0;
-
-    //trees
-    create_actor(*tree_definition, .{right_point-144+20,35});
-    create_actor(*tree_definition, .{-right_point+144-18,35});
-
-    //chest
-    create_actor(*chest_definition, .{right_point-20,-10});
-    create_actor(*chest_definition, .{-right_point+22,-10});
-
-    //cheese
-    create_actor(*cheese_definition, .{150,-20});
-    create_actor(*cheese_definition, .{-50,0});
-    create_actor(*cheese_definition, .{200,75});
-    create_actor(*cheese_definition, .{-230,-90});
-    create_actor(*cheese_definition, .{180,-100});
-    create_actor(*cheese_definition, .{-220,80});
-
-
-    //Bookshelves
-    //top
-    create_bookshelves_line(22, .{-right_point,100});
-    //middle left
-    create_bookshelves_line(5, .{-right_point,30});
-    //middle right
-    create_bookshelves_line(5, .{right_point,30},true);
-    //bottom left
-    create_bookshelves_line(8, .{-right_point,-80});
-    //bottom right
-    create_bookshelves_line(8, .{right_point,-80},true);
+    draw_sprite(xyz(position-.{offset,offset},0), tex);
 }
 
-level_1_ground :: ()
+create_bookshelves_line :: (number:s64, start_pos: Vector2 = .{}, invert:bool=false)
+{    
+    bookshelf_w:= 22;
+
+    inverted: = 1;
+    if (invert) inverted= -1;
+
+    for i : 0..number-1 
+    {
+        create_actor(*bookshelf_definition, .{start_pos.x+(i*bookshelf_w*inverted)+(bookshelf_w/2)*inverted, start_pos.y});
+    }
+}
+
+create_tree_line :: (number:s64, start_pos: Vector2 = .{}, vertical:=false)
 {
-    //rug center
-    draw_sprite(.{0-32,0-32,0}, resources.rug3_texture.texture);
 
-    //rug players
-    draw_sprite(xyz(player1_start_position+.{-32,-32},0), resources.rug4_texture.texture);
-    draw_sprite(xyz(player2_start_position+.{-32,-32},0), resources.rug4_texture.texture);
-    draw_sprite(xyz(player3_start_position+.{-32,-32},0), resources.rug4_texture.texture);
-    draw_sprite(xyz(player4_start_position+.{-32,-32},0), resources.rug4_texture.texture);
-
-    //rug bottom
-    draw_sprite(.{0-32,-top_point-32+10,0}, resources.rug5_texture.texture);
-    //rug chest
-    //right
-    draw_sprite(.{230-32-10,-32-10,0}, resources.rug5_texture.texture);
-    //left
-    draw_sprite(.{-230-32+12,-32-10,0}, resources.rug5_texture.texture);
-
-
-    //treetray middle right
-    draw_sprite(.{right_point-144-32,35-32,0}, resources.treetray_texture.texture);
-    //treetray middle left
-    draw_sprite(.{-right_point+144-32+2,35-32,0}, resources.treetray_texture.texture);
-
-}
-
-//LEVEL 2
-//Library 2
-level_2 :: ()
-{
-    player_x:float = 220;
-    player_y_top:float = 82;
-    player_y_bottom:float = 100;
-    player1_start_position = .{-player_x,-player_y_bottom};
-    player2_start_position = .{player_x,player_y_top};
-    player3_start_position = .{-player_x,player_y_top};
-    player4_start_position = .{player_x,-player_y_bottom};
-
-    //dark
-    //background_color = .{79,59,44,255};
-    //light
-    //background_color = .{163,150,130,255};
-    //
-    background_color = .{21,20,22,255};
-
-    right:= 230.0;
-    top:= 135.0;
-
-    //trees
-    tree_x:=130.0;
-    create_actor(*tree_definition, .{tree_x,top_point-90+32});
-    create_actor(*tree_definition, .{tree_x,top_point-180+32});
-    create_actor(*tree_definition, .{tree_x,top_point-270+32});
-    //
-    create_actor(*tree_definition, .{-tree_x,top_point-90+32});
-    create_actor(*tree_definition, .{-tree_x,top_point-180+32});
-    create_actor(*tree_definition, .{-tree_x,top_point-270+32});
-
-    //chest
-    //create_actor(*chest_definition, .{right_point-20,-10});
-    //create_actor(*chest_definition, .{-right_point+22,-10});
-
-    //cheese
-    /*create_actor(*cheese_definition, .{150,-20});
-    create_actor(*cheese_definition, .{-50,0});
-    create_actor(*cheese_definition, .{200,75});
-    create_actor(*cheese_definition, .{-230,-90});
-    create_actor(*cheese_definition, .{180,-100});
-    create_actor(*cheese_definition, .{-220,80});*/
-
-
-    //Bookshelves
-    //left
-    create_bookshelves_line(2, .{-right_point,-80});
-    create_bookshelves_line(2, .{-right_point,-20});
-    create_bookshelves_line(2, .{-right_point,40});
-    create_bookshelves_line(2, .{-right_point,100});
-    //right
-    create_bookshelves_line(2, .{right_point,-80},true);
-    create_bookshelves_line(2, .{right_point,-20},true);
-    create_bookshelves_line(2, .{right_point,40},true);
-    create_bookshelves_line(2, .{right_point,100},true);
-    //top
-    create_bookshelves_line(4, .{0,100});
-    create_bookshelves_line(4, .{0,100},true);
-    //center
-    create_actor(*bookshelf_definition, .{0,40});
-    create_actor(*bookshelf_definition, .{-22,30});
-    create_actor(*bookshelf_definition, .{22,30});
-    create_actor(*bookshelf_definition, .{-44,20});
-    create_actor(*bookshelf_definition, .{44,20});
-
-    create_actor(*bookshelf_definition, .{44,10});
-    create_actor(*bookshelf_definition, .{44,0});
-    create_actor(*bookshelf_definition, .{44,-10});
-    create_actor(*bookshelf_definition, .{44,-20});
-    create_actor(*bookshelf_definition, .{44,-30});
-
-
-    create_actor(*bookshelf_definition, .{-44,10});
-    create_actor(*bookshelf_definition, .{-44,0});
-    create_actor(*bookshelf_definition, .{-44,-10});
-    create_actor(*bookshelf_definition, .{-44,-20});
-    create_actor(*bookshelf_definition, .{-44,-30});
-
-    create_actor(*bookshelf_definition, .{0,-60});
-    create_actor(*bookshelf_definition, .{-22,-50});
-    create_actor(*bookshelf_definition, .{22,-50});
-    create_actor(*bookshelf_definition, .{-44,-40});
-    create_actor(*bookshelf_definition, .{44,-40});
-}
-
-level_2_ground :: ()
-{
-    //rug center
-    draw_sprite(.{0-32,0-32,0}, resources.rug3_texture.texture);
-
-    //rug players
-    draw_sprite(xyz(player1_start_position+.{-32,-32},0), resources.rug4_texture.texture);
-    draw_sprite(xyz(player2_start_position+.{-32,-32},0), resources.rug4_texture.texture);
-    draw_sprite(xyz(player3_start_position+.{-32,-32},0), resources.rug4_texture.texture);
-    draw_sprite(xyz(player4_start_position+.{-32,-32},0), resources.rug4_texture.texture);
-
-    //rug bottom
-    draw_sprite(.{0-32,-top_point-32+9,0}, resources.rug5_texture.texture);
-    //right
-    draw_sprite(.{-150-32,top_point-14-32,0}, resources.rug5_texture.texture);
-    //left
-    draw_sprite(.{150-32,top_point-14-32,0}, resources.rug5_texture.texture);
-
-
-    //treetray right
-    tray_x:=130.0;
-    draw_sprite(.{-tray_x-32,top_point-90,0}, resources.treetray_texture.texture);
-    draw_sprite(.{-tray_x-32,top_point-180,0}, resources.treetray_texture.texture);
-    draw_sprite(.{-tray_x-32,top_point-270,0}, resources.treetray_texture.texture);
-    //treetray middle left
-    draw_sprite(.{tray_x-32,top_point-90,0}, resources.treetray_texture.texture);
-    draw_sprite(.{tray_x-32,top_point-180,0}, resources.treetray_texture.texture);
-    draw_sprite(.{tray_x-32,top_point-270,0}, resources.treetray_texture.texture);
-
+    for i : 0..number-1 
+    {
+        tree_w:= random_range(6,12);
+        w_offset:= random_range(-12,12);
+        if vertical
+        {
+            create_actor(*tree_definition, .{start_pos.x+w_offset, start_pos.y+(i*tree_w)+(tree_w/2)});
+        }
+        else
+        {
+            create_actor(*tree_definition, .{start_pos.x+(i*tree_w)+(tree_w/2), start_pos.y+w_offset});
+        }
+    }
 }
 
 
-
-
-
-
-
-
-
-
-
+/*
 //LEVEL 0
 //This is the level we used for our prototyping with the tree lines and stuff
 level_0_test :: ()
@@ -344,17 +270,4 @@ level_0_test :: ()
     create_actor(*tree_definition, .{-100, -20});
     create_actor(*tree_definition, .{40, 5});
 }
-
-//Other
-create_bookshelves_line :: (number:s64, start_pos: Vector2 = .{}, invert:bool=false)
-{    
-    bookshelf_w:= 22;
-
-    inverted: = 1;
-    if (invert) inverted= -1;
-
-    for i : 0..number-1 
-    {
-        create_actor(*bookshelf_definition, .{start_pos.x+(i*bookshelf_w*inverted)+(bookshelf_w/2)*inverted, start_pos.y});
-    }
-}
+*/

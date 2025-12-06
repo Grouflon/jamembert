@@ -1,0 +1,3 @@
+{
+	"texture": "bush_texture"
+}

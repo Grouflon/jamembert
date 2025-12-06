@@ -112,21 +112,6 @@ resources : struct
     attack_smear_texture: TextureFile = .{ path = "data://aseprite/attack_smear.png" };
     attack_smear_aseprite: AsepriteFile = .{ path = "data://aseprite/attack_smear.json" };
 
-    tile1_texture: TextureFile = .{ path = "data://aseprite/tile1.png" };
-    tile1_aseprite: AsepriteFile = .{ path = "data://aseprite/tile1.json" };
-
-    tile2_texture: TextureFile = .{ path = "data://aseprite/tile2.png" };
-    tile2_aseprite: AsepriteFile = .{ path = "data://aseprite/tile2.json" };
-
-    tile3_texture: TextureFile = .{ path = "data://aseprite/tile3.png" };
-    tile3_aseprite: AsepriteFile = .{ path = "data://aseprite/tile3.json" };
-
-    tile4_texture: TextureFile = .{ path = "data://aseprite/tile4.png" };
-    tile4_aseprite: AsepriteFile = .{ path = "data://aseprite/tile4.json" };
-
-    tile5_texture: TextureFile = .{ path = "data://aseprite/tile5.png" };
-    tile5_aseprite: AsepriteFile = .{ path = "data://aseprite/tile5.json" };
-
     rug1_texture: TextureFile = .{ path = "data://aseprite/rug1.png" };
     rug1_aseprite: AsepriteFile = .{ path = "data://aseprite/rug1.json" };
 
@@ -144,5 +129,44 @@ resources : struct
 
     treetray_texture: TextureFile = .{ path = "data://aseprite/treetray.png" };
     treetray_aseprite: AsepriteFile = .{ path = "data://aseprite/treetray.json" };
+
+    bush_texture: TextureFile = .{ path = "data://aseprite/bush.png" };
+    bush_aseprite: AsepriteFile = .{ path = "data://aseprite/bush.json" };
+
+    grid_texture: TextureFile = .{ path = "data://aseprite/grid.png" };
+    grid_aseprite: AsepriteFile = .{ path = "data://aseprite/grid.json" };
+
+    slab_texture: TextureFile = .{ path = "data://aseprite/slab.png" };
+    slab_aseprite: AsepriteFile = .{ path = "data://aseprite/slab.json" };
+
+    patchlibrary_texture: TextureFile = .{ path = "data://aseprite/patch_library.png" };
+    patchlibrary_aseprite: AsepriteFile = .{ path = "data://aseprite/patch_library.json" };
+
+    // TILES
+
+    tile_wood_1_texture: TextureFile = .{ path = "data://aseprite/tile_wood_1.png" };
+    tile_wood_1_aseprite: AsepriteFile = .{ path = "data://aseprite/tile_wood_1.json" };
+
+    tile_wood_2_texture: TextureFile = .{ path = "data://aseprite/tile_wood_2.png" };
+    tile_wood_2_aseprite: AsepriteFile = .{ path = "data://aseprite/tile_wood_2.json" };
+
+    tile_wood_3_texture: TextureFile = .{ path = "data://aseprite/tile_wood_3.png" };
+    tile_wood_3_aseprite: AsepriteFile = .{ path = "data://aseprite/tile_wood_3.json" };
+
+    tile_wood_4_texture: TextureFile = .{ path = "data://aseprite/tile_wood_4.png" };
+    tile_wood_4_aseprite: AsepriteFile = .{ path = "data://aseprite/tile_wood_4.json" };
+
+    tile_wood_5_texture: TextureFile = .{ path = "data://aseprite/tile_wood_5.png" };
+    tile_wood_5_aseprite: AsepriteFile = .{ path = "data://aseprite/tile_wood_5.json" };
+
+
+    tile_rock_1_texture: TextureFile = .{ path = "data://aseprite/tile_rock_1.png" };
+    tile_rock_1_aseprite: AsepriteFile = .{ path = "data://aseprite/tile_rock_1.json" };
+
+    tile_rock_2_texture: TextureFile = .{ path = "data://aseprite/tile_rock_2.png" };
+    tile_rock_2_aseprite: AsepriteFile = .{ path = "data://aseprite/tile_rock_2.json" };
+
+    tile_rock_3_texture: TextureFile = .{ path = "data://aseprite/tile_rock_3.png" };
+    tile_rock_3_aseprite: AsepriteFile = .{ path = "data://aseprite/tile_rock_3.json" };
 
 };

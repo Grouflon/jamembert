@@ -71,6 +71,12 @@ spellbook: []*SpellDefinition = .[
 #load "actors/portal.jai";
 #load "actors/brain.jai";
 
+// Levels
+#load "levels/level_library1.jai";
+#load "levels/level_library2.jai";
+#load "levels/level_forest.jai";
+#load "levels/level_dungeon.jai";
+
 // Other
 #load "resources.jai";
 #load "actor.jai";

@@ -4,14 +4,6 @@ GAME_WIDTH :: 1920;
 GAME_HEIGHT :: 1080;
 
 players: [4]Player;
-player1_start_position: Vector2 = .{-50,-50};
-player2_start_position: Vector2 = .{-50,50};
-player3_start_position: Vector2 = .{50,-50};
-player4_start_position: Vector2 = .{50,50};
-
-background_color: Color = .{0,30,61,255};
-
-level_selected:s32=0;
 
 game_start :: ()
 {
@@ -54,9 +46,9 @@ game_start :: ()
     }
 
     //Spell on start
-    // players[0].spell_slots[0] = *portalbrain_spell_definition;
+    //players[0].spell_slots[0] = *portalbrain_spell_definition;
     //players[0].spell_slots[1] = *lobotomie_spell_definition;
-    // players[0].spell_slots[0] = *portalgraveyard_spell_definition;
+    //players[0].spell_slots[0] = *portalgraveyard_spell_definition;
     //players[0].spell_slots[1] = *portalbrain_spell_definition;
     //players[0].spell_slots[2] = *portalforest_spell_definition;
     //players[0].spell_slots[1] = *portallibrary_spell_definition;
@@ -64,7 +56,7 @@ game_start :: ()
     //players[0].spell_slots[1] = *spectralform_spell_definition;
     //players[0].spell_slots[2] = *illusion_spell_definition;
     //players[0].spell_slots[2] = *mindswap_spell_definition;
-    // players[0].spell_slots[2] = *rage_spell_definition;
+    //players[0].spell_slots[2] = *rage_spell_definition;
     //players[0].spell_slots[1] = *bouledefeu_spell_definition;
     //players[0].spell_slots[0] = *darkbook_spell_definition;
     //players[0].spell_slots[1] = *cupidon_spell_definition;
@@ -75,25 +67,10 @@ game_start :: ()
     //players[0].spell_slots[1] = *transposition_spell_definition;
     //players[0].spell_slots[0] = *spawngobelin_spell_definition;
 
+
     //Level Design
-    init_ground_tiles();
-    //level_test();
-    level_array: [] s32= .[1,2];
-    _,level_selected = random_get_array_item(level_array);
-    if level_selected==
-    {
-        case 1;
-        {
-            level_1();
-        }
-        case 2;
-        {
-            level_2();
-        }
-    }
-    //
-    
-    
+    //you can pass a number to init_level to choose a specific level, otherwise it will be random
+    select_level();
 
 
     //Set player controlled actor
@@ -153,6 +130,8 @@ game_update :: (dt: float)
 {
     actors_update(dt);
 
+    level_update(dt);
+
     for *player: players
     {
         player_update(player, dt);
@@ -209,7 +188,7 @@ game_draw :: ()
 
             begin_render_texture(render_layers[RenderLayer.GROUND]);
             clear_background(background_color);
-            draw_ground();
+            level_draw();
             end_render_texture();
 
             begin_render_texture(render_layers[RenderLayer.GROUND_OVERLAY]);
@@ -262,9 +241,9 @@ game_draw :: ()
             defer end_camera();
 
             player_draw_ui(*players[0], .{3,3});
-            player_draw_ui(*players[1], .{GAME_WIDTH / DRAW_SCALE - 52,3});
+            player_draw_ui(*players[1], .{GAME_WIDTH / DRAW_SCALE - 52 , GAME_HEIGHT / DRAW_SCALE - 23});
             player_draw_ui(*players[2], .{3, GAME_HEIGHT / DRAW_SCALE - 23});
-            player_draw_ui(*players[3], .{GAME_WIDTH / DRAW_SCALE - 52 , GAME_HEIGHT / DRAW_SCALE - 23});
+            player_draw_ui(*players[3], .{GAME_WIDTH / DRAW_SCALE - 52,3});
         }
 
         // Compositing

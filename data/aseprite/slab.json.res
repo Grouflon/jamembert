@@ -1,0 +1,3 @@
+{
+	"texture": "slab_texture"
+}
