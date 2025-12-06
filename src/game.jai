@@ -54,9 +54,9 @@ game_start :: ()
     }
 
     //Spell on start
-    players[0].spell_slots[0] = *portalbrain_spell_definition;
+    // players[0].spell_slots[0] = *portalbrain_spell_definition;
     //players[0].spell_slots[1] = *lobotomie_spell_definition;
-    players[0].spell_slots[0] = *portalgraveyard_spell_definition;
+    // players[0].spell_slots[0] = *portalgraveyard_spell_definition;
     //players[0].spell_slots[1] = *portalbrain_spell_definition;
     //players[0].spell_slots[2] = *portalforest_spell_definition;
     //players[0].spell_slots[1] = *portallibrary_spell_definition;
@@ -64,7 +64,7 @@ game_start :: ()
     //players[0].spell_slots[1] = *spectralform_spell_definition;
     //players[0].spell_slots[2] = *illusion_spell_definition;
     //players[0].spell_slots[2] = *mindswap_spell_definition;
-    players[0].spell_slots[2] = *rage_spell_definition;
+    // players[0].spell_slots[2] = *rage_spell_definition;
     //players[0].spell_slots[1] = *bouledefeu_spell_definition;
     //players[0].spell_slots[0] = *darkbook_spell_definition;
     //players[0].spell_slots[1] = *cupidon_spell_definition;
