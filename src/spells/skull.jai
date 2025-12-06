@@ -2,7 +2,6 @@
 skull_spell_definition : = SpellDefinition.{
     type = .PROJECTILE,
     icon = .{ "icons_aseprite", "skull" },
-    range = 200,
     cast_func = (params: SpellCastParams) -> bool
     {
         f: = create_actor(*skull_definition, params.projectile.origin);

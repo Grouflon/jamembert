@@ -2,7 +2,6 @@
 explosion_spell_definition : = SpellDefinition.{
     type = .POSITION,
     icon = .{ "icons_aseprite", "explosion" },
-    range = 200,
     cast_func = (params: SpellCastParams) -> bool
     {
         exp: = create_actor(*explosion_definition, params.position.origin);

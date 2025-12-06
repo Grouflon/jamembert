@@ -2,7 +2,6 @@
 spectralform_spell_definition : = SpellDefinition.{
     type = .PROJECTILE,
     icon = .{ "icons_aseprite", "spectralform" },
-    range = 200,
     cast_func = (params: SpellCastParams) -> bool
     {
         spect: = create_actor(*spectralform_definition, params.source.position.xy);

@@ -2,7 +2,7 @@
 darkbook_spell_definition : = SpellDefinition.{
     type = .PROJECTILE,
     icon = .{ "icons_aseprite", "darkbook" },
-    range = 200,
+    //range = 200,
     cast_func = (params: SpellCastParams) -> bool
     {
         f: = create_actor(*darkbook_definition, params.projectile.origin);

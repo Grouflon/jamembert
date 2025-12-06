@@ -2,7 +2,6 @@
 mitose_spell_definition : = SpellDefinition.{
     type = .TARGET,
     icon = .{ "icons_aseprite", "mitose" },
-    range = 200,
     cast_func = (params: SpellCastParams) -> bool
     {
         target: = params.target.target;

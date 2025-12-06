@@ -2,7 +2,7 @@ SpellDefinition :: struct
 {
     type: SpellCastType;
     icon: AsepriteAnimation;
-    range: float;
+    range: float = 1000;
     cast_func: #type (params: SpellCastParams) -> bool;
 }
 

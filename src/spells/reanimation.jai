@@ -2,7 +2,6 @@
 reanimation_spell_definition : = SpellDefinition.{
     type = .POSITION,
     icon = .{ "icons_aseprite", "reanimation" },
-    range = 200,
     cast_func = (params: SpellCastParams) -> bool
     {
         circ: = create_actor(*reanimation_definition, params.position.origin);

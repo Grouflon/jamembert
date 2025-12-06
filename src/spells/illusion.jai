@@ -2,7 +2,6 @@
 illusion_spell_definition : = SpellDefinition.{
     type = .POSITION,
     icon = .{ "icons_aseprite", "illusion" },
-    range = 200,
     cast_func = (params: SpellCastParams) -> bool
     {
         ill: = create_actor(*illusion_definition, params.position.origin);
