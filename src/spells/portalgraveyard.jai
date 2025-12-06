@@ -2,7 +2,6 @@
 portalgraveyard_spell_definition : = SpellDefinition.{
     type = .POSITION,
     icon = .{ "icons_aseprite", "portal_graveyard" },
-    range = 200,
     cast_func = (params: SpellCastParams) -> bool
     {
         create_portal(params.position.origin, *resources.portalgraveyard_aseprite, portalgraveyard_spawn_actors);
@@ -19,6 +18,9 @@ portalgraveyard_spawn_actors :: (using actor: *Actor)
         *tomb1_definition,
         *tomb2_definition,
     ];
+
+    //center
+    create_actor(*cheese_definition,portalpos);
 
     //left
     _, tomb: = random_get_array_item(tombs);

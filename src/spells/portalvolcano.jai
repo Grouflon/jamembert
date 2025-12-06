@@ -2,7 +2,6 @@
 portalvolcano_spell_definition : = SpellDefinition.{
     type = .POSITION,
     icon = .{ "icons_aseprite", "portal_volcano" },
-    range = 200,
     cast_func = (params: SpellCastParams) -> bool
     {
         portal: = create_portal(params.position.origin, *resources.portalvolcano_aseprite, portalvolcano_spawn_actors, portal_burn_actors);

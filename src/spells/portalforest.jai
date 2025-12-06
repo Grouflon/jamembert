@@ -2,7 +2,6 @@
 portalforest_spell_definition : = SpellDefinition.{
     type = .POSITION,
     icon = .{ "icons_aseprite", "portal_forest" },
-    range = 200,
     cast_func = (params: SpellCastParams) -> bool
     {
         create_portal(params.position.origin, *resources.portalforest_aseprite, portalforest_spawn_actors);
@@ -14,16 +13,21 @@ portalforest_spell_definition : = SpellDefinition.{
 portalforest_spawn_actors :: (using actor: *Actor)
 {
     portalpos:= actor.position.xy;
-    treecount: = cast(u32) random_get_within_range(3,5);
+    /*treecount: = cast(u32) random_get_within_range(3,5);
     for tree : 0..treecount
     {
         pos: Vector2 = .{random_get_within_range(-16,16), random_get_within_range(-22,16)};
         create_actor(*tree_definition, portalpos + pos);
-    }
-    //left
-    //create_actor(*tree_definition, portalpos + .{-19, 4});
-    //top right
+    }*/
+    
+    create_actor(*tree_definition, portalpos + .{0, 26});
+    create_actor(*tree_definition, portalpos + .{18, 18});
+    create_actor(*tree_definition, portalpos + .{26, 0});
+    create_actor(*tree_definition, portalpos + .{18, -18});
+    create_actor(*tree_definition, portalpos + .{0, -26});
+    create_actor(*tree_definition, portalpos + .{-18, -18});
+    create_actor(*tree_definition, portalpos + .{-26, 0});
+    create_actor(*tree_definition, portalpos + .{-18, 18});
     //create_actor(*tree_definition, portalpos + .{10, 18});
-    //bottom right
     //create_actor(*tree_definition, portalpos + .{15, -8});
 }

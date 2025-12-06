@@ -2,7 +2,6 @@
 portalbrain_spell_definition : = SpellDefinition.{
     type = .POSITION,
     icon = .{ "icons_aseprite", "portal_brain" },
-    range = 200,
     cast_func = (params: SpellCastParams) -> bool
     {
         create_portal(params.position.origin, *resources.portalbrain_aseprite, portalbrain_spawn_actors);
