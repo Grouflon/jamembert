@@ -383,7 +383,7 @@ actor_hit :: (using actor: *Actor, damage: s32, source: *Actor = null)
     assert(actor != null);
     assert(definition != null);
 
-    last_hit_time = xx get_time();
+    last_hit_time = xx get_time_since_startup();
     actor_modify_health(actor, -damage);
 
     if definition.on_hit != null

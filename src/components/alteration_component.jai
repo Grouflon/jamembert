@@ -75,7 +75,7 @@ alteration_component_update :: (using component: *AlterationComponent, dt: float
 
 alteration_component_draw :: (using component: *AlterationComponent)
 {
-    time: = get_time();
+    time: = get_time_since_startup();
 
     if burning
     {

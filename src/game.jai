@@ -7,7 +7,8 @@ players: [4]Player;
 
 game_start :: ()
 {
-    random_seed(Some_Big_Time_Value.{current_time_consensus().low, current_time_consensus().high}); // Will need something for wasm, but we should change our own get_time() api first to have different calls for time_since_init and absolute time
+    t: = get_current_appolo_time();
+    random_seed(Some_Big_Time_Value.{t.low, t.high});
     
     // yae_refresh_gamepads();
 
@@ -150,8 +151,6 @@ game_update :: (dt: float)
         game_stop();
         game_start();
     }
-
-
 }
 
 game_draw :: ()

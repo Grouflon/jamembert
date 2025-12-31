@@ -14,8 +14,7 @@ const float hitEffectTime = 0.2;
 
 void main()
 {
-
-    float t = clamp((uTime - uLastHitTime) / hitEffectTime, 0, 1);
+    float t = clamp((uTime - uLastHitTime) / hitEffectTime, 0.0, 1.0);
     vec4 spriteColor = fragColor * texture(uTexture, fragTexCoord);
     outColor = mix(vec4(1,1,1,1), spriteColor, t);
     if (spriteColor.w == 0.0)

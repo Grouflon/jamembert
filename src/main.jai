@@ -171,7 +171,6 @@ main :: ()
 #scope_file
 #import "Basic"()(MEMORY_DEBUGGER = YAE_DEBUG_MEMORY);
 #import "String";
-#import "System";
 
 #import "Math";
 #import "yae";

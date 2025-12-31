@@ -53,7 +53,7 @@ resources : struct
     fireball_aseprite: AsepriteFile = .{ path = "data://aseprite/fireball.json" };
 
     flame_texture: TextureFile = .{ path = "data://aseprite/flame.png" };
-    flame_aseprite: TextureFile = .{ path = "data://aseprite/flame.json" };
+    flame_aseprite: AsepriteFile = .{ path = "data://aseprite/flame.json" };
 
     explosion_texture: TextureFile = .{ path = "data://aseprite/explosion.png" };
     explosion_aseprite: AsepriteFile = .{ path = "data://aseprite/explosion.json" };
