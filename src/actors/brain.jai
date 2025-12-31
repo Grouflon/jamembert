@@ -85,7 +85,7 @@ brain_update :: (using actor: *Actor, dt: float)
             triggers: = physics_cast_circle(actor.position.xy, 512, .[PHYSIC_LAYER_HURTBOX]);
 
             sort_reference_position = actor.position.xy;
-            bubble_sort(triggers, (a: *Collider, b: *Collider) -> s64
+            quick_sort(triggers, (a: *Collider, b: *Collider) -> s64
             {
                 d1: = distance_squared_point_bounds(sort_reference_position, collider_get_bounds(a));
                 d2: = distance_squared_point_bounds(sort_reference_position, collider_get_bounds(b));

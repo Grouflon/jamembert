@@ -591,7 +591,7 @@ actor_update_boxes :: (using actor: *Actor)
 
             for *p: points
             {
-                <<p = rotate(<<p, angle);
+                p.* = rotate(p.*, angle);
             }
             box = make_bounds(..points);
         }
